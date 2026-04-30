@@ -1,0 +1,34 @@
+{
+  "name": "api-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "setup": "playwright test --project=setup-authentication",
+    "tests:smoke": "npx playwright test tests/smoke/",
+    "tests:contract": "npx playwright test tests/contract/",
+    "tests:functional": "npx playwright test tests/functional/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gniazdowski-luk/api-testing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gniazdowski-luk/api-testing/issues"
+  },
+  "homepage": "https://github.com/gniazdowski-luk/api-testing#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/jsonschema": "^0.0.5",
+    "@types/node": "^25.6.0",
+    "jsonschema": "^1.5.0",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}
