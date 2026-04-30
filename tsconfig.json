@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "types": ["node"],
+    "baseUrl": "./",
+    "paths": {
+      "@test-data/*": ["test-data/*"],
+      "@setup/*": ["setup/*"],
+      "@tests/*": ["tests/*"]
+    },
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["tests/**/*.ts", "setup/**/*.ts", "playwright.config.ts"]
+}
