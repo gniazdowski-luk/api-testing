@@ -2,7 +2,14 @@
 
 GAD application API testing project using Playwright with TypeScript.
 
-## Setup
+## GAD Application setup
+
+Before running tests locally, you need to have the GAD application running. Clone and start the backend server:
+
+1. Clone repository: `git clone https://github.com/jaktestowac/gad-gui-api-demo`
+2. Install dependencies and run the server: `npm install` and `npm start`
+
+## Project setup
 
 Install project dependencies: `npm install`
 

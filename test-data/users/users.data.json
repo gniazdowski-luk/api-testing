@@ -1,0 +1,13 @@
+{
+  "user1": {
+    "id": 1,
+    "firstname": "Moses",
+    "lastname": "Armstrong"
+  },
+  "user2": {
+    "id": 2,
+    "firstname": "Danial",
+    "lastname": "Dicki"
+  },
+  "maskedLastname": "****"
+}
