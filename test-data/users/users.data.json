@@ -8,5 +8,6 @@
     "id": 2,
     "firstname": "Danial",
     "lastname": "Dicki"
-  }
+  },
+  "maskedLastname": "****"
 }

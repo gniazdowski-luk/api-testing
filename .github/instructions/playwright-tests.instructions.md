@@ -6,6 +6,8 @@ applyTo: "**/*.spec.ts"
 
 - Hard assertion must always be the **last** assertion in a test block.
 - All other assertions except the final one must use `expect.soft(...)`.
+- Exact equality assertions (`.toBe(...)`) must always be the final hard assertion, not soft.
+- Do not make multiple separate assertions on the same type of data; combine them into a single assertion (e.g. use an array or object matcher).
 
 # Test Data Conventions
 

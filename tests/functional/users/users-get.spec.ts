@@ -36,3 +36,18 @@ test('GET /users contains specific users @functional-users', async ({ request, a
     },
   ]);
 });
+
+test('GET /users without cookie id has masked lastname @functional-users-negative', async ({ request, accessToken }) => {
+  const response = await request.get('users', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const users = await response.json();
+
+  const user1 = users.find((u: { id: number }) => u.id === expectedUsersData.user1.id);
+  const user2 = users.find((u: { id: number }) => u.id === expectedUsersData.user2.id);
+
+  expect([user1.lastname, user2.lastname]).toEqual([expectedUsersData.maskedLastname, expectedUsersData.maskedLastname]);
+});
