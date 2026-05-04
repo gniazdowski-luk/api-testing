@@ -2,4 +2,4 @@
 
 ## @functional-users
 
-- `GET /users` must return a list that includes a specific user matched by `id`. The matched user must contain the correct `firstname`, `lastname`, a non-empty `avatar` string, and a non-empty `password` string.
+- `GET /users` must return a list that includes two specific users matched by `id`. Each matched user must contain the correct `firstname`, `lastname`, a non-empty `email` string, a non-empty `avatar` string, and a non-empty `password` string.
