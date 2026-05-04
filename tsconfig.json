@@ -15,7 +15,8 @@
       "@setup/*": ["setup/*"],
       "@tests/*": ["tests/*"]
     },
-    "ignoreDeprecations": "6.0"
+    "ignoreDeprecations": "6.0",
+    "resolveJsonModule": true
   },
   "include": ["tests/**/*.ts", "setup/**/*.ts", "playwright.config.ts"]
 }

@@ -18,6 +18,7 @@ setup('authenticate', async ({ request }) => {
   await expect(response).toBeOK();
 
   const { access_token } = await response.json();
+
   fs.mkdirSync(path.dirname(AUTH_FILE), { recursive: true });
-  fs.writeFileSync(AUTH_FILE, JSON.stringify({ accessToken: access_token }));
+  fs.writeFileSync(AUTH_FILE, JSON.stringify({ accessToken: access_token, userId: Number(process.env.AUTHENTICATION_ID) }));
 });
