@@ -29,6 +29,10 @@ export default defineConfig({
       testDir: './tests/functional',
       dependencies: ['setup-authentication'],
     },
-    
+    {
+      name: 'tests-security',
+      testDir: './tests/security',
+      dependencies: ['setup-authentication'],
+    },
   ],
 });
