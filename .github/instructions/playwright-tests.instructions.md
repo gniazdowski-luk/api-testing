@@ -7,8 +7,9 @@ applyTo: "**/*.spec.ts"
 - Hard assertion must always be the **last** assertion in a test block.
 - All other assertions except the final one must use `expect.soft(...)`.
 - Exact equality assertions (`.toBe(...)`) must always be the final hard assertion, not soft.
-- **Never use less-than or greater-than assertions for status codes. Always assert exact status codes using `.toBe(...)`.**
-- **Status code assertions are more important than response body assertions. The status code `.toBe(...)` must always be the final hard assertion in that cases. Response body/message assertions must use `expect.soft(...)` and appear before the status code assertion.**
+- Never use less-than or greater-than assertions for status codes. Always assert exact status codes using `.toBe(...)`.
+- Status code assertions are more important than response body assertions. The status code `.toBe(...)` must always be the final hard assertion in that cases. Response body/message assertions must use `expect.soft(...)` and appear before the status code assertion.
+- Do not add a status code assertion when the test is verifying something else (e.g. response body structure, pagination, sorting). Only assert the status code when it is the point of the test.
 - Do not make multiple separate assertions on the same type of data; combine them into a single assertion (e.g. use an array or object matcher).
 
 # Test Data Conventions
@@ -16,6 +17,7 @@ applyTo: "**/*.spec.ts"
 - All hardcoded test data (e.g. expected field values, user records, payloads) must be stored in separate files inside the `test-data/` directory.
 - Import test data using the `@test-data/*` path alias.
 - Do not inline hardcoded data values directly in `*.spec.ts` files.
+- Organize test data by endpoint first. For example, all `/users` datasets, payloads, and schemas must live under `test-data/users/`.
 
 # Tagging and Requirements Conventions
 
@@ -28,10 +30,12 @@ applyTo: "**/*.spec.ts"
 - Do not repeat test data structures across tests; store all test payloads and mock data in the `test-data/` directory and import them via the `@test-data/*` alias.
 - Do not repeat setup logic across tests; extract shared setup into Playwright fixtures in `tests/fixtures.ts`.
 - Do not instantiate shared utilities (e.g. `Validator`) inside individual test blocks; declare them once at module scope or inside a shared fixture.
+- Do not duplicate shared entities (e.g. user records, IDs, names) across multiple test-data files. Define them once in a canonical file (e.g. `test-data/users/users.data.json`) and import that file wherever the same values are needed.
 
 # Test Validation Principles
 
 - Validate application behavior against requirements after implementing tests. Do not create tests that will not work - ensure that the application actually fulfills the requirements
+- Do not modify existing lines in test files unless explicitly asked to. Only add new code or change the lines directly related to the requested task.
 
 # README Update Conventions
 

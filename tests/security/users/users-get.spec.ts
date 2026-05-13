@@ -1,6 +1,6 @@
 import { test, expect } from '@tests/fixtures';
 import expectedUsersData from '@test-data/users/users.data.json';
-import { securityUsersData } from '@test-data/security/users.security.data';
+import { securityUsersData } from '@test-data/users/users.security.data';
 
 const maskedUser = {
   email: securityUsersData.maskedEmail,

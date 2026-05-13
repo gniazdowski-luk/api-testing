@@ -9,5 +9,9 @@
     "firstname": "Danial",
     "lastname": "Dicki"
   },
-  "maskedLastname": "****"
+  "user3": {
+    "id": 3,
+    "firstname": "Daryl",
+    "lastname": "Parisian"
+  }
 }

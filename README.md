@@ -21,7 +21,7 @@ Install Playwright framework: `npx playwright install`
 
 - [Contract tests](./requirements/contract) - tests to check if the API responses match the expected contract.
 
-- [Functional tests](./requirements/functional) - tests to check the functionality of the API endpoints.
+- [Functional tests](./requirements/functional-users.md) - tests to check the functionality of the API endpoints.
 
 - [Security tests](./requirements/security-users.md) - tests to check that sensitive fields are masked for unauthenticated or improperly authenticated requests.
 
@@ -30,8 +30,6 @@ Install Playwright framework: `npx playwright install`
 Setup
 
 - [Authentication](./setup/authentication) - steps to obtain authentication token for tests: `npm run setup`
-
-
 
 Tests
 

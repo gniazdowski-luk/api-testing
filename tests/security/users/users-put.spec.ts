@@ -1,5 +1,5 @@
 import { test, expect } from '@tests/fixtures';
-import { securityUsersData } from '@test-data/security/users.security.data';
+import { securityUsersData } from '@test-data/users/users.security.data';
 
 test('PUT /users without Authorization header returns 401 with error message @security-authorization-put-users', async ({ request }) => {
   const response = await request.put('users', {
