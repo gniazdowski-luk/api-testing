@@ -1,7 +1,7 @@
 import { test, expect } from '@tests/fixtures';
 import { Validator } from 'jsonschema';
-import { usersSchema } from '@test-data/schemas/users.schema';
-import { contractUsersData } from '@test-data/contract/users.contract.data';
+import { usersSchema } from '@test-data/users/users.schema';
+import { contractUsersData } from '@test-data/users/users.contract.data';
 
 const validator = new Validator();
 
