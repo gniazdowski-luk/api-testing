@@ -4,19 +4,28 @@ import * as path from 'path';
 
 const AUTH_FILE = path.join(__dirname, '../setup/authentication/.auth/user.json');
 
+function readAuth(): { accessToken: string; userId: number } {
+  return JSON.parse(fs.readFileSync(AUTH_FILE, 'utf-8'));
+}
+
 type Fixtures = {
   accessToken: string;
   userId: number;
+  authHeaders: { Authorization: string; Cookie: string };
 };
 
 export const test = base.extend<Fixtures>({
   accessToken: async ({}, use) => {
-    const { accessToken } = JSON.parse(fs.readFileSync(AUTH_FILE, 'utf-8'));
-    await use(accessToken);
+    await use(readAuth().accessToken);
   },
   userId: async ({}, use) => {
-    const { userId } = JSON.parse(fs.readFileSync(AUTH_FILE, 'utf-8'));
-    await use(userId);
+    await use(readAuth().userId);
+  },
+  authHeaders: async ({ accessToken, userId }, use) => {
+    await use({
+      Authorization: `Bearer ${accessToken}`,
+      Cookie: `id=${userId}`,
+    });
   },
 });
 

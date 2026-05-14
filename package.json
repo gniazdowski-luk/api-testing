@@ -7,7 +7,8 @@
     "setup": "playwright test --project=setup-authentication",
     "tests:smoke": "npx playwright test tests/smoke/",
     "tests:contract": "npx playwright test tests/contract/",
-    "tests:functional": "npx playwright test tests/functional/"
+    "tests:functional": "npx playwright test tests/functional/",
+    "tests:performance": "npx playwright test tests/performance/"
   },
   "repository": {
     "type": "git",

@@ -34,5 +34,10 @@ export default defineConfig({
       testDir: './tests/security',
       dependencies: ['setup-authentication'],
     },
+    {
+      name: 'tests-performance',
+      testDir: './tests/performance',
+      dependencies: ['setup-authentication'],
+    },
   ],
 });
