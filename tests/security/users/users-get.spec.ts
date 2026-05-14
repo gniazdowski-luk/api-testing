@@ -8,18 +8,25 @@ const maskedUser = {
   password: securityUsersData.maskedPassword,
 };
 
+function assertMaskedFields(
+  users: { id: number; email: string; lastname: string; password: string }[],
+  response: { status: () => number },
+) {
+  const user1 = users.find((u) => u.id === expectedUsersData.user1.id);
+  const user2 = users.find((u) => u.id === expectedUsersData.user2.id);
+
+  expect.soft(response.status()).toBe(200);
+  expect([
+    { email: user1!.email, lastname: user1!.lastname, password: user1!.password },
+    { email: user2!.email, lastname: user2!.lastname, password: user2!.password },
+  ]).toEqual([maskedUser, maskedUser]);
+}
+
 test('GET /users without Authorization header returns 200 with masked fields @security-authorization-get-users', async ({ request }) => {
   const response = await request.get('users');
   const users = await response.json();
 
-  const user1 = users.find((u: { id: number }) => u.id === expectedUsersData.user1.id);
-  const user2 = users.find((u: { id: number }) => u.id === expectedUsersData.user2.id);
-
-  expect.soft(response.status()).toBe(200);
-  expect([
-    { email: user1.email, lastname: user1.lastname, password: user1.password },
-    { email: user2.email, lastname: user2.lastname, password: user2.password },
-  ]).toEqual([maskedUser, maskedUser]);
+  assertMaskedFields(users, response);
 });
 
 test('GET /users with empty Bearer token returns 200 with masked fields @security-authorization-get-users', async ({ request }) => {
@@ -28,14 +35,7 @@ test('GET /users with empty Bearer token returns 200 with masked fields @securit
   });
   const users = await response.json();
 
-  const user1 = users.find((u: { id: number }) => u.id === expectedUsersData.user1.id);
-  const user2 = users.find((u: { id: number }) => u.id === expectedUsersData.user2.id);
-
-  expect.soft(response.status()).toBe(200);
-  expect([
-    { email: user1.email, lastname: user1.lastname, password: user1.password },
-    { email: user2.email, lastname: user2.lastname, password: user2.password },
-  ]).toEqual([maskedUser, maskedUser]);
+  assertMaskedFields(users, response);
 });
 
 test('GET /users with wrong Bearer token returns 200 with masked fields @security-authorization-get-users', async ({ request }) => {
@@ -44,14 +44,7 @@ test('GET /users with wrong Bearer token returns 200 with masked fields @securit
   });
   const users = await response.json();
 
-  const user1 = users.find((u: { id: number }) => u.id === expectedUsersData.user1.id);
-  const user2 = users.find((u: { id: number }) => u.id === expectedUsersData.user2.id);
-
-  expect.soft(response.status()).toBe(200);
-  expect([
-    { email: user1.email, lastname: user1.lastname, password: user1.password },
-    { email: user2.email, lastname: user2.lastname, password: user2.password },
-  ]).toEqual([maskedUser, maskedUser]);
+  assertMaskedFields(users, response);
 });
 
 test('GET /users with wrong Basic auth returns 200 with masked fields @security-authorization-get-users', async ({ request }) => {
@@ -60,14 +53,7 @@ test('GET /users with wrong Basic auth returns 200 with masked fields @security-
   });
   const users = await response.json();
 
-  const user1 = users.find((u: { id: number }) => u.id === expectedUsersData.user1.id);
-  const user2 = users.find((u: { id: number }) => u.id === expectedUsersData.user2.id);
-
-  expect.soft(response.status()).toBe(200);
-  expect([
-    { email: user1.email, lastname: user1.lastname, password: user1.password },
-    { email: user2.email, lastname: user2.lastname, password: user2.password },
-  ]).toEqual([maskedUser, maskedUser]);
+  assertMaskedFields(users, response);
 });
 
 test('GET /users with valid Bearer token but without Cookie returns 200 with masked fields @security-authorization-get-users', async ({ request, accessToken }) => {
@@ -76,12 +62,5 @@ test('GET /users with valid Bearer token but without Cookie returns 200 with mas
   });
   const users = await response.json();
 
-  const user1 = users.find((u: { id: number }) => u.id === expectedUsersData.user1.id);
-  const user2 = users.find((u: { id: number }) => u.id === expectedUsersData.user2.id);
-
-  expect.soft(response.status()).toBe(200);
-  expect([
-    { email: user1.email, lastname: user1.lastname, password: user1.password },
-    { email: user2.email, lastname: user2.lastname, password: user2.password },
-  ]).toEqual([maskedUser, maskedUser]);
+  assertMaskedFields(users, response);
 });
