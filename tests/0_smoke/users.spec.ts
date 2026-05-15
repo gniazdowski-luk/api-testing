@@ -1,6 +1,6 @@
 import { test, expect } from '@tests/fixtures';
 
-test('GET /users status is OK @smoke', async ({ request, accessToken }) => {
+test('checks that the endpoint for retrieving users is accessible and returns a successful response @smoke', async ({ request, accessToken }) => {
   const response = await request.get('users', {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

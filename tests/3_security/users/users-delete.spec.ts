@@ -1,7 +1,7 @@
 import { test, expect } from '@tests/fixtures';
 import { securityUsersData } from '@test-data/users/users.security.data';
 
-test('DELETE /users without Authorization header returns 401 with error message @security-authorization-delete-users', async ({ request }) => {
+test('checks that missing authorization returns the correct status code and error message @security-authorization-delete-users', async ({ request }) => {
   const response = await request.delete('users');
   const body = await response.json();
 
@@ -9,7 +9,7 @@ test('DELETE /users without Authorization header returns 401 with error message 
   expect(response.status()).toBe(401);
 });
 
-test('DELETE /users with empty Bearer token returns 401 with error message @security-authorization-delete-users', async ({ request }) => {
+test('checks that an empty Bearer token returns the correct status code and error message @security-authorization-delete-users', async ({ request }) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
   });
@@ -19,7 +19,7 @@ test('DELETE /users with empty Bearer token returns 401 with error message @secu
   expect(response.status()).toBe(401);
 });
 
-test('DELETE /users with wrong Bearer token returns 401 with error message @security-authorization-delete-users', async ({ request }) => {
+test('checks that an invalid Bearer token returns the correct status code and error message @security-authorization-delete-users', async ({ request }) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
   });
@@ -29,7 +29,7 @@ test('DELETE /users with wrong Bearer token returns 401 with error message @secu
   expect(response.status()).toBe(401);
 });
 
-test('DELETE /users with wrong Basic auth returns 401 with error message @security-authorization-delete-users', async ({ request }) => {
+test('checks that wrong Basic auth returns the correct status code and error message @security-authorization-delete-users', async ({ request }) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
   });
@@ -39,7 +39,7 @@ test('DELETE /users with wrong Basic auth returns 401 with error message @securi
   expect(response.status()).toBe(401);
 });
 
-test('DELETE /users with valid Bearer token but without Cookie returns 401 with error message @security-authorization-delete-users', async ({ request, accessToken }) => {
+test('checks that a valid token without Cookie returns the correct status code and error message @security-authorization-delete-users', async ({ request, accessToken }) => {
   const response = await request.delete('users', {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

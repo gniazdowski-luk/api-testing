@@ -1,7 +1,7 @@
 import { test, expect } from '@tests/fixtures';
 import { securityUsersData } from '@test-data/users/users.security.data';
 
-test('PUT /users without Authorization header returns 401 with error message @security-authorization-put-users', async ({ request }) => {
+test('checks that missing authorization returns the correct status code and error message @security-authorization-put-users', async ({ request }) => {
   const response = await request.put('users', {
     data: securityUsersData.putUserPayload,
   });
@@ -11,7 +11,7 @@ test('PUT /users without Authorization header returns 401 with error message @se
   expect(response.status()).toBe(401);
 });
 
-test('PUT /users with empty Bearer token returns 401 with error message @security-authorization-put-users', async ({ request }) => {
+test('checks that an empty Bearer token returns the correct status code and error message @security-authorization-put-users', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
     data: securityUsersData.putUserPayload,
@@ -22,7 +22,7 @@ test('PUT /users with empty Bearer token returns 401 with error message @securit
   expect(response.status()).toBe(401);
 });
 
-test('PUT /users with wrong Bearer token returns 401 with error message @security-authorization-put-users', async ({ request }) => {
+test('checks that an invalid Bearer token returns the correct status code and error message @security-authorization-put-users', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
     data: securityUsersData.putUserPayload,
@@ -33,7 +33,7 @@ test('PUT /users with wrong Bearer token returns 401 with error message @securit
   expect(response.status()).toBe(401);
 });
 
-test('PUT /users with wrong Basic auth returns 401 with error message @security-authorization-put-users', async ({ request }) => {
+test('checks that wrong Basic auth returns the correct status code and error message @security-authorization-put-users', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
     data: securityUsersData.putUserPayload,
@@ -44,7 +44,7 @@ test('PUT /users with wrong Basic auth returns 401 with error message @security-
   expect(response.status()).toBe(401);
 });
 
-test('PUT /users with valid Bearer token but without Cookie returns 401 with error message @security-authorization-put-users', async ({ request, accessToken }) => {
+test('checks that a valid token without Cookie returns the correct status code and error message @security-authorization-put-users', async ({ request, accessToken }) => {
   const response = await request.put('users', {
     headers: { Authorization: `Bearer ${accessToken}` },
     data: securityUsersData.putUserPayload,

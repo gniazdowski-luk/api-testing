@@ -22,14 +22,14 @@ function assertMaskedFields(
   ]).toEqual([maskedUser, maskedUser]);
 }
 
-test('GET /users without Authorization header returns 200 with masked fields @security-authorization-get-users', async ({ request }) => {
+test('checks that unauthenticated access returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request }) => {
   const response = await request.get('users');
   const users = await response.json();
 
   assertMaskedFields(users, response);
 });
 
-test('GET /users with empty Bearer token returns 200 with masked fields @security-authorization-get-users', async ({ request }) => {
+test('checks that an empty Bearer token returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request }) => {
   const response = await request.get('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
   });
@@ -38,7 +38,7 @@ test('GET /users with empty Bearer token returns 200 with masked fields @securit
   assertMaskedFields(users, response);
 });
 
-test('GET /users with wrong Bearer token returns 200 with masked fields @security-authorization-get-users', async ({ request }) => {
+test('checks that an invalid Bearer token returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request }) => {
   const response = await request.get('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
   });
@@ -47,7 +47,7 @@ test('GET /users with wrong Bearer token returns 200 with masked fields @securit
   assertMaskedFields(users, response);
 });
 
-test('GET /users with wrong Basic auth returns 200 with masked fields @security-authorization-get-users', async ({ request }) => {
+test('checks that wrong Basic auth returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request }) => {
   const response = await request.get('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
   });
@@ -56,7 +56,7 @@ test('GET /users with wrong Basic auth returns 200 with masked fields @security-
   assertMaskedFields(users, response);
 });
 
-test('GET /users with valid Bearer token but without Cookie returns 200 with masked fields @security-authorization-get-users', async ({ request, accessToken }) => {
+test('checks that a valid token without Cookie returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request, accessToken }) => {
   const response = await request.get('users', {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

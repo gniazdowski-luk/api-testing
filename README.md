@@ -17,15 +17,15 @@ Install Playwright framework: `npx playwright install`
 
 ## Requirements
 
-- [Smoke tests](./requirements/smoke) - basic API tests to check if the endpoints are working.
+- [Smoke tests](./requirements/0_smoke.md) - basic API tests to check if the endpoints are working.
 
-- [Contract tests](./requirements/contract) - tests to check if the API responses match the expected contract.
+- [Contract tests](./requirements/1_contract.md) - tests to check if the API responses match the expected contract.
 
-- [Functional tests](./requirements/functional-users.md) - tests to check the functionality of the API endpoints.
+- [Functional tests](./requirements/2_functional-users.md) - tests to check the functionality of the API endpoints.
 
-- [Security tests](./requirements/security-users.md) - tests to check that sensitive fields are masked for unauthenticated or improperly authenticated requests.
+- [Security tests](./requirements/3_security-users.md) - tests to check that sensitive fields are masked for unauthenticated or improperly authenticated requests.
 
-- [Performance tests](./requirements/performance-users.md) - tests to check that endpoints respond within defined SLA thresholds.
+- [Performance tests](./requirements/4_performance-users.md) - tests to check that endpoints respond within defined SLA thresholds.
 
 ## Tests execution
 
@@ -42,3 +42,8 @@ Tests
 - [Performance tests](./tests/performance/): `npm run tests:performance`
 
 or run tests for specific requirement using tags, for example: `npx playwright test --grep @smoke`
+
+## Reporting
+
+After running tests with command `npx playwright test`, Playwright generates an HTML report. To open the report, run: `npx playwright show-report`
+

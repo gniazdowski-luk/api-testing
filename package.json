@@ -8,6 +8,7 @@
     "tests:smoke": "npx playwright test tests/smoke/",
     "tests:contract": "npx playwright test tests/contract/",
     "tests:functional": "npx playwright test tests/functional/",
+    "tests:security": "npx playwright test tests/security/",
     "tests:performance": "npx playwright test tests/performance/"
   },
   "repository": {

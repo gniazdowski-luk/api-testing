@@ -16,28 +16,29 @@ export default defineConfig({
     },
     {
       name: 'tests-smoke',
-      testDir: './tests/smoke',
+      testDir: './tests/0_smoke',
       dependencies: ['setup-authentication'],
     },
     {
       name: 'tests-contract',
-      testDir: './tests/contract',
+      testDir: './tests/1_contract',
       dependencies: ['setup-authentication']
     },
     {
       name: 'tests-functional',
-      testDir: './tests/functional',
+      testDir: './tests/2_functional',
       dependencies: ['setup-authentication'],
     },
     {
       name: 'tests-security',
-      testDir: './tests/security',
+      testDir: './tests/3_security',
       dependencies: ['setup-authentication'],
     },
     {
       name: 'tests-performance',
-      testDir: './tests/performance',
+      testDir: './tests/4_performance',
       dependencies: ['setup-authentication'],
     },
   ],
+  reporter: 'html',
 });
