@@ -22,8 +22,22 @@ applyTo: "**/*.spec.ts"
 # Tagging and Requirements Conventions
 
 - Every test must have at least one tag in its title (e.g. `@smoke`, `@functional-users`, `@contract-users`).
-- For every new test introduced (or edited), a corresponding requirement entry must be added (or edited) to the matching file in `requirements/` (e.g. `requirements/functional-users.md`, `requirements/smoke.md`, `requirements/contract.md`).
+- For every new test introduced (or edited), a corresponding requirement entry must be added (or edited) to the matching numbered file in `requirements/` (e.g. `requirements/0smoke.md`, `requirements/1contract.md`, `requirements/2functional-users.md`, `requirements/3security-users.md`, `requirements/4performance-users.md`).
 - Requirement entries must describe the behaviour being verified by the tagged test(s).
+- Requirement entries must follow this format — a `### Endpoint - SubCategory` subsection heading, then a tag header line, followed by one bullet per test:
+  ```
+  ### <Endpoint> - <SubCategory>
+
+  @tag - <Tag group description>:
+  - `test1 name as general description` - <test1 testing details with technical details/params>
+  - `test2 name as general description` - <test2 testing details with technical details/params>
+
+  ```
+- The general description in backticks must not contain specific values (e.g. status codes, error message strings, numeric thresholds); those belong in the technical details after the dash.
+- Backticks must only be used for the test name (the first part before the dash). Never use backticks anywhere in the description part (after the dash).
+- Never use HTML tag names (e.g. `<a>`, `<b>`, `<i>`, `<s>`, `<em>`) as placeholder variable names in requirement descriptions — they cause incorrect rendering in markdown preview. Use descriptive names instead (e.g. `<start>`, `<end>`, `<min>`, `<max>`).
+- Every requirement file must start with a top-level title (`# <Category> Requirements`) on the first line, followed by `## <Endpoint>` sections (e.g. `## Users`), then `### <Endpoint> - <SubCategory>` subsections (e.g. `### Users - Pagination`, `### Users - GET`), and finally `@tag` entries with their bullet points.
+- When a tag group is planned but has no tests yet, reserve its place with an HTML comment: `<!-- @tag-name -->`.
 
 # Test Documentation Conventions
 
