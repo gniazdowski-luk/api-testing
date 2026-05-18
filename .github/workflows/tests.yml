@@ -95,8 +95,8 @@ jobs:
 
   contract:
     name: Contract Tests
-    needs: smoke
-    if: github.event_name == 'workflow_dispatch'
+    needs: [smoke]
+    if: always() && needs.smoke.result == 'success'
     runs-on: ubuntu-latest
 
     services:
@@ -134,8 +134,8 @@ jobs:
 
   functional:
     name: Functional Tests
-    needs: contract
-    if: ${{ inputs.run_functional == true }}
+    needs: [smoke]
+    if: always() && github.event_name == 'workflow_dispatch' && inputs.run_functional == true && needs.smoke.result == 'success'
     runs-on: ubuntu-latest
 
     services:
@@ -173,8 +173,8 @@ jobs:
 
   security:
     name: Security Tests
-    needs: contract
-    if: ${{ inputs.run_security == true }}
+    needs: [smoke, functional]
+    if: always() && github.event_name == 'workflow_dispatch' && inputs.run_security == true && needs.smoke.result == 'success'
     runs-on: ubuntu-latest
 
     services:
@@ -212,8 +212,8 @@ jobs:
 
   performance:
     name: Performance Tests
-    needs: contract
-    if: ${{ inputs.run_performance == true }}
+    needs: [smoke, functional, security]
+    if: always() && github.event_name == 'workflow_dispatch' && inputs.run_performance == true && needs.smoke.result == 'success'
     runs-on: ubuntu-latest
 
     services:
