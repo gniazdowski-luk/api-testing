@@ -134,8 +134,8 @@ jobs:
 
   functional:
     name: Functional Tests
-    needs: [smoke]
-    if: always() && github.event_name == 'workflow_dispatch' && inputs.run_functional == true && needs.smoke.result == 'success'
+    needs: [smoke, contract]
+    if: always() && github.event_name == 'workflow_dispatch' && inputs.run_functional == true && needs.smoke.result == 'success' && needs.contract.result == 'success'
     runs-on: ubuntu-latest
 
     services:
