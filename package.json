@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "biome:check": "biome check .",
+    "biome:fix": "biome check --write --unsafe .",
     "setup": "playwright test --project=setup-authentication",
     "tests:smoke": "npx playwright test tests/smoke/",
     "tests:contract": "npx playwright test tests/contract/",
@@ -24,6 +26,7 @@
   },
   "homepage": "https://github.com/gniazdowski-luk/api-testing#readme",
   "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
     "@playwright/test": "^1.59.1",
     "@types/jsonschema": "^0.0.5",
     "@types/node": "^25.6.0",

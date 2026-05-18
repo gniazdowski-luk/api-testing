@@ -1,0 +1,9 @@
+name: Wait for GAD backend
+description: Waits for the local GAD service to become available
+
+runs:
+  using: composite
+  steps:
+    - name: Wait for GAD backend
+      shell: bash
+      run: npx wait-on http://localhost:3000 --timeout 60000

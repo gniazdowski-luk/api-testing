@@ -3,10 +3,17 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+const baseURLs: Record<string, string> = {
+  qa: 'http://localhost:3000/api/',
+  staging: 'https://staging.gad/api/',
+};
+
+const environment = (process.env.TEST_ENV ?? 'qa').toLowerCase();
+
 export default defineConfig({
   testDir: './tests',
   use: {
-    baseURL: 'http://localhost:3000/api/',
+    baseURL: baseURLs[environment] ?? baseURLs.qa,
   },
   projects: [
     {
@@ -22,7 +29,7 @@ export default defineConfig({
     {
       name: 'tests-contract',
       testDir: './tests/1_contract',
-      dependencies: ['setup-authentication']
+      dependencies: ['setup-authentication'],
     },
     {
       name: 'tests-functional',

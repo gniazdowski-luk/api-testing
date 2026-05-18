@@ -8,7 +8,11 @@ const canonicalContractUser = {
 
 export const contractUsersData = {
   missingRequiredFields: [
-    { id: canonicalContractUser.id, firstname: canonicalContractUser.firstname, lastname: canonicalContractUser.lastname }, // missing required 'email' and 'avatar'
+    {
+      id: canonicalContractUser.id,
+      firstname: canonicalContractUser.firstname,
+      lastname: canonicalContractUser.lastname,
+    }, // missing required 'email' and 'avatar'
   ],
   wrongFieldTypes: [
     { ...canonicalContractUser, email: 123, firstname: true }, // email and firstname are wrong types
