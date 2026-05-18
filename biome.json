@@ -1,0 +1,118 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "defaultBranch": "origin/main"
+  },
+  "files": {
+    "includes": ["**", "!**/.vscode", "!**/node_modules"]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 120,
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "expand": "auto"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              {
+                "type": true,
+                "source": [
+                  ":PACKAGE:",
+                  ":NODE:",
+                  "!@pages/**",
+                  "!@helpers/**",
+                  "!@typings/**",
+                  "!@fixtures/**",
+                  "!@components/**"
+                ]
+              },
+              { "type": true, "source": ["@pages/**", "@helpers/**", "@typings/**", "@fixtures/**", "@components/**"] },
+              ":BLANK_LINE:",
+              [":PACKAGE:", ":NODE:", "!@pages/**", "!@helpers/**", "!@typings/**", "!@fixtures/**", "!@components/**"],
+              ["@pages/**", "@helpers/**", "@typings/**", "@fixtures/**", "@components/**"]
+            ]
+          }
+        }
+      }
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noForEach": "off",
+        "noExtraBooleanCast": "off",
+        "noUselessSwitchCase": "off",
+        "noStaticOnlyClass": "off"
+      },
+      "style": {
+        "noInferrableTypes": "off",
+        "useBlockStatements": "off",
+        "noNonNullAssertion": "off",
+        "useEnumInitializers": "off",
+        "useImportType": {
+          "level": "error",
+          "options": { "style": "separatedType" }
+        },
+        "noParameterAssign": "off",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noUselessElse": "error",
+        "useNodejsImportProtocol": "error",
+        "noCommonJs": "error",
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": { "syntax": "shorthand" }
+        }
+      },
+      "correctness": {
+        "noUnusedFunctionParameters": "off",
+        "useExhaustiveDependencies": "off",
+        "noUnknownFunction": "off",
+        "noEmptyPattern": "off",
+        "noUnusedPrivateClassMembers": "off",
+        "noUnusedImports": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "error",
+        "noArrayIndexKey": "off",
+        "noThenProperty": "off",
+        "noAssignInExpressions": "off",
+        "useIterableCallbackReturn": "off",
+        "noEmptyBlockStatements": "error",
+        "noExportsInTest": "error",
+        "noConsole": "error",
+        "useAwait": "error"
+      },
+      "performance": {
+        "noAccumulatingSpread": "error"
+      }
+    }
+  }
+}

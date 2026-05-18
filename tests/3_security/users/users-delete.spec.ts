@@ -1,7 +1,9 @@
-import { test, expect } from '@tests/fixtures';
 import { securityUsersData } from '@test-data/users/users.security.data';
+import { expect, test } from '@tests/fixtures';
 
-test('checks that missing authorization returns the correct status code and error message @security-authorization-delete-users', async ({ request }) => {
+test('checks that missing authorization returns the correct status code and error message @security-authorization-delete-users', async ({
+  request,
+}) => {
   const response = await request.delete('users');
   const body = await response.json();
 
@@ -9,7 +11,9 @@ test('checks that missing authorization returns the correct status code and erro
   expect(response.status()).toBe(401);
 });
 
-test('checks that an empty Bearer token returns the correct status code and error message @security-authorization-delete-users', async ({ request }) => {
+test('checks that an empty Bearer token returns the correct status code and error message @security-authorization-delete-users', async ({
+  request,
+}) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
   });
@@ -19,7 +23,9 @@ test('checks that an empty Bearer token returns the correct status code and erro
   expect(response.status()).toBe(401);
 });
 
-test('checks that an invalid Bearer token returns the correct status code and error message @security-authorization-delete-users', async ({ request }) => {
+test('checks that an invalid Bearer token returns the correct status code and error message @security-authorization-delete-users', async ({
+  request,
+}) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
   });
@@ -29,7 +35,9 @@ test('checks that an invalid Bearer token returns the correct status code and er
   expect(response.status()).toBe(401);
 });
 
-test('checks that wrong Basic auth returns the correct status code and error message @security-authorization-delete-users', async ({ request }) => {
+test('checks that wrong Basic auth returns the correct status code and error message @security-authorization-delete-users', async ({
+  request,
+}) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
   });
@@ -39,7 +47,10 @@ test('checks that wrong Basic auth returns the correct status code and error mes
   expect(response.status()).toBe(401);
 });
 
-test('checks that a valid token without Cookie returns the correct status code and error message @security-authorization-delete-users', async ({ request, accessToken }) => {
+test('checks that a valid token without Cookie returns the correct status code and error message @security-authorization-delete-users', async ({
+  request,
+  accessToken,
+}) => {
   const response = await request.delete('users', {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

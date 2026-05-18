@@ -1,6 +1,6 @@
-import { test, expect } from '@tests/fixtures';
 import expectedUsersData from '@test-data/users/users.data.json';
 import { securityUsersData } from '@test-data/users/users.security.data';
+import { expect, test } from '@tests/fixtures';
 
 const maskedUser = {
   email: securityUsersData.maskedEmail,
@@ -10,7 +10,7 @@ const maskedUser = {
 
 function assertMaskedFields(
   users: { id: number; email: string; lastname: string; password: string }[],
-  response: { status: () => number },
+  response: { status: () => number }
 ) {
   const user1 = users.find((u) => u.id === expectedUsersData.user1.id);
   const user2 = users.find((u) => u.id === expectedUsersData.user2.id);
@@ -22,14 +22,18 @@ function assertMaskedFields(
   ]).toEqual([maskedUser, maskedUser]);
 }
 
-test('checks that unauthenticated access returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request }) => {
+test('checks that unauthenticated access returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  request,
+}) => {
   const response = await request.get('users');
   const users = await response.json();
 
   assertMaskedFields(users, response);
 });
 
-test('checks that an empty Bearer token returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request }) => {
+test('checks that an empty Bearer token returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  request,
+}) => {
   const response = await request.get('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
   });
@@ -38,7 +42,9 @@ test('checks that an empty Bearer token returns the correct status code with mas
   assertMaskedFields(users, response);
 });
 
-test('checks that an invalid Bearer token returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request }) => {
+test('checks that an invalid Bearer token returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  request,
+}) => {
   const response = await request.get('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
   });
@@ -47,7 +53,9 @@ test('checks that an invalid Bearer token returns the correct status code with m
   assertMaskedFields(users, response);
 });
 
-test('checks that wrong Basic auth returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request }) => {
+test('checks that wrong Basic auth returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  request,
+}) => {
   const response = await request.get('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
   });
@@ -56,7 +64,10 @@ test('checks that wrong Basic auth returns the correct status code with masked s
   assertMaskedFields(users, response);
 });
 
-test('checks that a valid token without Cookie returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({ request, accessToken }) => {
+test('checks that a valid token without Cookie returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  request,
+  accessToken,
+}) => {
   const response = await request.get('users', {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

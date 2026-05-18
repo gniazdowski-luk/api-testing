@@ -1,7 +1,7 @@
-import { test as setup, expect } from '@playwright/test';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { expect, test as setup } from '@playwright/test';
 import * as dotenv from 'dotenv';
-import * as fs from 'fs';
-import * as path from 'path';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
@@ -20,5 +20,8 @@ setup('authenticate', async ({ request }) => {
   const { access_token } = await response.json();
 
   fs.mkdirSync(path.dirname(AUTH_FILE), { recursive: true });
-  fs.writeFileSync(AUTH_FILE, JSON.stringify({ accessToken: access_token, userId: Number(process.env.AUTHENTICATION_ID) }));
+  fs.writeFileSync(
+    AUTH_FILE,
+    JSON.stringify({ accessToken: access_token, userId: Number(process.env.AUTHENTICATION_ID) })
+  );
 });

@@ -1,6 +1,6 @@
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { test as base } from '@playwright/test';
-import * as fs from 'fs';
-import * as path from 'path';
 
 const AUTH_FILE = path.join(__dirname, '../setup/authentication/.auth/user.json');
 

@@ -1,0 +1,250 @@
+name: tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment (qa | staging)'
+        type: choice
+        options:
+          - qa
+          - staging
+        default: qa
+      run_functional:
+        description: Run functional tests
+        type: boolean
+        default: false
+      run_security:
+        description: Run security tests
+        type: boolean
+        default: false
+      run_performance:
+        description: Run performance tests
+        type: boolean
+        default: false
+  pull_request:
+    branches:
+      - main
+
+env:
+  AUTHENTICATION_ID: ${{ secrets.AUTHENTICATION_ID }}
+  AUTHENTICATION_EMAIL: ${{ secrets.AUTHENTICATION_EMAIL }}
+  AUTHENTICATION_PASSWORD: ${{ secrets.AUTHENTICATION_PASSWORD }}
+  TEST_ENV: ${{ inputs.environment || 'qa' }}
+
+jobs:
+  quality:
+    name: Quality Check
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Biome check
+        run: npm run biome:check
+
+  smoke:
+    name: Smoke Tests
+    needs: quality
+    if: always() && (needs.quality.result == 'success' || needs.quality.result == 'skipped')
+    runs-on: ubuntu-latest
+
+    services:
+      gad:
+        image: jaktestowac/gad
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Wait for GAD backend
+        uses: ./.github/actions/wait-for-gad
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run smoke tests
+        run: npx playwright test --project=setup-authentication --project=tests-smoke
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-smoke
+          path: playwright-report/
+          retention-days: 7
+
+  contract:
+    name: Contract Tests
+    needs: smoke
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    services:
+      gad:
+        image: jaktestowac/gad
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Wait for GAD backend
+        uses: ./.github/actions/wait-for-gad
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run contract tests
+        run: npx playwright test --project=setup-authentication --project=tests-contract
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-contract
+          path: playwright-report/
+          retention-days: 7
+
+  functional:
+    name: Functional Tests
+    needs: contract
+    if: ${{ inputs.run_functional == true }}
+    runs-on: ubuntu-latest
+
+    services:
+      gad:
+        image: jaktestowac/gad
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Wait for GAD backend
+        uses: ./.github/actions/wait-for-gad
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run functional tests
+        run: npx playwright test --project=setup-authentication --project=tests-functional
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-functional
+          path: playwright-report/
+          retention-days: 7
+
+  security:
+    name: Security Tests
+    needs: contract
+    if: ${{ inputs.run_security == true }}
+    runs-on: ubuntu-latest
+
+    services:
+      gad:
+        image: jaktestowac/gad
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Wait for GAD backend
+        uses: ./.github/actions/wait-for-gad
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security tests
+        run: npx playwright test --project=setup-authentication --project=tests-security
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-security
+          path: playwright-report/
+          retention-days: 7
+
+  performance:
+    name: Performance Tests
+    needs: contract
+    if: ${{ inputs.run_performance == true }}
+    runs-on: ubuntu-latest
+
+    services:
+      gad:
+        image: jaktestowac/gad
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Wait for GAD backend
+        uses: ./.github/actions/wait-for-gad
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run performance tests
+        run: npx playwright test --project=setup-authentication --project=tests-performance
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-performance
+          path: playwright-report/
+          retention-days: 7

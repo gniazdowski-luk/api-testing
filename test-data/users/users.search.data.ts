@@ -11,6 +11,6 @@ export const searchUsersData = {
     expectedIds: [3, 9],
   },
   noMatchFirstnameLike: 'NoMatchXYZ',
-  specialCharMatch: '%40',   // decoded '@' - present in all email fields
+  specialCharMatch: '%40', // decoded '@' - present in all email fields
   specialCharNoMatch: '%2B', // decoded '+' - not present in any user field
 };
