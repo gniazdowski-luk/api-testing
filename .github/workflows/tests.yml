@@ -80,7 +80,7 @@ jobs:
 
   pr-tests:
     name: PR Changed Tests
-    needs: [quality, detect-changes]
+    needs: [quality, detect-changes, contract]
     if: github.event_name == 'pull_request' && needs.detect-changes.outputs.has_tests == 'true'
     runs-on: ubuntu-latest
 
