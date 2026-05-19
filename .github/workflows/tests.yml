@@ -125,7 +125,6 @@ jobs:
 
     services:
       gad:
-        if: ${{ inputs.environment == 'qa' }}
         image: jaktestowac/gad
         ports:
           - 3000:3000
@@ -166,7 +165,6 @@ jobs:
 
     services:
       gad:
-        if: ${{ inputs.environment == 'qa' }}
         image: jaktestowac/gad
         ports:
           - 3000:3000
@@ -207,7 +205,6 @@ jobs:
 
     services:
       gad:
-        if: ${{ inputs.environment == 'qa' }}
         image: jaktestowac/gad
         ports:
           - 3000:3000
@@ -248,7 +245,6 @@ jobs:
 
     services:
       gad:
-        if: ${{ inputs.environment == 'qa' }}
         image: jaktestowac/gad
         ports:
           - 3000:3000
@@ -289,7 +285,6 @@ jobs:
 
     services:
       gad:
-        if: ${{ inputs.environment == 'qa' }}
         image: jaktestowac/gad
         ports:
           - 3000:3000
