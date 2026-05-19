@@ -8,9 +8,9 @@ async function fetchAllUsers(request: APIRequestContext, headers: Record<string,
   return response.json();
 }
 
-import { avatarData } from '@test-data/users/users.schema';
 import { filteringUsersData } from '@test-data/users/users.filtering.data';
 import { paginationOffsetData, paginationPageData } from '@test-data/users/users.pagination.data';
+import { avatarData } from '@test-data/users/users.schema';
 import { searchUsersData } from '@test-data/users/users.search.data';
 
 const PAGE_LIMIT = paginationPageData.limit;
@@ -364,7 +364,6 @@ test('checks that all users with a non-empty avatar have a correct avatar path @
 
   expect(usersWithCorrectPath.length).toBe(usersWithAvatar.length);
 });
-
 
 test('checks that requesting a page beyond the total number of pages returns the correct status code @functional-users-pagination', async ({
   request,
