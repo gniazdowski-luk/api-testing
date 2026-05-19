@@ -33,6 +33,30 @@ env:
   TEST_ENV: ${{ inputs.environment || 'qa' }}
 
 jobs:
+  detect-changes:
+    name: Detect Changed Tests
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    outputs:
+      test_files: ${{ steps.changed.outputs.test_files }}
+      has_tests: ${{ steps.changed.outputs.has_tests }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Find changed test files
+        id: changed
+        run: |
+          FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'tests/**/*.spec.ts' | tr '\n' ' ')
+          echo "test_files=$FILES" >> $GITHUB_OUTPUT
+          if [ -n "$FILES" ]; then
+            echo "has_tests=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_tests=false" >> $GITHUB_OUTPUT
+          fi
+
   quality:
     name: Quality Check
     if: github.event_name == 'pull_request'
@@ -53,6 +77,45 @@ jobs:
 
       - name: Run Biome check
         run: npm run biome:check
+
+  pr-tests:
+    name: PR Changed Tests
+    needs: [quality, detect-changes, contract]
+    if: github.event_name == 'pull_request' && needs.detect-changes.outputs.has_tests == 'true'
+    runs-on: ubuntu-latest
+
+    services:
+      gad:
+        image: jaktestowac/gad
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Wait for GAD backend
+        uses: ./.github/actions/wait-for-gad
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run changed tests
+        run: npx playwright test ${{ needs.detect-changes.outputs.test_files }}
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-pr
+          path: playwright-report/
+          retention-days: 7
 
   smoke:
     name: Smoke Tests
@@ -77,6 +140,7 @@ jobs:
           cache: npm
 
       - name: Wait for GAD backend
+        if: ${{ inputs.environment == 'qa' }}
         uses: ./.github/actions/wait-for-gad
 
       - name: Install dependencies
@@ -116,6 +180,7 @@ jobs:
           cache: npm
 
       - name: Wait for GAD backend
+        if: ${{ inputs.environment == 'qa' }}
         uses: ./.github/actions/wait-for-gad
 
       - name: Install dependencies
@@ -155,6 +220,7 @@ jobs:
           cache: npm
 
       - name: Wait for GAD backend
+        if: ${{ inputs.environment == 'qa' }}
         uses: ./.github/actions/wait-for-gad
 
       - name: Install dependencies
@@ -194,6 +260,7 @@ jobs:
           cache: npm
 
       - name: Wait for GAD backend
+        if: ${{ inputs.environment == 'qa' }}
         uses: ./.github/actions/wait-for-gad
 
       - name: Install dependencies
@@ -233,6 +300,7 @@ jobs:
           cache: npm
 
       - name: Wait for GAD backend
+        if: ${{ inputs.environment == 'qa' }}
         uses: ./.github/actions/wait-for-gad
 
       - name: Install dependencies

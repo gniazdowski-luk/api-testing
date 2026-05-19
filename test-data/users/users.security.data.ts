@@ -7,6 +7,4 @@ export const securityUsersData = {
   maskedPassword: '****',
   accessTokenNotProvided: 'Access token not provided!',
   accessTokenInvalid: 'Access token for given user is invalid!',
-  putUserPayload: { firstname: 'Test' },
-  patchUserPayload: { firstname: 'Test' },
 };
