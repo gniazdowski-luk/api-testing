@@ -1,3 +1,4 @@
+import { usersPayloadsData } from '@test-data/users/users.payloads.data';
 import { securityUsersData } from '@test-data/users/users.security.data';
 import { expect, test } from '@tests/fixtures';
 
@@ -5,7 +6,7 @@ test('checks that missing authorization returns the correct status code and erro
   request,
 }) => {
   const response = await request.patch('users', {
-    data: securityUsersData.patchUserPayload,
+    data: usersPayloadsData.patch,
   });
   const body = await response.json();
 
@@ -18,7 +19,7 @@ test('checks that an empty Bearer token returns the correct status code and erro
 }) => {
   const response = await request.patch('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
-    data: securityUsersData.patchUserPayload,
+    data: usersPayloadsData.patch,
   });
   const body = await response.json();
 
@@ -31,7 +32,7 @@ test('checks that an invalid Bearer token returns the correct status code and er
 }) => {
   const response = await request.patch('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
-    data: securityUsersData.patchUserPayload,
+    data: usersPayloadsData.patch,
   });
   const body = await response.json();
 
@@ -44,7 +45,7 @@ test('checks that wrong Basic auth returns the correct status code and error mes
 }) => {
   const response = await request.patch('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
-    data: securityUsersData.patchUserPayload,
+    data: usersPayloadsData.patch,
   });
   const body = await response.json();
 
@@ -58,7 +59,7 @@ test('checks that a valid token without Cookie returns the correct status code a
 }) => {
   const response = await request.patch('users', {
     headers: { Authorization: `Bearer ${accessToken}` },
-    data: securityUsersData.patchUserPayload,
+    data: usersPayloadsData.patch,
   });
   const body = await response.json();
 

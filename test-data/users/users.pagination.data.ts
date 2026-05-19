@@ -1,3 +1,8 @@
+export const paginationPageData = {
+  limit: 5,
+  beyondLastPage: 9999,
+};
+
 export const paginationOffsetData = {
   offsetLimit: {
     start: 5,

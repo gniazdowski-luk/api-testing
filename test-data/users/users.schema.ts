@@ -15,3 +15,7 @@ export const usersSchema = {
   type: 'array',
   items: userSchema,
 };
+
+export const avatarData = {
+  correctAvatarPath: '.\\data\\users\\',
+};

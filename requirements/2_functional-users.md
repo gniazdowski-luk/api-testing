@@ -28,19 +28,34 @@
 
 @functional-users-filtering - Functional tests for users filtering:
 - `checks that filtering by firstname returns only exact matches` - GET /users?firstname=<value> returns only users with matching firstname.
-- `checks that filtering with a non-existent value returns the correct status code` - GET /users?firstname=<value> with no matching user responds with 404.
 - `checks that multiple filters are combined with AND logic` - GET /users?firstname=<value>&lastname=<value> applies AND logic.
 - `checks that repeating the same parameter applies OR logic` - GET /users?id=<id1>&id=<id2> applies OR logic.
 - `checks that range filtering returns only users within the inclusive ID range` - GET /users?id_gte=<min>&id_lte=<max> returns users within inclusive range.
-- `checks that an empty ID range returns the correct status code` - GET /users?id_gte=<min>&id_lte=<max> with no users in range responds with 404.
 - `checks that unrecognized query parameters are ignored and all users are returned` - GET /users with unrecognized param returns all users.
 
 ### Users - Search
 
 @functional-users-search - Functional tests for users search:
 - `checks that full-text search returns only users where at least one field matches` - GET /users?q=<text> returns only users matching the search text.
-- `checks that a non-matching full-text search returns the correct status code` - GET /users?q=<text> with no matching user responds with 404.
 - `checks that an empty search string returns all users` - GET /users?q= with empty string returns all users.
 - `checks that partial firstname matching returns the correct users` - GET /users?firstname_like=<pattern> returns users with matching firstname (case-insensitive).
-- `checks that a no-match partial firstname search returns the correct status code` - GET /users?firstname_like=<pattern> with no matching user responds with 404.
 - `checks that URL-encoded special characters are treated as literal search values` - GET /users?q=<url-encoded-special-chars> treats decoded value as literal search (no server errors).
+
+### Users - Data
+
+@functional-users-data - Functional tests for users data field validation:
+- `checks that all users with a non-empty avatar have a correct avatar path` - GET /users returns all users; users filtered by non-empty avatar must equal users filtered by avatar path starting with .\data\users\.
+
+### Users - Negative
+
+@functional-users-negative - Functional tests for negative and edge-case scenarios:
+- `checks that requesting a page beyond the total number of pages returns the correct status code` - GET /users?_page=<beyond-last>&_limit=<n> with a page number exceeding total pages responds with 404.
+- `checks that requesting with a zero limit returns the correct status code` - GET /users?_limit=0 responds with 404.
+- `checks that an invalid sort order value falls back to ascending alphabetical order` - GET /users?_sort=firstname&_order=invalid with an unrecognised _order value falls back to ascending order.
+- `checks that filtering with a non-existent value returns the correct status code` - GET /users?firstname=<value> with no matching user responds with 404.
+- `checks that an empty ID range returns the correct status code` - GET /users?id_gte=<min>&id_lte=<max> with no users in range responds with 404.
+- `checks that an inverted ID range returns the correct status code` - GET /users?id_gte=<min>&id_lte=<max> where min > max so no user can satisfy both conditions, responds with 404.
+- `checks that a non-matching full-text search returns the correct status code` - GET /users?q=<text> with no matching user responds with 404.
+- `checks that a no-match partial firstname search returns the correct status code` - GET /users?firstname_like=<pattern> with no matching user responds with 404.
+
+

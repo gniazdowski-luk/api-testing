@@ -35,15 +35,35 @@ Setup
 
 Tests
 
-- [Smoke tests](./tests/smoke/): `npm run tests:smoke`
-- [Contract tests](./tests/contract/): `npm run tests:contract`
-- [Functional tests](./tests/functional/): `npm run tests:functional`
-- [Security tests](./tests/security/): `npm run tests:security`
-- [Performance tests](./tests/performance/): `npm run tests:performance`
+- [Smoke tests](./tests/0_smoke/): `npm run tests:smoke`
+- [Contract tests](./tests/1_contract/): `npm run tests:contract`
+- [Functional tests](./tests/2_functional/): `npm run tests:functional`
+- [Security tests](./tests/3_security/): `npm run tests:security`
+- [Performance tests](./tests/4_performance/): `npm run tests:performance`
 
 or run tests for specific requirement using tags, for example: `npx playwright test --grep @smoke`
 
 ## Reporting
 
 After running tests with command `npx playwright test`, Playwright generates an HTML report. To open the report, run: `npx playwright show-report`
+
+## Code Formatting and Linting
+
+This project uses [Biome](https://biomejs.dev/) for code formatting and linting. Biome ensures consistent code style and helps catch common issues.
+
+- Check for issues: `npm run biome:check`
+- Automatically fix issues: `npm run biome:fix`
+
+## Continuous Integration (CI)
+
+This project uses a CI pipeline to ensure code quality and reliability. The pipeline automatically runs (on QA environment)the following checks on every pull request:
+
+- Code formatting and linting using Biome.
+- Smoke and Contract tests.
+
+### Manual Trigger
+
+Functional, Security and Performance tests are not run automatically on pull requests. These tests can be triggered manually for specific branches and environments by enabling the respective options in the CI pipeline.
+
+
 

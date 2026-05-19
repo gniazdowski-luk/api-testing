@@ -8,11 +8,12 @@ async function fetchAllUsers(request: APIRequestContext, headers: Record<string,
   return response.json();
 }
 
+import { avatarData } from '@test-data/users/users.schema';
 import { filteringUsersData } from '@test-data/users/users.filtering.data';
-import { paginationOffsetData } from '@test-data/users/users.pagination.data';
+import { paginationOffsetData, paginationPageData } from '@test-data/users/users.pagination.data';
 import { searchUsersData } from '@test-data/users/users.search.data';
 
-const PAGE_LIMIT = 5;
+const PAGE_LIMIT = paginationPageData.limit;
 
 test('checks that the response includes two specific users with correct fields @functional-users', async ({
   request,
@@ -350,4 +351,66 @@ test('checks that range-based pagination returns exactly b-a users @functional-u
   const users = await response.json();
 
   expect(users).toHaveLength(end - start);
+});
+
+test('checks that all users with a non-empty avatar have a correct avatar path @functional-users-data', async ({
+  request,
+  authHeaders,
+}) => {
+  const allUsers = await fetchAllUsers(request, authHeaders);
+
+  const usersWithAvatar = (allUsers as { avatar: string }[]).filter((u) => u.avatar !== '');
+  const usersWithCorrectPath = usersWithAvatar.filter((u) => u.avatar.startsWith(avatarData.correctAvatarPath));
+
+  expect(usersWithCorrectPath.length).toBe(usersWithAvatar.length);
+});
+
+
+test('checks that requesting a page beyond the total number of pages returns the correct status code @functional-users-pagination', async ({
+  request,
+  authHeaders,
+}) => {
+  const response = await request.get(`users?_page=${paginationPageData.beyondLastPage}&_limit=${PAGE_LIMIT}`, {
+    headers: authHeaders,
+  });
+
+  expect(response.status()).toBe(404);
+});
+
+test('checks that requesting with a zero limit returns the correct status code @functional-users-pagination', async ({
+  request,
+  authHeaders,
+}) => {
+  const response = await request.get('users?_limit=0', {
+    headers: authHeaders,
+  });
+
+  expect(response.status()).toBe(404);
+});
+
+test('checks that an invalid sort order value falls back to ascending alphabetical order @functional-users-sorting', async ({
+  request,
+  authHeaders,
+}) => {
+  const response = await request.get('users?_sort=firstname&_order=invalid', {
+    headers: authHeaders,
+  });
+
+  const users = await response.json();
+  const firstnames = users.map((u: { firstname: string }) => u.firstname);
+  const sortedAsc = [...firstnames].sort();
+
+  expect(firstnames).toEqual(sortedAsc);
+});
+
+test('checks that an inverted ID range returns the correct status code @functional-users-filtering', async ({
+  request,
+  authHeaders,
+}) => {
+  const data = filteringUsersData.idRange;
+  const response = await request.get(`users?id_gte=${data.max}&id_lte=${data.min}`, {
+    headers: authHeaders,
+  });
+
+  expect(response.status()).toBe(404);
 });
