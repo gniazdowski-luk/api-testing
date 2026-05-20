@@ -260,15 +260,21 @@ test('checks that partial firstname matching returns the correct users @function
   request,
   authHeaders,
 }) => {
-  const data = searchUsersData.firstnameLike;
-  const response = await request.get(`users?firstname_like=${data.pattern}`, {
-    headers: authHeaders,
-  });
+  const pattern = searchUsersData.firstnameLikePattern;
 
-  const users = await response.json();
-  const userIds = users.map((u: { id: number }) => u.id);
+  const [apiResponse, allUsers] = await Promise.all([
+    request.get(`users?firstname_like=${pattern}`, { headers: authHeaders }),
+    fetchAllUsers(request, authHeaders),
+  ]);
 
-  expect(userIds).toEqual(data.expectedIds);
+  const apiUsers = await apiResponse.json();
+  const apiIds = apiUsers.map((u: { id: number }) => u.id);
+
+  const localIds = (allUsers as { id: number; firstname: string }[])
+    .filter((u) => new RegExp(pattern, 'i').test(u.firstname))
+    .map((u) => u.id);
+
+  expect(apiIds).toEqual(localIds);
 });
 
 test('checks that a no-match partial firstname search returns the correct status code @functional-users-search', async ({

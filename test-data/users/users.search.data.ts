@@ -6,10 +6,7 @@ export const searchUsersData = {
     expectedIds: [usersData.user1.id],
   },
   noMatchQuery: 'NonExistentXYZ123',
-  firstnameLike: {
-    pattern: 'Dar',
-    expectedIds: [3, 9],
-  },
+  firstnameLikePattern: 'Dar',
   noMatchFirstnameLike: 'NoMatchXYZ',
   specialCharMatch: '%40', // decoded '@' - present in all email fields
   specialCharNoMatch: '%2B', // decoded '+' - not present in any user field
