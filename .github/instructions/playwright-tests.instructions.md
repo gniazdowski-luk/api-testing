@@ -36,13 +36,19 @@ applyTo: "**/*.spec.ts"
 - The general description in backticks must not contain specific values (e.g. status codes, error message strings, numeric thresholds); those belong in the technical details after the dash.
 - Backticks must only be used for the test name (the first part before the dash). Never use backticks anywhere in the description part (after the dash).
 - Never use HTML tag names (e.g. `<a>`, `<b>`, `<i>`, `<s>`, `<em>`) as placeholder variable names in requirement descriptions — they cause incorrect rendering in markdown preview. Use descriptive names instead (e.g. `<start>`, `<end>`, `<min>`, `<max>`).
-- Every requirement file must start with a top-level title (`# <Category> Requirements`) on the first line, followed by `## <Endpoint>` sections (e.g. `## Users`), then `### <Endpoint> - <SubCategory>` subsections (e.g. `### Users - Pagination`, `### Users - GET`), and finally `@tag` entries with their bullet points.
+- Every requirement file must start with a top-level title (`# <Category> Requirements`) on the first line, followed by `## <Endpoint>` sections (e.g. `## Users`), then `### <HTTP Method> /<endpoint> - <SubCategory>` subsections (e.g. `### GET /users - Pagination`, `### GET /users - Core`), and finally `@tag` entries with their bullet points.
 - When a tag group is planned but has no tests yet, reserve its place with an HTML comment: `<!-- @tag-name -->`.
+- Tests must appear in the same order within each spec file as their corresponding requirement entries appear in the matching `requirements/` file. This applies both to the order of test sections (e.g. Core, Pagination, Sorting) and to the order of individual tests within each section.
+
+# Test Structure Conventions
+
+- When a spec file contains tests from multiple distinct sub-categories (identified by different tag suffixes, e.g. `@tag-name-pagination`, `@tag-name-negative`), wrap each sub-category's tests in a `test.describe` block. Name each block after the sub-category (e.g. `'Core'`, `'Pagination'`, `'Negative'`).
 
 # Test Documentation Conventions
 
 - Do not repeat test data structures across tests; store all test payloads and mock data in the `test-data/` directory and import them via the `@test-data/*` alias.
 - Do not repeat setup logic across tests; extract shared setup into Playwright fixtures in `tests/fixtures.ts`.
+- Do not create per-spec utility helper functions (e.g. request measurement wrappers); extract them to `tests/helpers.ts` and import via `@tests/helpers`.
 - Do not instantiate shared utilities (e.g. `Validator`) inside individual test blocks; declare them once at module scope or inside a shared fixture.
 - Do not duplicate shared entities (e.g. user records, IDs, names) across multiple test-data files. Define them once in a canonical file (e.g. `test-data/users/users.data.json`) and import that file wherever the same values are needed.
 

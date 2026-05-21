@@ -6,6 +6,8 @@ export const performanceData = {
     paginatedEndpoint: 500,
     searchEndpoint: 800,
     unauthenticated: 500,
+    postCreate: 1000,
+    postDuplicateRejection: 500,
   },
   pagination: {
     page: 1,
