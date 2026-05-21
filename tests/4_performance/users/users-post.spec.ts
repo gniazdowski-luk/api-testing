@@ -1,11 +1,9 @@
-import { buildUserPayload } from '@test-data/users/users.post.data';
 import { performanceData } from '@test-data/users/users.performance.data';
+import { buildUserPayload } from '@test-data/users/users.post.data';
 import { expect, test } from '@tests/fixtures';
 import { measureRequest } from '@tests/helpers';
 
-test('checks that creating a new user responds within the defined SLA @performance-users-post', async ({
-  request,
-}) => {
+test('checks that creating a new user responds within the defined SLA @performance-users-post', async ({ request }) => {
   const { response, elapsed } = await measureRequest(() => request.post('users', { data: buildUserPayload() }));
 
   expect.soft(response.status()).toBe(201);
