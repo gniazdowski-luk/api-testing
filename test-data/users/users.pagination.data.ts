@@ -13,4 +13,8 @@ export const paginationOffsetData = {
     start: 2,
     end: 7,
   },
+  offsetBeyondTotal: {
+    start: 99999,
+    limit: 5,
+  },
 };

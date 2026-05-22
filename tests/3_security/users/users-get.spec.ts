@@ -107,3 +107,30 @@ test.describe('CORS', () => {
     expect(response.headers()['access-control-allow-headers']).toBeTruthy();
   });
 });
+
+test.describe('Security Headers', () => {
+  test('checks that the response includes the X-Content-Type-Options header @security-headers-users', async ({
+    request,
+  }) => {
+    const response = await request.get('users');
+
+    expect(response.headers()['x-content-type-options']).toBe('nosniff');
+  });
+
+  test('checks that the response includes the X-Frame-Options header @security-headers-users', async ({
+    request,
+  }) => {
+    const response = await request.get('users');
+
+    expect(['DENY', 'SAMEORIGIN']).toContain(response.headers()['x-frame-options']);
+  });
+
+  test('checks that the response includes a Content-Security-Policy header @security-headers-users', async ({
+    request,
+  }) => {
+    const response = await request.get('users');
+
+    expect(response.headers()['content-security-policy']).toBeTruthy();
+  });
+});
+

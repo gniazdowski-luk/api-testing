@@ -1,10 +1,13 @@
 import {
   buildUserPayload,
   buildUserPayloadWithBirthDate,
+  postEmptyFieldData,
+  postInvalidBirthDateData,
   postInvalidEmailFormatData,
   postInvalidTypeData,
   postMissingFieldData,
   postNegativeData,
+  postNullFieldData,
 } from '@test-data/users/users.post.data';
 import { expect, test } from '@tests/fixtures';
 
@@ -292,5 +295,85 @@ test.describe('Negative', () => {
     });
 
     expect(response.status()).toBe(422);
+  });
+
+  test('checks that creating a user with an empty firstname string returns the correct status code @functional-users-post-negative', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: postEmptyFieldData.emptyFirstname,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('checks that creating a user with an empty lastname string returns the correct status code @functional-users-post-negative', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: postEmptyFieldData.emptyLastname,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('checks that creating a user with an empty email string returns the correct status code @functional-users-post-negative', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: postEmptyFieldData.emptyEmail,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('checks that creating a user with an empty password string returns the correct status code @functional-users-post-negative', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: postEmptyFieldData.emptyPassword,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('checks that creating a user with an empty avatar string returns the correct status code @functional-users-post-negative', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: postEmptyFieldData.emptyAvatar,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('checks that creating a user with a null firstname returns the correct status code @functional-users-post-negative', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: postNullFieldData.nullFirstname,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('checks that creating a user with a null email returns the correct status code @functional-users-post-negative', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: postNullFieldData.nullEmail,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('checks that creating a user with an invalid birthDate format returns the correct status code @functional-users-post-negative', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: postInvalidBirthDateData.nonIso8601,
+    });
+
+    expect(response.status()).toBe(201);
   });
 });

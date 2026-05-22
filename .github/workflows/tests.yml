@@ -34,7 +34,7 @@ env:
 
 jobs:
   detect-changes:
-    name: Detect Changed Tests
+    name: Detect changed tests
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     outputs:
@@ -79,7 +79,7 @@ jobs:
         run: npm run biome:check
 
   pr-tests:
-    name: PR Changed Tests
+    name: PR Tests
     needs: [quality, detect-changes, contract]
     if: github.event_name == 'pull_request' && needs.detect-changes.outputs.has_tests == 'true'
     runs-on: ubuntu-latest

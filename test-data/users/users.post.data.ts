@@ -52,3 +52,20 @@ export const postMissingFieldData = {
   missingPassword: buildPayloadWithout('password'),
   missingAvatar: buildPayloadWithout('avatar'),
 };
+
+export const postEmptyFieldData = {
+  emptyFirstname: { ...buildUserPayload(), firstname: '' },
+  emptyLastname: { ...buildUserPayload(), lastname: '' },
+  emptyEmail: { ...buildUserPayload(), email: '' },
+  emptyPassword: { ...buildUserPayload(), password: '' },
+  emptyAvatar: { ...buildUserPayload(), avatar: '' },
+};
+
+export const postNullFieldData = {
+  nullFirstname: { ...buildUserPayload(), firstname: null },
+  nullEmail: { ...buildUserPayload(), email: null },
+};
+
+export const postInvalidBirthDateData = {
+  nonIso8601: { ...buildUserPayload(), birthDate: '2000-01-01' },
+};
