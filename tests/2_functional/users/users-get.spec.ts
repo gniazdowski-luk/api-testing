@@ -187,6 +187,36 @@ test.describe('Sorting', () => {
     expect(firstnames).toEqual(sortedDesc);
   });
 
+  test('checks that users are sorted by id in ascending order @functional-users-sorting', async ({
+    request,
+    authHeaders,
+  }) => {
+    const response = await request.get('users?_sort=id&_order=asc', {
+      headers: authHeaders,
+    });
+
+    const users = await response.json();
+    const ids = users.map((u: { id: number }) => u.id);
+    const sortedAsc = [...ids].sort((a, b) => a - b);
+
+    expect(ids).toEqual(sortedAsc);
+  });
+
+  test('checks that users are sorted by lastname in ascending alphabetical order @functional-users-sorting', async ({
+    request,
+    authHeaders,
+  }) => {
+    const response = await request.get('users?_sort=lastname&_order=asc', {
+      headers: authHeaders,
+    });
+
+    const users = await response.json();
+    const lastnames = users.map((u: { lastname: string }) => u.lastname);
+    const sortedAsc = [...lastnames].sort();
+
+    expect(lastnames).toEqual(sortedAsc);
+  });
+
   test('checks that sorting by a non-existent field name does not cause a server error @functional-users-sorting', async ({
     request,
     authHeaders,
@@ -266,12 +296,34 @@ test.describe('Filtering', () => {
   }) => {
     const allUsers = await fetchAllUsers(request, authHeaders);
 
-    const filteredResponse = await request.get(`users?${filteringUsersData.unknownParam}=test`, {
+    const filteredResponse = await request.get('users?unknownparam=test', {
       headers: authHeaders,
     });
     const filteredUsers = await filteredResponse.json();
 
     expect(filteredUsers).toHaveLength(allUsers.length);
+  });
+
+  test('checks that filtering with an empty string value returns all users @functional-users-filtering', async ({
+    request,
+    authHeaders,
+  }) => {
+    const response = await request.get('users?firstname=', {
+      headers: authHeaders,
+    });
+
+    expect(response.status()).toBe(404);
+  });
+
+  test('checks that field filtering is case-sensitive @functional-users-filtering', async ({
+    request,
+    authHeaders,
+  }) => {
+    const response = await request.get(`users?firstname=${filteringUsersData.caseSensitiveFirstname}`, {
+      headers: authHeaders,
+    });
+
+    expect(response.status()).toBe(404);
   });
 });
 
@@ -369,6 +421,51 @@ test.describe('Negative', () => {
     authHeaders,
   }) => {
     const response = await request.get('users?_limit=0', {
+      headers: authHeaders,
+    });
+
+    expect(response.status()).toBe(404);
+  });
+
+  test('checks that requesting with a zero page number returns the correct status code @functional-users-negative', async ({
+    request,
+    authHeaders,
+  }) => {
+    const response = await request.get(`users?_page=0&_limit=${PAGE_LIMIT}`, {
+      headers: authHeaders,
+    });
+
+    expect(response.status()).toBe(200);
+  });
+
+  test('checks that requesting with a negative page number returns the correct status code @functional-users-negative', async ({
+    request,
+    authHeaders,
+  }) => {
+    const response = await request.get(`users?_page=-1&_limit=${PAGE_LIMIT}`, {
+      headers: authHeaders,
+    });
+
+    expect(response.status()).toBe(200);
+  });
+
+  test('checks that requesting with a negative limit returns the correct status code @functional-users-negative', async ({
+    request,
+    authHeaders,
+  }) => {
+    const response = await request.get('users?_limit=-1', {
+      headers: authHeaders,
+    });
+
+    expect(response.status()).toBe(200);
+  });
+
+  test('checks that an offset beyond the total number of users returns the correct status code @functional-users-negative', async ({
+    request,
+    authHeaders,
+  }) => {
+    const { start, limit } = paginationOffsetData.offsetBeyondTotal;
+    const response = await request.get(`users?_start=${start}&_limit=${limit}`, {
       headers: authHeaders,
     });
 

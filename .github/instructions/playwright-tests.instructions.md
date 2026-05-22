@@ -8,6 +8,7 @@ applyTo: "**/*.spec.ts"
 - All other assertions except the final one must use `expect.soft(...)`.
 - Exact equality assertions (`.toBe(...)`) must always be the final hard assertion, not soft.
 - Never use less-than or greater-than assertions for status codes. Always assert exact status codes using `.toBe(...)`.
+- Never assert multiple possible status codes (e.g. `expect([200, 404]).toContain(...)`). Always assert a single exact status code using `.toBe(...)`.
 - Status code assertions are more important than response body assertions. The status code `.toBe(...)` must always be the final hard assertion in that cases. Response body/message assertions must use `expect.soft(...)` and appear before the status code assertion.
 - Do not add a status code assertion when the test is verifying something else (e.g. response body structure, pagination, sorting). Only assert the status code when it is the point of the test.
 - Do not make multiple separate assertions on the same type of data; combine them into a single assertion (e.g. use an array or object matcher).
@@ -38,6 +39,7 @@ applyTo: "**/*.spec.ts"
 - Never use HTML tag names (e.g. `<a>`, `<b>`, `<i>`, `<s>`, `<em>`) as placeholder variable names in requirement descriptions — they cause incorrect rendering in markdown preview. Use descriptive names instead (e.g. `<start>`, `<end>`, `<min>`, `<max>`).
 - Every requirement file must start with a top-level title (`# <Category> Requirements`) on the first line, followed by `## <Endpoint>` sections (e.g. `## Users`), then `### <HTTP Method> /<endpoint> - <SubCategory>` subsections (e.g. `### GET /users - Pagination`, `### GET /users - Core`), and finally `@tag` entries with their bullet points.
 - When a tag group is planned but has no tests yet, reserve its place with an HTML comment: `<!-- @tag-name -->`.
+- Each requirement bullet must start with a markdown checkbox to indicate coverage status: `- [x]` if a corresponding test exists, or `- [ ]` if no test has been written yet.
 - Tests must appear in the same order within each spec file as their corresponding requirement entries appear in the matching `requirements/` file. This applies both to the order of test sections (e.g. Core, Pagination, Sorting) and to the order of individual tests within each section.
 
 # Test Structure Conventions

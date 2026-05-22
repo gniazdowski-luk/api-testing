@@ -23,5 +23,5 @@ export const filteringUsersData = {
     min: 1000,
     max: 1010,
   },
-  unknownParam: 'unknownparam',
+  caseSensitiveFirstname: usersData.user1.firstname.toLowerCase(),
 };

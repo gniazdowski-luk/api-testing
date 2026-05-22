@@ -1,5 +1,6 @@
 import { contractUsersData } from '@test-data/users/users.contract.data';
-import { buildUserPayload } from '@test-data/users/users.post.data';
+import { usersPayloadsData } from '@test-data/users/users.payloads.data';
+import { buildUserPayload, postMissingFieldData } from '@test-data/users/users.post.data';
 import { userSchema, usersSchema } from '@test-data/users/users.schema';
 import { expect, test } from '@tests/fixtures';
 import { Validator } from 'jsonschema';
@@ -102,5 +103,52 @@ test.describe('POST', () => {
     });
 
     expect(response.headers()['content-type']).toMatch(/application\/json/);
+  });
+});
+
+test.describe('Error Responses - Content-Type', () => {
+  test('checks that a 422 response includes the correct Content-Type header @contract-error-content-type', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: postMissingFieldData.missingFirstname,
+    });
+
+    expect(response.headers()['content-type']).toMatch(/application\/json/);
+  });
+
+  test('checks that a 409 response includes the correct Content-Type header @contract-error-content-type', async ({
+    request,
+  }) => {
+    const payload = buildUserPayload();
+    await request.post('users', { data: payload });
+    const response = await request.post('users', { data: payload });
+
+    expect(response.headers()['content-type']).toMatch(/application\/json/);
+  });
+
+  test('checks that a 401 response includes the correct Content-Type header @contract-error-content-type', async ({
+    request,
+  }) => {
+    const response = await request.put('users', {
+      data: usersPayloadsData.put,
+    });
+
+    expect(response.headers()['content-type']).toMatch(/application\/json/);
+  });
+});
+
+test.describe('HEAD', () => {
+  test('checks that HEAD /users returns 200 with no response body @contract-head-users', async ({
+    request,
+    accessToken,
+  }) => {
+    const response = await request.head('users', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const body = await response.text();
+
+    expect.soft(body).toBe('');
+    expect(response.status()).toBe(200);
   });
 });

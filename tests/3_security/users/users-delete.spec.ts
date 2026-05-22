@@ -59,3 +59,13 @@ test('checks that a valid token without Cookie returns the correct status code a
   expect.soft(body.error.message).toBe(securityUsersData.accessTokenInvalid);
   expect(response.status()).toBe(401);
 });
+
+test('checks that an expired token on DELETE /users returns the correct status code and error message @security-expired-token-users', async ({
+  request,
+}) => {
+  const response = await request.delete('users', {
+    headers: { Authorization: securityUsersData.expiredToken },
+  });
+
+  expect(response.status()).toBe(401);
+});
