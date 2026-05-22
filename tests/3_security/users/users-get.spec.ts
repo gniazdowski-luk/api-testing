@@ -117,9 +117,7 @@ test.describe('Security Headers', () => {
     expect(response.headers()['x-content-type-options']).toBe('nosniff');
   });
 
-  test('checks that the response includes the X-Frame-Options header @security-headers-users', async ({
-    request,
-  }) => {
+  test('checks that the response includes the X-Frame-Options header @security-headers-users', async ({ request }) => {
     const response = await request.get('users');
 
     expect(['DENY', 'SAMEORIGIN']).toContain(response.headers()['x-frame-options']);
@@ -133,4 +131,3 @@ test.describe('Security Headers', () => {
     expect(response.headers()['content-security-policy']).toBeTruthy();
   });
 });
-

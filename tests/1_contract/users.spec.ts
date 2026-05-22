@@ -1,6 +1,6 @@
 import { contractUsersData } from '@test-data/users/users.contract.data';
-import { buildUserPayload, postMissingFieldData } from '@test-data/users/users.post.data';
 import { usersPayloadsData } from '@test-data/users/users.payloads.data';
+import { buildUserPayload, postMissingFieldData } from '@test-data/users/users.post.data';
 import { userSchema, usersSchema } from '@test-data/users/users.schema';
 import { expect, test } from '@tests/fixtures';
 import { Validator } from 'jsonschema';
