@@ -70,10 +70,13 @@ test.describe('Pagination', () => {
     request,
     authHeaders,
   }) => {
-    const allUsers = await fetchAllUsers(request, authHeaders);
-    const realCount = allUsers.length;
+    const [allUsersResponse, response] = await Promise.all([
+      request.get('users', { headers: authHeaders }),
+      request.get(`users?_page=1&_limit=${PAGE_LIMIT}`, { headers: authHeaders }),
+    ]);
 
-    const response = await request.get(`users?_page=1&_limit=${PAGE_LIMIT}`, { headers: authHeaders });
+    const allUsers = await allUsersResponse.json();
+    const realCount = allUsers.length;
 
     const totalCount = Number(response.headers()['x-total-count']);
 
@@ -131,10 +134,14 @@ test.describe('Pagination', () => {
   }) => {
     const { start, limit } = paginationOffsetData.offsetLimit;
 
-    const allUsers = await fetchAllUsers(request, authHeaders);
+    const [allUsersResponse, response] = await Promise.all([
+      request.get('users', { headers: authHeaders }),
+      request.get(`users?_start=${start}&_limit=${limit}`, { headers: authHeaders }),
+    ]);
+
+    const allUsers = await allUsersResponse.json();
     const realCount = allUsers.length;
 
-    const response = await request.get(`users?_start=${start}&_limit=${limit}`, { headers: authHeaders });
     const totalCount = Number(response.headers()['x-total-count']);
 
     expect.soft(response.headers()['x-total-count']).toBeTruthy();
@@ -294,11 +301,12 @@ test.describe('Filtering', () => {
     request,
     authHeaders,
   }) => {
-    const allUsers = await fetchAllUsers(request, authHeaders);
+    const [allUsersResponse, filteredResponse] = await Promise.all([
+      request.get('users', { headers: authHeaders }),
+      request.get('users?unknownparam=test', { headers: authHeaders }),
+    ]);
 
-    const filteredResponse = await request.get('users?unknownparam=test', {
-      headers: authHeaders,
-    });
+    const allUsers = await allUsersResponse.json();
     const filteredUsers = await filteredResponse.json();
 
     expect(filteredUsers).toHaveLength(allUsers.length);
@@ -347,9 +355,12 @@ test.describe('Search', () => {
     request,
     authHeaders,
   }) => {
-    const allUsers = await fetchAllUsers(request, authHeaders);
+    const [allUsersResponse, searchResponse] = await Promise.all([
+      request.get('users', { headers: authHeaders }),
+      request.get('users?q=', { headers: authHeaders }),
+    ]);
 
-    const searchResponse = await request.get('users?q=', { headers: authHeaders });
+    const allUsers = await allUsersResponse.json();
     const searchUsers = await searchResponse.json();
 
     expect(searchUsers).toHaveLength(allUsers.length);

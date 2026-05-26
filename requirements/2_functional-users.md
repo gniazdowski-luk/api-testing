@@ -68,6 +68,19 @@
 - [x] `checks that a non-matching full-text search returns the correct status code` - GET /users?q=<text> with no matching user responds with 404.
 - [x] `checks that a no-match partial firstname search returns the correct status code` - GET /users?firstname_like=<pattern> with no matching user responds with 404.
 
+## GET /users/{id}
+
+### GET /users/{id} - Core
+
+@functional-users-id - Functional tests for retrieving a single user by ID:
+- [x] `checks that an existing user can be retrieved by ID with correct fields` - GET /users/{id} with a valid existing user ID returns a user object with correct id, firstname, lastname, email, avatar, and password fields.
+
+### GET /users/{id} - Negative
+
+@functional-users-id-negative - Functional tests for negative and edge-case scenarios for retrieving a user by ID:
+- [x] `checks that retrieving a non-existent user returns the correct status code` - GET /users/{id} with a non-existent user ID responds with 404.
+- [x] `checks that retrieving a user with an invalid ID returns the correct status code` - GET /users/{id} with a non-numeric string ID responds with 404.
+
 ## POST /users
 
 ### POST /users - Create

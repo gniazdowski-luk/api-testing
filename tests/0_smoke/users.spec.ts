@@ -1,16 +1,34 @@
+import expectedUsersData from '@test-data/users/users.data.json';
 import { buildUserPayload } from '@test-data/users/users.post.data';
 import { expect, test } from '@tests/fixtures';
 
 test('checks that the endpoint for retrieving users is accessible and returns a successful response @smoke', async ({
   request,
-  accessToken,
+  authHeaders,
 }) => {
   const response = await request.get('users', {
-    headers: { Authorization: `Bearer ${accessToken}` },
+    headers: authHeaders,
   });
   const body = await response.json();
 
   expect.soft(body).toBeInstanceOf(Array);
+  expect(response.status()).toBe(200);
+});
+
+test('checks that the endpoint for retrieving a user by ID is accessible and returns a successful response @smoke', async ({
+  request,
+  authHeaders,
+}) => {
+  const user1Expected = expectedUsersData.user1;
+
+  const response = await request.get(`users/${user1Expected.id}`, {
+    headers: authHeaders,
+  });
+  const body = await response.json();
+
+  expect.soft(body).toMatchObject({
+    id: user1Expected.id,
+  });
   expect(response.status()).toBe(200);
 });
 

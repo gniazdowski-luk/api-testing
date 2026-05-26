@@ -1,4 +1,5 @@
-import { contractUsersData } from '@test-data/users/users.contract.data';
+import expectedUsersData from '@test-data/users/users.data.json';
+import { contractUserData, contractUsersData } from '@test-data/users/users.contract.data';
 import { usersPayloadsData } from '@test-data/users/users.payloads.data';
 import { buildUserPayload, postMissingFieldData } from '@test-data/users/users.post.data';
 import { userSchema, usersSchema } from '@test-data/users/users.schema';
@@ -8,12 +9,12 @@ import { Validator } from 'jsonschema';
 const validator = new Validator();
 
 test.describe('GET', () => {
-  test('checks that the response matches the expected contract schema @contract-users-get', async ({
+  test('checks that the response matches the expected users contract schema @contract-users-get', async ({
     request,
-    accessToken,
+    authHeaders,
   }) => {
     const response = await request.get('users', {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: authHeaders,
     });
 
     const body = await response.json();
@@ -24,10 +25,10 @@ test.describe('GET', () => {
 
   test('checks that the response includes the correct Content-Type header @contract-users-get', async ({
     request,
-    accessToken,
+    authHeaders,
   }) => {
     const response = await request.get('users', {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: authHeaders,
     });
 
     expect(response.headers()['content-type']).toMatch(/application\/json/);
@@ -80,6 +81,61 @@ test.describe('GET - Mocked', () => {
     const result = validator.validate(contractUsersData.emptyArray, usersSchema);
 
     expect(result.errors).toHaveLength(0);
+  });
+});
+
+test.describe('GET /users/{id}', () => {
+  test('checks that the response matches the expected user contract schema @contract-users-get-id', async ({
+    request,
+    authHeaders,
+  }) => {
+    const response = await request.get(`users/${expectedUsersData.user1.id}`, {
+      headers: authHeaders,
+    });
+
+    const body = await response.json();
+    const result = validator.validate(body, userSchema);
+
+    expect(result.errors).toHaveLength(0);
+  });
+
+  test('checks that the GET /users/{id} response includes the correct Content-Type header @contract-users-get-id', async ({
+    request,
+    authHeaders,
+  }) => {
+    const response = await request.get(`users/${expectedUsersData.user1.id}`, {
+      headers: authHeaders,
+    });
+
+    expect(response.headers()['content-type']).toMatch(/application\/json/);
+  });
+});
+
+test.describe('GET /users/{id} - Mocked', () => {
+  test('verifies that a user object at /users/{id} missing required fields is correctly rejected @contract-users-get-id-mocked', () => {
+    const result = validator.validate(contractUserData.missingRequiredFields, userSchema);
+
+    expect.soft(result.errors.every((e) => e.name === 'required')).toBe(true);
+    expect.soft(result.errors.map((e) => e.argument)).toEqual(expect.arrayContaining(['email', 'avatar']));
+    expect(result.errors).toHaveLength(2);
+  });
+
+  test('verifies that a user object at /users/{id} with incorrect field types is correctly rejected @contract-users-get-id-mocked', () => {
+    const result = validator.validate(contractUserData.wrongFieldTypes, userSchema);
+
+    expect.soft(result.errors.every((e) => e.name === 'type')).toBe(true);
+    expect
+      .soft(result.errors.map((e) => e.property))
+      .toEqual(expect.arrayContaining(['instance.email', 'instance.avatar']));
+    expect(result.errors).toHaveLength(2);
+  });
+
+  test('verifies that an array is correctly rejected as a user object @contract-users-get-id-mocked', () => {
+    const result = validator.validate(contractUserData.nonObjectRoot, userSchema);
+
+    expect.soft(result.errors[0].name).toBe('type');
+    expect.soft(result.errors[0].property).toBe('instance');
+    expect(result.errors).toHaveLength(1);
   });
 });
 
@@ -141,10 +197,10 @@ test.describe('Error Responses - Content-Type', () => {
 test.describe('HEAD', () => {
   test('checks that HEAD /users returns 200 with no response body @contract-head-users', async ({
     request,
-    accessToken,
+    authHeaders,
   }) => {
     const response = await request.head('users', {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: authHeaders,
     });
     const body = await response.text();
 

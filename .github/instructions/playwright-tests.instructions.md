@@ -53,6 +53,11 @@ applyTo: "**/*.spec.ts"
 - Do not create per-spec utility helper functions (e.g. request measurement wrappers); extract them to `tests/helpers.ts` and import via `@tests/helpers`.
 - Do not instantiate shared utilities (e.g. `Validator`) inside individual test blocks; declare them once at module scope or inside a shared fixture.
 - Do not duplicate shared entities (e.g. user records, IDs, names) across multiple test-data files. Define them once in a canonical file (e.g. `test-data/users/users.data.json`) and import that file wherever the same values are needed.
+- Test names (the text before the tag suffix) must be unique across all spec files in the project, and the corresponding requirement entry names (the text in backticks) must also be unique across all requirement files. When writing tests for a new endpoint or variant that is similar to an existing one, differentiate the name to reflect the specific resource or context (e.g. add "for a single user" or "on /endpoint/{id}").
+
+# Concurrency Conventions
+
+- When a test needs to compare results from two separate API calls that must reflect the same data state (e.g. fetching all users as a baseline and then fetching a filtered/paginated subset), always fire both requests concurrently using `Promise.all`. Never fetch a baseline sequentially before making the measured request — other tests running in parallel may mutate shared state between the two calls.
 
 # Test Validation Principles
 

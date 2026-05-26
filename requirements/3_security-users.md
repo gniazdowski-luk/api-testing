@@ -14,29 +14,29 @@
 ### PUT /users
 
 @security-authorization-put-users - Security tests for PUT /users authorization:
-- [x] `checks that missing authorization returns the correct status code and error message` - PUT /users without Authorization header returns 401 with "Access token not provided!".
-- [x] `checks that an empty Bearer token returns the correct status code and error message` - PUT /users with empty Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that an invalid Bearer token returns the correct status code and error message` - PUT /users with wrong Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that wrong Basic auth returns the correct status code and error message` - PUT /users with wrong Basic auth returns 401 with "Access token not provided!".
-- [x] `checks that a valid token without Cookie returns the correct status code and error message` - PUT /users with valid Bearer token but without Cookie returns 401 with "Access token for given user is invalid!".
+- [x] `checks that missing authorization on PUT /users returns the correct status code and error message` - PUT /users without Authorization header returns 401 with "Access token not provided!".
+- [x] `checks that an empty Bearer token on PUT /users returns the correct status code and error message` - PUT /users with empty Bearer token returns 401 with "Access token not provided!".
+- [x] `checks that an invalid Bearer token on PUT /users returns the correct status code and error message` - PUT /users with wrong Bearer token returns 401 with "Access token not provided!".
+- [x] `checks that wrong Basic auth on PUT /users returns the correct status code and error message` - PUT /users with wrong Basic auth returns 401 with "Access token not provided!".
+- [x] `checks that a valid token without Cookie on PUT /users returns the correct status code and error message` - PUT /users with valid Bearer token but without Cookie returns 401 with "Access token for given user is invalid!".
 
 ### PATCH /users
 
 @security-authorization-patch-users - Security tests for PATCH /users authorization:
-- [x] `checks that missing authorization returns the correct status code and error message` - PATCH /users without Authorization header returns 401 with "Access token not provided!".
-- [x] `checks that an empty Bearer token returns the correct status code and error message` - PATCH /users with empty Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that an invalid Bearer token returns the correct status code and error message` - PATCH /users with wrong Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that wrong Basic auth returns the correct status code and error message` - PATCH /users with wrong Basic auth returns 401 with "Access token not provided!".
-- [x] `checks that a valid token without Cookie returns the correct status code and error message` - PATCH /users with valid Bearer token but without Cookie returns 401 with "Access token for given user is invalid!".
+- [x] `checks that missing authorization on PATCH /users returns the correct status code and error message` - PATCH /users without Authorization header returns 401 with "Access token not provided!".
+- [x] `checks that an empty Bearer token on PATCH /users returns the correct status code and error message` - PATCH /users with empty Bearer token returns 401 with "Access token not provided!".
+- [x] `checks that an invalid Bearer token on PATCH /users returns the correct status code and error message` - PATCH /users with wrong Bearer token returns 401 with "Access token not provided!".
+- [x] `checks that wrong Basic auth on PATCH /users returns the correct status code and error message` - PATCH /users with wrong Basic auth returns 401 with "Access token not provided!".
+- [x] `checks that a valid token without Cookie on PATCH /users returns the correct status code and error message` - PATCH /users with valid Bearer token but without Cookie returns 401 with "Access token for given user is invalid!".
 
 ### DELETE /users
 
 @security-authorization-delete-users - Security tests for DELETE /users authorization:
-- [x] `checks that missing authorization returns the correct status code and error message` - DELETE /users without Authorization header returns 401 with "Access token not provided!".
-- [x] `checks that an empty Bearer token returns the correct status code and error message` - DELETE /users with empty Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that an invalid Bearer token returns the correct status code and error message` - DELETE /users with wrong Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that wrong Basic auth returns the correct status code and error message` - DELETE /users with wrong Basic auth returns 401 with "Access token not provided!".
-- [x] `checks that a valid token without Cookie returns the correct status code and error message` - DELETE /users with valid Bearer token but without Cookie returns 401 with "Access token for given user is invalid!".
+- [x] `checks that missing authorization on DELETE /users returns the correct status code and error message` - DELETE /users without Authorization header returns 401 with "Access token not provided!".
+- [x] `checks that an empty Bearer token on DELETE /users returns the correct status code and error message` - DELETE /users with empty Bearer token returns 401 with "Access token not provided!".
+- [x] `checks that an invalid Bearer token on DELETE /users returns the correct status code and error message` - DELETE /users with wrong Bearer token returns 401 with "Access token not provided!".
+- [x] `checks that wrong Basic auth on DELETE /users returns the correct status code and error message` - DELETE /users with wrong Basic auth returns 401 with "Access token not provided!".
+- [x] `checks that a valid token without Cookie on DELETE /users returns the correct status code and error message` - DELETE /users with valid Bearer token but without Cookie returns 401 with "Access token for given user is invalid!".
 
 ### GET /users - CORS Headers
 
@@ -67,3 +67,31 @@
 @security-expired-token-users - Security tests verifying that an expired or revoked token is rejected on protected endpoints:
 - [x] `checks that an expired token on PUT /users returns the correct status code and error message` - PUT /users with a token that has expired returns 401.
 - [x] `checks that an expired token on DELETE /users returns the correct status code and error message` - DELETE /users with a token that has expired returns 401.
+
+### GET /users/{id} - Authorization
+
+@security-authorization-get-users-id - Security tests for GET /users/{id} authorization:
+- [x] `checks that unauthenticated access to a single user returns the correct status code with masked sensitive fields` - GET /users/{id} without Authorization header returns 200 with masked email, lastname, and password.
+- [x] `checks that an empty Bearer token for a single-user request returns the correct status code with masked sensitive fields` - GET /users/{id} with empty Bearer token returns 200 with masked fields.
+- [x] `checks that an invalid Bearer token for a single-user request returns the correct status code with masked sensitive fields` - GET /users/{id} with wrong Bearer token returns 200 with masked fields.
+- [x] `checks that wrong Basic auth for a single-user request returns the correct status code with masked sensitive fields` - GET /users/{id} with wrong Basic auth returns 200 with masked fields.
+- [x] `checks that a valid token without Cookie for a single-user request returns the correct status code with masked sensitive fields` - GET /users/{id} with valid Bearer token but without Cookie returns 200 with masked fields.
+
+### GET /users/{id} - CORS Headers
+
+@security-cors-get-users-id - Security tests verifying CORS response headers are present on the /users/{id} endpoint:
+- [x] `checks that the single-user response includes the Access-Control-Allow-Origin header` - GET /users/{id} with an Origin header set to the base URL origin returns an Access-Control-Allow-Origin response header matching that origin.
+- [x] `checks that an OPTIONS preflight request for a single user returns the correct CORS headers` - OPTIONS /users/{id} with Origin, Access-Control-Request-Method, and Access-Control-Request-Headers returns Access-Control-Allow-Methods and Access-Control-Allow-Headers in the response.
+
+### GET /users/{id} - Security Response Headers
+
+@security-headers-users-id - Security tests verifying that the /users/{id} endpoint returns expected security-related HTTP response headers:
+- [x] `checks that the single-user response includes the X-Content-Type-Options header` - GET /users/{id} response includes X-Content-Type-Options: nosniff.
+- [x] `checks that the single-user response includes the X-Frame-Options header` - GET /users/{id} response includes X-Frame-Options header (DENY or SAMEORIGIN).
+- [x] `checks that the single-user response includes a Content-Security-Policy header` - GET /users/{id} response includes a Content-Security-Policy header.
+
+### /users/{id} - Disallowed HTTP Methods
+
+@security-methods-users-id - Security tests verifying that HTTP methods not supported at the /users/{id} endpoint are rejected by the server:
+- [x] `checks that sending POST to a single user returns the correct status code` - POST /users/{id} with a valid body and an existing ID returns 404, confirming the endpoint does not support POST.
+- [x] `checks that sending POST to a non-existing user returns the correct status code` - POST /users/{id} with a valid body and a non-existing ID (99999999) returns 404, confirming the route is absent regardless of whether the ID exists.

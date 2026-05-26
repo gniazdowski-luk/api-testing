@@ -29,11 +29,11 @@ Install Playwright framework: `npx playwright install`
 
 ## Tests execution
 
-Setup
+### Authentication
 
 - [Authentication](./setup/authentication) - steps to obtain authentication token for tests: `npm run setup`
 
-Tests
+### Tests
 
 - [Smoke tests](./tests/0_smoke/): `npm run tests:smoke`
 - [Contract tests](./tests/1_contract/): `npm run tests:contract`
@@ -42,6 +42,10 @@ Tests
 - [Performance tests](./tests/4_performance/): `npm run tests:performance`
 
 or run tests for specific requirement using tags, for example: `npx playwright test --grep @smoke`
+
+### Restore DB
+
+- [Restore db](./setup/restore-db) - step to restore the database to a clean state after (or before) running tests: `npm run restore-db`
 
 ## Reporting
 
@@ -64,6 +68,4 @@ This project uses a CI pipeline to ensure code quality and reliability. The pipe
 ### Manual Trigger
 
 Functional, Security and Performance tests are not run automatically on pull requests. These tests can be triggered manually for specific branches and environments by enabling the respective options in the CI pipeline.
-
-
 
