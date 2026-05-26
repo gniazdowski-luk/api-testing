@@ -88,7 +88,6 @@ jobs:
           fi
 
           echo "::group::Detected changed test files"
-          echo "All test files:  ${FILES:-<none>}"
           echo "Functional:      ${FUNCTIONAL:-<none>}"
           echo "Security:        ${SECURITY:-<none>}"
           echo "Performance:     ${PERFORMANCE:-<none>}"
