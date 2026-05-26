@@ -1,5 +1,5 @@
-import expectedUsersData from '@test-data/users/users.data.json';
 import { contractUserData, contractUsersData } from '@test-data/users/users.contract.data';
+import expectedUsersData from '@test-data/users/users.data.json';
 import { usersPayloadsData } from '@test-data/users/users.payloads.data';
 import { buildUserPayload, postMissingFieldData } from '@test-data/users/users.post.data';
 import { userSchema, usersSchema } from '@test-data/users/users.schema';

@@ -1,5 +1,5 @@
-import { buildUserPayload } from '@test-data/users/users.post.data';
 import expectedUsersData from '@test-data/users/users.data.json';
+import { buildUserPayload } from '@test-data/users/users.post.data';
 import { byIdData } from '@test-data/users/users-id.data';
 import { expect, test } from '@tests/fixtures';
 

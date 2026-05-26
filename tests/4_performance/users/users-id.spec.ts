@@ -1,6 +1,6 @@
 import expectedUsersData from '@test-data/users/users.data.json';
-import { byIdData } from '@test-data/users/users-id.data';
 import { performanceData } from '@test-data/users/users.performance.data';
+import { byIdData } from '@test-data/users/users-id.data';
 import { expect, test } from '@tests/fixtures';
 import { measureRequest } from '@tests/helpers';
 
@@ -10,9 +10,7 @@ test('checks that fetching an existing user by ID responds within the defined SL
 }) => {
   const { id } = expectedUsersData.user1;
 
-  const { response, elapsed } = await measureRequest(() =>
-    request.get(`users/${id}`, { headers: authHeaders })
-  );
+  const { response, elapsed } = await measureRequest(() => request.get(`users/${id}`, { headers: authHeaders }));
 
   expect.soft(response.status()).toBe(200);
   expect(elapsed).toBeLessThan(performanceData.slaMs.byIdEndpoint);
@@ -40,9 +38,7 @@ test.describe('Concurrent', () => {
 
     const results = await Promise.all(
       Array.from({ length: concurrentRequests }, async () => {
-        const { response, elapsed } = await measureRequest(() =>
-          request.get(`users/${id}`, { headers: authHeaders })
-        );
+        const { response, elapsed } = await measureRequest(() => request.get(`users/${id}`, { headers: authHeaders }));
         return { response, elapsed };
       })
     );
