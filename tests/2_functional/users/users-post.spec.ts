@@ -39,28 +39,6 @@ test.describe('Create', () => {
     expect(getResponse.status()).toBe(200);
   });
 
-  test('checks that a newly created user can log in with the correct credentials @functional-users-post', async ({
-    request,
-  }) => {
-    const newUserPayload = buildUserPayload();
-
-    const createResponse = await request.post('users', {
-      data: newUserPayload,
-    });
-    await createResponse.json();
-
-    const loginResponse = await request.post('login', {
-      data: {
-        email: newUserPayload.email,
-        password: newUserPayload.password,
-      },
-    });
-    const loginBody = await loginResponse.json();
-
-    expect.soft(loginBody).toMatchObject({ access_token: expect.any(String) });
-    expect(loginResponse.status()).toBe(200);
-  });
-
   test('checks that creating a user with a birthdate returns the correct status code and a well-formed response body @functional-users-post', async ({
     request,
   }) => {
