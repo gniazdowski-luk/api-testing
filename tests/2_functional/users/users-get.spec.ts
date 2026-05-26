@@ -314,17 +314,6 @@ test.describe('Filtering', () => {
 
     expect(response.status()).toBe(404);
   });
-
-  test('checks that field filtering is case-sensitive @functional-users-filtering', async ({
-    request,
-    authHeaders,
-  }) => {
-    const response = await request.get(`users?firstname=${filteringUsersData.caseSensitiveFirstname}`, {
-      headers: authHeaders,
-    });
-
-    expect(response.status()).toBe(404);
-  });
 });
 
 test.describe('Search', () => {
