@@ -87,6 +87,13 @@ jobs:
             echo "has_performance=false" >> $GITHUB_OUTPUT
           fi
 
+          echo "::group::Detected changed test files"
+          echo "All test files:  ${FILES:-<none>}"
+          echo "Functional:      ${FUNCTIONAL:-<none>}"
+          echo "Security:        ${SECURITY:-<none>}"
+          echo "Performance:     ${PERFORMANCE:-<none>}"
+          echo "::endgroup::"
+
   quality:
     name: Quality Check
     if: github.event_name == 'pull_request'
