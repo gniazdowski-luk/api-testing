@@ -157,6 +157,7 @@ jobs:
     name: PR Security Tests
     needs: [quality, detect-changes, contract, pr-functional]
     if: |
+      always() &&
       github.event_name == 'pull_request' &&
       needs.detect-changes.outputs.has_security == 'true' &&
       (needs.pr-functional.result == 'success' || needs.pr-functional.result == 'skipped')
@@ -199,6 +200,7 @@ jobs:
     name: PR Performance Tests
     needs: [quality, detect-changes, contract, pr-functional, pr-security]
     if: |
+      always() &&
       github.event_name == 'pull_request' &&
       needs.detect-changes.outputs.has_performance == 'true' &&
       (needs.pr-functional.result == 'success' || needs.pr-functional.result == 'skipped') &&
