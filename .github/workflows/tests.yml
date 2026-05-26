@@ -40,6 +40,12 @@ jobs:
     outputs:
       test_files: ${{ steps.changed.outputs.test_files }}
       has_tests: ${{ steps.changed.outputs.has_tests }}
+      functional_files: ${{ steps.changed.outputs.functional_files }}
+      has_functional: ${{ steps.changed.outputs.has_functional }}
+      security_files: ${{ steps.changed.outputs.security_files }}
+      has_security: ${{ steps.changed.outputs.has_security }}
+      performance_files: ${{ steps.changed.outputs.performance_files }}
+      has_performance: ${{ steps.changed.outputs.has_performance }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -55,6 +61,30 @@ jobs:
             echo "has_tests=true" >> $GITHUB_OUTPUT
           else
             echo "has_tests=false" >> $GITHUB_OUTPUT
+          fi
+
+          FUNCTIONAL=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'tests/2_functional/**/*.spec.ts' | tr '\n' ' ')
+          echo "functional_files=$FUNCTIONAL" >> $GITHUB_OUTPUT
+          if [ -n "$FUNCTIONAL" ]; then
+            echo "has_functional=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_functional=false" >> $GITHUB_OUTPUT
+          fi
+
+          SECURITY=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'tests/3_security/**/*.spec.ts' | tr '\n' ' ')
+          echo "security_files=$SECURITY" >> $GITHUB_OUTPUT
+          if [ -n "$SECURITY" ]; then
+            echo "has_security=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_security=false" >> $GITHUB_OUTPUT
+          fi
+
+          PERFORMANCE=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'tests/4_performance/**/*.spec.ts' | tr '\n' ' ')
+          echo "performance_files=$PERFORMANCE" >> $GITHUB_OUTPUT
+          if [ -n "$PERFORMANCE" ]; then
+            echo "has_performance=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_performance=false" >> $GITHUB_OUTPUT
           fi
 
   quality:
@@ -78,10 +108,10 @@ jobs:
       - name: Run Biome check
         run: npm run biome:check
 
-  pr-tests:
-    name: PR Tests
+  pr-functional:
+    name: PR Functional Tests
     needs: [quality, detect-changes, contract]
-    if: github.event_name == 'pull_request' && needs.detect-changes.outputs.has_tests == 'true'
+    if: github.event_name == 'pull_request' && needs.detect-changes.outputs.has_functional == 'true'
     runs-on: ubuntu-latest
 
     services:
@@ -106,14 +136,99 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run changed tests
-        run: npx playwright test ${{ needs.detect-changes.outputs.test_files }}
+      - name: Run changed functional tests
+        run: npx playwright test ${{ needs.detect-changes.outputs.functional_files }}
 
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report-pr
+          name: playwright-report-pr-functional
+          path: playwright-report/
+          retention-days: 7
+
+  pr-security:
+    name: PR Security Tests
+    needs: [quality, detect-changes, contract, pr-functional]
+    if: |
+      github.event_name == 'pull_request' &&
+      needs.detect-changes.outputs.has_security == 'true' &&
+      (needs.pr-functional.result == 'success' || needs.pr-functional.result == 'skipped')
+    runs-on: ubuntu-latest
+
+    services:
+      gad:
+        image: jaktestowac/gad
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Wait for GAD backend
+        uses: ./.github/actions/wait-for-gad
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run changed security tests
+        run: npx playwright test ${{ needs.detect-changes.outputs.security_files }}
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-pr-security
+          path: playwright-report/
+          retention-days: 7
+
+  pr-performance:
+    name: PR Performance Tests
+    needs: [quality, detect-changes, contract, pr-functional, pr-security]
+    if: |
+      github.event_name == 'pull_request' &&
+      needs.detect-changes.outputs.has_performance == 'true' &&
+      (needs.pr-functional.result == 'success' || needs.pr-functional.result == 'skipped') &&
+      (needs.pr-security.result == 'success' || needs.pr-security.result == 'skipped')
+    runs-on: ubuntu-latest
+
+    services:
+      gad:
+        image: jaktestowac/gad
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Wait for GAD backend
+        uses: ./.github/actions/wait-for-gad
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run changed performance tests
+        run: npx playwright test ${{ needs.detect-changes.outputs.performance_files }}
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-pr-performance
           path: playwright-report/
           retention-days: 7
 
@@ -147,7 +262,7 @@ jobs:
         run: npm ci
 
       - name: Run smoke tests
-        run: npx playwright test --project=setup-authentication --project=tests-smoke
+        run: npx playwright test --project=setup-authentication --project=tests-smoke --reporter=blob,html
 
       - name: Upload Playwright report
         if: always()
@@ -156,6 +271,14 @@ jobs:
           name: playwright-report-smoke
           path: playwright-report/
           retention-days: 7
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: blob-report-smoke
+          path: blob-report/
+          retention-days: 1
 
   contract:
     name: Contract Tests
@@ -187,7 +310,7 @@ jobs:
         run: npm ci
 
       - name: Run contract tests
-        run: npx playwright test --project=setup-authentication --project=tests-contract
+        run: npx playwright test --project=setup-authentication --project=tests-contract --reporter=blob,html
 
       - name: Upload Playwright report
         if: always()
@@ -196,6 +319,14 @@ jobs:
           name: playwright-report-contract
           path: playwright-report/
           retention-days: 7
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: blob-report-contract
+          path: blob-report/
+          retention-days: 1
 
   functional:
     name: Functional Tests
@@ -227,7 +358,7 @@ jobs:
         run: npm ci
 
       - name: Run functional tests
-        run: npx playwright test --project=setup-authentication --project=tests-functional
+        run: npx playwright test --project=setup-authentication --project=tests-functional --reporter=blob,html
 
       - name: Upload Playwright report
         if: always()
@@ -236,6 +367,14 @@ jobs:
           name: playwright-report-functional
           path: playwright-report/
           retention-days: 7
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: blob-report-functional
+          path: blob-report/
+          retention-days: 1
 
   security:
     name: Security Tests
@@ -267,7 +406,7 @@ jobs:
         run: npm ci
 
       - name: Run security tests
-        run: npx playwright test --project=setup-authentication --project=tests-security
+        run: npx playwright test --project=setup-authentication --project=tests-security --reporter=blob,html
 
       - name: Upload Playwright report
         if: always()
@@ -276,6 +415,14 @@ jobs:
           name: playwright-report-security
           path: playwright-report/
           retention-days: 7
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: blob-report-security
+          path: blob-report/
+          retention-days: 1
 
   performance:
     name: Performance Tests
@@ -307,7 +454,7 @@ jobs:
         run: npm ci
 
       - name: Run performance tests
-        run: npx playwright test --project=setup-authentication --project=tests-performance
+        run: npx playwright test --project=setup-authentication --project=tests-performance --reporter=blob,html
 
       - name: Upload Playwright report
         if: always()
@@ -316,3 +463,58 @@ jobs:
           name: playwright-report-performance
           path: playwright-report/
           retention-days: 7
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: blob-report-performance
+          path: blob-report/
+          retention-days: 1
+
+  publish-report:
+    name: Publish Report to GitHub Pages
+    needs: [smoke, contract, functional, security, performance]
+    if: always() && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download all blob reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: blob-report-*
+          path: all-blobs
+          merge-multiple: true
+
+      - name: Merge reports
+        run: npx playwright merge-reports --reporter html ./all-blobs
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: playwright-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

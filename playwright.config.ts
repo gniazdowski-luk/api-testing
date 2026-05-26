@@ -20,6 +20,7 @@ export default defineConfig({
       name: 'setup-authentication',
       testDir: './setup/authentication',
       testMatch: /.*\.setup\.ts/,
+      ...(process.env.CI ? {} : { teardown: 'teardown-restore-db' }),
     },
     {
       name: 'tests-smoke',
@@ -45,6 +46,11 @@ export default defineConfig({
       name: 'tests-performance',
       testDir: './tests/4_performance',
       dependencies: ['setup-authentication'],
+    },
+    {
+      name: 'teardown-restore-db',
+      testDir: './setup/restore-db',
+      testMatch: /.*\.teardown\.ts/,
     },
   ],
   reporter: 'html',
