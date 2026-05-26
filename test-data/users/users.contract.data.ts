@@ -24,3 +24,13 @@ export const contractUsersData = {
   ],
   emptyArray: [] as unknown[],
 };
+
+export const contractUserData = {
+  missingRequiredFields: {
+    id: canonicalContractUser.id,
+    firstname: canonicalContractUser.firstname,
+    lastname: canonicalContractUser.lastname,
+  }, // missing required 'email' and 'avatar'
+  wrongFieldTypes: { ...canonicalContractUser, email: 123, avatar: true } as unknown, // email and avatar are wrong types
+  nonObjectRoot: [canonicalContractUser] as unknown, // array instead of object
+};

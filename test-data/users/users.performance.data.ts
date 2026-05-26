@@ -9,6 +9,9 @@ export const performanceData = {
     postCreate: 1000,
     postDuplicateRejection: 500,
     concurrentEndpoint: 1000,
+    byIdEndpoint: 500,
+    byIdNotFound: 500,
+    byIdConcurrentEndpoint: 1000,
   },
   pagination: {
     page: 1,
