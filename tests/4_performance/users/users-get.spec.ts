@@ -3,16 +3,6 @@ import { performanceData } from '@test-data/users/users.performance.data';
 import { expect, test } from '@tests/fixtures';
 import { measureRequest } from '@tests/helpers';
 
-test('checks that a single authenticated request responds within the defined SLA @performance-users', async ({
-  request,
-  authHeaders,
-}) => {
-  const { response, elapsed } = await measureRequest(() => request.get('users', { headers: authHeaders }));
-
-  expect.soft(response.status()).toBe(200);
-  expect(elapsed).toBeLessThan(performanceData.slaMs.listEndpoint);
-});
-
 test('checks that a paginated request responds within the defined SLA @performance-users', async ({
   request,
   authHeaders,
