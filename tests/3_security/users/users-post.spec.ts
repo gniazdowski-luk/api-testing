@@ -1,20 +1,22 @@
 import { buildUserPayload } from '@test-data/users/users.post.data';
 import { expect, test } from '@tests/fixtures';
 
-test.describe('CORS', () => {
-  test('checks that a POST request includes the Access-Control-Allow-Origin header @security-cors-post-users', async ({
+test.describe('CORS Headers', () => {
+  test('POST /users access control allow origin header is included @security-users-post-cors', async ({
     request,
     baseURL,
   }) => {
+    const origin = new URL(baseURL!).origin;
     const response = await request.post('users', {
-      headers: { Origin: new URL(baseURL!).origin },
+      headers: { Origin: origin },
       data: buildUserPayload(),
     });
 
-    expect(response.headers()['access-control-allow-origin']).toBeTruthy();
+    expect.soft(response.headers()['access-control-allow-origin']).toBe(origin);
+    expect(response.status()).toBe(201);
   });
 
-  test('checks that an OPTIONS preflight request for POST includes the correct CORS headers @security-cors-post-users', async ({
+  test('OPTIONS /users preflight request for POST returns CORS headers @security-users-post-cors', async ({
     request,
     baseURL,
   }) => {
@@ -27,7 +29,8 @@ test.describe('CORS', () => {
       },
     });
 
-    expect.soft(response.headers()['access-control-allow-methods']).toBeTruthy();
-    expect(response.headers()['access-control-allow-headers']).toBeTruthy();
+    expect.soft(response.headers()['access-control-allow-methods']).toContain('POST');
+    expect.soft(response.headers()['access-control-allow-headers']).toContain('Content-Type');
+    expect(response.status()).toBe(204);
   });
 });

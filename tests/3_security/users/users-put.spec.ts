@@ -2,58 +2,50 @@ import { usersPayloadsData } from '@test-data/users/users.payloads.data';
 import { securityUsersData } from '@test-data/users/users.security.data';
 import { expect, test } from '@tests/fixtures';
 
-test('checks that missing authorization on PUT /users returns the correct status code and error message @security-authorization-put-users', async ({
-  request,
-}) => {
+test('PUT /users unauthenticated access returns error @security-users-put-authorization', async ({ request }) => {
   const response = await request.put('users', {
     data: usersPayloadsData.put,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenNotProvided);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenNotProvided);
   expect(response.status()).toBe(401);
 });
 
-test('checks that an empty Bearer token on PUT /users returns the correct status code and error message @security-authorization-put-users', async ({
-  request,
-}) => {
+test('PUT /users empty Bearer token returns error @security-users-put-authorization', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
     data: usersPayloadsData.put,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenNotProvided);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenNotProvided);
   expect(response.status()).toBe(401);
 });
 
-test('checks that an invalid Bearer token on PUT /users returns the correct status code and error message @security-authorization-put-users', async ({
-  request,
-}) => {
+test('PUT /users invalid Bearer token returns error @security-users-put-authorization', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
     data: usersPayloadsData.put,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenNotProvided);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenNotProvided);
   expect(response.status()).toBe(401);
 });
 
-test('checks that wrong Basic auth on PUT /users returns the correct status code and error message @security-authorization-put-users', async ({
-  request,
-}) => {
+test('PUT /users wrong Basic auth returns error @security-users-put-authorization', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
     data: usersPayloadsData.put,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenNotProvided);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenNotProvided);
   expect(response.status()).toBe(401);
 });
 
-test('checks that a valid token without Cookie on PUT /users returns the correct status code and error message @security-authorization-put-users', async ({
+test('PUT /users valid token without Cookie returns error @security-users-put-authorization', async ({
   request,
   accessToken,
 }) => {
@@ -61,15 +53,13 @@ test('checks that a valid token without Cookie on PUT /users returns the correct
     headers: { Authorization: `Bearer ${accessToken}` },
     data: usersPayloadsData.put,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenInvalid);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenInvalid);
   expect(response.status()).toBe(401);
 });
 
-test('checks that an expired token on PUT /users returns the correct status code and error message @security-expired-token-users', async ({
-  request,
-}) => {
+test('PUT /users expired token returns error @security-users-put-expired_token', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.expiredToken },
     data: usersPayloadsData.put,

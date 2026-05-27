@@ -3,17 +3,17 @@ import { performanceData } from '@test-data/users/users.performance.data';
 import { expect, test } from '@tests/fixtures';
 import { measureRequest } from '@tests/helpers';
 
-test('checks that a single authenticated request responds within the defined SLA @performance-users', async ({
+test('GET /users single authenticated request responds within SLA @performance-users-get-sla', async ({
   request,
   authHeaders,
 }) => {
   const { response, elapsed } = await measureRequest(() => request.get('users', { headers: authHeaders }));
 
   expect.soft(response.status()).toBe(200);
-  expect(elapsed).toBeLessThan(performanceData.slaMs.listEndpoint);
+  expect(elapsed).toBeLessThan(performanceData.slaMs.getList);
 });
 
-test('checks that a paginated request responds within the defined SLA @performance-users', async ({
+test('GET /users paginated request responds within SLA @performance-users-get-sla', async ({
   request,
   authHeaders,
 }) => {
@@ -24,10 +24,10 @@ test('checks that a paginated request responds within the defined SLA @performan
   );
 
   expect.soft(response.status()).toBe(200);
-  expect(elapsed).toBeLessThan(performanceData.slaMs.paginatedEndpoint);
+  expect(elapsed).toBeLessThan(performanceData.slaMs.getPaginated);
 });
 
-test('checks that a full-text search request responds within the defined SLA @performance-users', async ({
+test('GET /users full-text search request responds within SLA @performance-users-get-sla', async ({
   request,
   authHeaders,
 }) => {
@@ -36,46 +36,38 @@ test('checks that a full-text search request responds within the defined SLA @pe
   );
 
   expect.soft(response.status()).toBe(200);
-  expect(elapsed).toBeLessThan(performanceData.slaMs.searchEndpoint);
+  expect(elapsed).toBeLessThan(performanceData.slaMs.getSearch);
 });
 
-test('checks that a sorted request responds within the defined SLA @performance-users', async ({
-  request,
-  authHeaders,
-}) => {
+test('GET /users sorted request responds within SLA @performance-users-get-sla', async ({ request, authHeaders }) => {
   const { response, elapsed } = await measureRequest(() =>
     request.get('users?_sort=firstname&_order=asc', { headers: authHeaders })
   );
 
   expect.soft(response.status()).toBe(200);
-  expect(elapsed).toBeLessThan(performanceData.slaMs.sortedEndpoint);
+  expect(elapsed).toBeLessThan(performanceData.slaMs.getSorted);
 });
 
-test('checks that a filtered request responds within the defined SLA @performance-users', async ({
-  request,
-  authHeaders,
-}) => {
+test('GET /users filtered request responds within SLA @performance-users-get-sla', async ({ request, authHeaders }) => {
   const { response, elapsed } = await measureRequest(() =>
     request.get(`users?firstname=${filteringUsersData.singleFirstname.value}`, { headers: authHeaders })
   );
 
   expect.soft(response.status()).toBe(200);
-  expect(elapsed).toBeLessThan(performanceData.slaMs.filteredEndpoint);
+  expect(elapsed).toBeLessThan(performanceData.slaMs.getFiltered);
 });
 
-test('checks that an unauthenticated request still responds within the defined SLA @performance-users', async ({
-  request,
-}) => {
+test('GET /users unauthenticated request responds within SLA @performance-users-get-sla', async ({ request }) => {
   const { response, elapsed } = await measureRequest(() =>
     request.get('users', { headers: { Authorization: 'Bearer invalid-token' } })
   );
 
   expect.soft(response.status()).toBe(200);
-  expect(elapsed).toBeLessThan(performanceData.slaMs.unauthenticated);
+  expect(elapsed).toBeLessThan(performanceData.slaMs.getUnauthenticated);
 });
 
 test.describe('Concurrent', () => {
-  test('checks that concurrent GET requests all respond within the defined SLA @performance-users-concurrent', async ({
+  test('GET /users concurrent requests respond within SLA @performance-users-get-concurrent', async ({
     request,
     authHeaders,
   }) => {
@@ -92,6 +84,6 @@ test.describe('Concurrent', () => {
     const maxElapsed = Math.max(...results.map(({ elapsed }) => elapsed));
 
     expect.soft(statuses).toEqual(Array(concurrentRequests).fill(200));
-    expect(maxElapsed).toBeLessThan(performanceData.slaMs.concurrentEndpoint);
+    expect(maxElapsed).toBeLessThan(performanceData.slaMs.getConcurrent);
   });
 });
