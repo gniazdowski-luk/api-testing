@@ -4,9 +4,7 @@ import { expect, test } from '@tests/fixtures';
 import { createUserAndLogin, measureRequest } from '@tests/helpers';
 
 test.describe('SLA', () => {
-  test('PUT /users/{id} updating a user responds within SLA @performance-users_id-put-sla', async ({
-    request,
-  }) => {
+  test('PUT /users/{id} updating a user responds within SLA @performance-users_id-put-sla', async ({ request }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
 
     const { response, elapsed } = await measureRequest(() =>

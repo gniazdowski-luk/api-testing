@@ -2,9 +2,7 @@ import { usersPayloadsData } from '@test-data/users/users.payloads.data';
 import { securityUsersData } from '@test-data/users/users.security.data';
 import { expect, test } from '@tests/fixtures';
 
-test('PUT /users unauthenticated access returns error @security-users-put-authorization', async ({
-  request,
-}) => {
+test('PUT /users unauthenticated access returns error @security-users-put-authorization', async ({ request }) => {
   const response = await request.put('users', {
     data: usersPayloadsData.put,
   });
@@ -14,9 +12,7 @@ test('PUT /users unauthenticated access returns error @security-users-put-author
   expect(response.status()).toBe(401);
 });
 
-test('PUT /users empty Bearer token returns error @security-users-put-authorization', async ({
-  request,
-}) => {
+test('PUT /users empty Bearer token returns error @security-users-put-authorization', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
     data: usersPayloadsData.put,
@@ -27,9 +23,7 @@ test('PUT /users empty Bearer token returns error @security-users-put-authorizat
   expect(response.status()).toBe(401);
 });
 
-test('PUT /users invalid Bearer token returns error @security-users-put-authorization', async ({
-  request,
-}) => {
+test('PUT /users invalid Bearer token returns error @security-users-put-authorization', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
     data: usersPayloadsData.put,
@@ -40,9 +34,7 @@ test('PUT /users invalid Bearer token returns error @security-users-put-authoriz
   expect(response.status()).toBe(401);
 });
 
-test('PUT /users wrong Basic auth returns error @security-users-put-authorization', async ({
-  request,
-}) => {
+test('PUT /users wrong Basic auth returns error @security-users-put-authorization', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
     data: usersPayloadsData.put,
@@ -67,9 +59,7 @@ test('PUT /users valid token without Cookie returns error @security-users-put-au
   expect(response.status()).toBe(401);
 });
 
-test('PUT /users expired token returns error @security-users-put-expired_token', async ({
-  request,
-}) => {
+test('PUT /users expired token returns error @security-users-put-expired_token', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.expiredToken },
     data: usersPayloadsData.put,

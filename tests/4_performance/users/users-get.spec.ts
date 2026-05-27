@@ -39,10 +39,7 @@ test('GET /users full-text search request responds within SLA @performance-users
   expect(elapsed).toBeLessThan(performanceData.slaMs.getSearch);
 });
 
-test('GET /users sorted request responds within SLA @performance-users-get-sla', async ({
-  request,
-  authHeaders,
-}) => {
+test('GET /users sorted request responds within SLA @performance-users-get-sla', async ({ request, authHeaders }) => {
   const { response, elapsed } = await measureRequest(() =>
     request.get('users?_sort=firstname&_order=asc', { headers: authHeaders })
   );
@@ -51,10 +48,7 @@ test('GET /users sorted request responds within SLA @performance-users-get-sla',
   expect(elapsed).toBeLessThan(performanceData.slaMs.getSorted);
 });
 
-test('GET /users filtered request responds within SLA @performance-users-get-sla', async ({
-  request,
-  authHeaders,
-}) => {
+test('GET /users filtered request responds within SLA @performance-users-get-sla', async ({ request, authHeaders }) => {
   const { response, elapsed } = await measureRequest(() =>
     request.get(`users?firstname=${filteringUsersData.singleFirstname.value}`, { headers: authHeaders })
   );
@@ -63,9 +57,7 @@ test('GET /users filtered request responds within SLA @performance-users-get-sla
   expect(elapsed).toBeLessThan(performanceData.slaMs.getFiltered);
 });
 
-test('GET /users unauthenticated request responds within SLA @performance-users-get-sla', async ({
-  request,
-}) => {
+test('GET /users unauthenticated request responds within SLA @performance-users-get-sla', async ({ request }) => {
   const { response, elapsed } = await measureRequest(() =>
     request.get('users', { headers: { Authorization: 'Bearer invalid-token' } })
   );

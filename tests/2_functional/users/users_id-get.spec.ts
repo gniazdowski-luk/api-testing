@@ -3,10 +3,7 @@ import { byIdData } from '@test-data/users/users_id.data';
 import { expect, test } from '@tests/fixtures';
 
 test.describe('Core', () => {
-  test('GET /users/{id} user data is correct @functional-users_id-get-core', async ({
-    request,
-    authHeaders,
-  }) => {
+  test('GET /users/{id} user data is correct @functional-users_id-get-core', async ({ request, authHeaders }) => {
     const user1Expected = expectedUsersData.user1;
 
     const response = await request.get(`users/${user1Expected.id}`, {

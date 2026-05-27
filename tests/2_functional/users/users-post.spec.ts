@@ -151,9 +151,7 @@ test.describe('Core', () => {
 });
 
 test.describe('Edge cases', () => {
-  test('POST /users invalid birthDate format is accepted @functional-users_id-post-edge', async ({
-    request,
-  }) => {
+  test('POST /users invalid birthDate format is accepted @functional-users_id-post-edge', async ({ request }) => {
     const response = await request.post('users', {
       data: postInvalidBirthDateData.nonIso8601,
     });
@@ -163,9 +161,7 @@ test.describe('Edge cases', () => {
 });
 
 test.describe('Negative', () => {
-  test('POST /users duplicate email returns conflict @functional-users_id-post-negative', async ({
-    request,
-  }) => {
+  test('POST /users duplicate email returns conflict @functional-users_id-post-negative', async ({ request }) => {
     await request.post('users', {
       data: postNegativeData.duplicateEmailBase,
     });
@@ -197,9 +193,7 @@ test.describe('Negative', () => {
     expect(response.status()).toBe(422);
   });
 
-  test('POST /users missing email returns validation error @functional-users_id-post-negative', async ({
-    request,
-  }) => {
+  test('POST /users missing email returns validation error @functional-users_id-post-negative', async ({ request }) => {
     const response = await request.post('users', {
       data: postMissingFieldData.missingEmail,
     });
@@ -307,9 +301,7 @@ test.describe('Negative', () => {
     expect(response.status()).toBe(422);
   });
 
-  test('POST /users empty body returns validation error @functional-users_id-post-negative', async ({
-    request,
-  }) => {
+  test('POST /users empty body returns validation error @functional-users_id-post-negative', async ({ request }) => {
     const response = await request.post('users', {
       data: postNegativeData.emptyBody,
     });
@@ -387,14 +379,11 @@ test.describe('Negative', () => {
     expect(response.status()).toBe(422);
   });
 
-  test('POST /users null email returns validation error @functional-users_id-post-negative', async ({
-    request,
-  }) => {
+  test('POST /users null email returns validation error @functional-users_id-post-negative', async ({ request }) => {
     const response = await request.post('users', {
       data: postNullFieldData.nullEmail,
     });
 
     expect(response.status()).toBe(422);
   });
-
 });

@@ -15,10 +15,12 @@ function assertMaskedFields(
   const user1 = users.find((u) => u.id === expectedUsersData.user1.id);
   const user2 = users.find((u) => u.id === expectedUsersData.user2.id);
 
-  expect.soft([
-    { email: user1!.email, lastname: user1!.lastname, password: user1!.password },
-    { email: user2!.email, lastname: user2!.lastname, password: user2!.password },
-  ]).toEqual([maskedUser, maskedUser]);
+  expect
+    .soft([
+      { email: user1!.email, lastname: user1!.lastname, password: user1!.password },
+      { email: user2!.email, lastname: user2!.lastname, password: user2!.password },
+    ])
+    .toEqual([maskedUser, maskedUser]);
   expect(response.status()).toBe(200);
 }
 

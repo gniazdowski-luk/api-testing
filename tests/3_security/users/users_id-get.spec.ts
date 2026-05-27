@@ -12,11 +12,13 @@ function assertMaskedFields(
   user: { id: number; email: string; lastname: string; password: string },
   response: { status: () => number }
 ) {
-  expect.soft({
-    email: user.email,
-    lastname: user.lastname,
-    password: user.password,
-  }).toEqual(maskedUser);
+  expect
+    .soft({
+      email: user.email,
+      lastname: user.lastname,
+      password: user.password,
+    })
+    .toEqual(maskedUser);
   expect(response.status()).toBe(200);
 }
 

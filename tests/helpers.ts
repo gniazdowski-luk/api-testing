@@ -1,4 +1,5 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
+
 import { buildUserPayload } from '@test-data/users/users.post.data';
 
 export async function measureRequest(fn: () => Promise<APIResponse>) {

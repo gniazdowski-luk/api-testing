@@ -2,9 +2,7 @@ import { usersPayloadsData } from '@test-data/users/users.payloads.data';
 import { securityUsersData } from '@test-data/users/users.security.data';
 import { expect, test } from '@tests/fixtures';
 
-test('PATCH /users unauthenticated access returns error @security-users-patch-authorization', async ({
-  request,
-}) => {
+test('PATCH /users unauthenticated access returns error @security-users-patch-authorization', async ({ request }) => {
   const response = await request.patch('users', {
     data: usersPayloadsData.patch,
   });
@@ -14,9 +12,7 @@ test('PATCH /users unauthenticated access returns error @security-users-patch-au
   expect(response.status()).toBe(401);
 });
 
-test('PATCH /users empty Bearer token returns error @security-users-patch-authorization', async ({
-  request,
-}) => {
+test('PATCH /users empty Bearer token returns error @security-users-patch-authorization', async ({ request }) => {
   const response = await request.patch('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
     data: usersPayloadsData.patch,
@@ -27,9 +23,7 @@ test('PATCH /users empty Bearer token returns error @security-users-patch-author
   expect(response.status()).toBe(401);
 });
 
-test('PATCH /users invalid Bearer token returns error @security-users-patch-authorization', async ({
-  request,
-}) => {
+test('PATCH /users invalid Bearer token returns error @security-users-patch-authorization', async ({ request }) => {
   const response = await request.patch('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
     data: usersPayloadsData.patch,
@@ -40,9 +34,7 @@ test('PATCH /users invalid Bearer token returns error @security-users-patch-auth
   expect(response.status()).toBe(401);
 });
 
-test('PATCH /users wrong Basic auth returns error @security-users-patch-authorization', async ({
-  request,
-}) => {
+test('PATCH /users wrong Basic auth returns error @security-users-patch-authorization', async ({ request }) => {
   const response = await request.patch('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
     data: usersPayloadsData.patch,

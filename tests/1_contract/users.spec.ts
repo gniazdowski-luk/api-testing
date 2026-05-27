@@ -1,6 +1,5 @@
 import expectedUsersData from '@test-data/users/users.data.json';
-import { usersPayloadsData } from '@test-data/users/users.payloads.data';
-import { buildUserPayload, postMissingFieldData } from '@test-data/users/users.post.data';
+import { buildUserPayload } from '@test-data/users/users.post.data';
 import { userSchema, usersSchema } from '@test-data/users/users.schema';
 import { expect, test } from '@tests/fixtures';
 import { createUserAndLogin } from '@tests/helpers';
@@ -73,9 +72,7 @@ test.describe('POST', () => {
     expect(result.errors).toHaveLength(0);
   });
 
-  test('POST /users response includes the correct Content-Type header @contract-users-post', async ({
-    request,
-  }) => {
+  test('POST /users response includes the correct Content-Type header @contract-users-post', async ({ request }) => {
     const response = await request.post('users', {
       data: buildUserPayload(),
     });
@@ -85,9 +82,7 @@ test.describe('POST', () => {
 });
 
 test.describe('PUT /users/{id}', () => {
-  test('PUT /users/{id} response matches the user contract schema @contract-users_id-put', async ({
-    request,
-  }) => {
+  test('PUT /users/{id} response matches the user contract schema @contract-users_id-put', async ({ request }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
 
     const response = await request.put(`users/${createdUser.id}`, {
@@ -114,4 +109,3 @@ test.describe('PUT /users/{id}', () => {
     expect(response.headers()['content-type']).toMatch(/application\/json/);
   });
 });
-

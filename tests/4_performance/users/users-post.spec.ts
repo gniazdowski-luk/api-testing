@@ -10,9 +10,7 @@ test('POST /users creating a new user responds within SLA @performance-users-pos
   expect(elapsed).toBeLessThan(performanceData.slaMs.postCreate);
 });
 
-test('POST /users duplicate email rejection responds within SLA @performance-users-post-sla', async ({
-  request,
-}) => {
+test('POST /users duplicate email rejection responds within SLA @performance-users-post-sla', async ({ request }) => {
   const payload = buildUserPayload();
   await request.post('users', { data: payload });
 

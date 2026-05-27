@@ -18,9 +18,7 @@ test.describe('Authorization', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('PUT /users/{id} empty Bearer token returns error @security-users_id-put-authorization', async ({
-    request,
-  }) => {
+  test('PUT /users/{id} empty Bearer token returns error @security-users_id-put-authorization', async ({ request }) => {
     const { createdUser } = await createUserAndLogin(request);
 
     const response = await request.put(`users/${createdUser.id}`, {
@@ -48,9 +46,7 @@ test.describe('Authorization', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('PUT /users/{id} wrong Basic auth returns error @security-users_id-put-authorization', async ({
-    request,
-  }) => {
+  test('PUT /users/{id} wrong Basic auth returns error @security-users_id-put-authorization', async ({ request }) => {
     const { createdUser } = await createUserAndLogin(request);
 
     const response = await request.put(`users/${createdUser.id}`, {

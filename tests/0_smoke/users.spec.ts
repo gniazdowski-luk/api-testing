@@ -3,10 +3,7 @@ import { buildUserPayload } from '@test-data/users/users.post.data';
 import { expect, test } from '@tests/fixtures';
 import { createUserAndLogin } from '@tests/helpers';
 
-test('GET /users endpoint is accessible @smoke-users-get', async ({
-  request,
-  authHeaders,
-}) => {
+test('GET /users endpoint is accessible @smoke-users-get', async ({ request, authHeaders }) => {
   const response = await request.get('users', {
     headers: authHeaders,
   });
@@ -16,10 +13,7 @@ test('GET /users endpoint is accessible @smoke-users-get', async ({
   expect(response.status()).toBe(200);
 });
 
-test('GET /users/{id} endpoint is accessible @smoke-users_id-get', async ({
-  request,
-  authHeaders,
-}) => {
+test('GET /users/{id} endpoint is accessible @smoke-users_id-get', async ({ request, authHeaders }) => {
   const user1Expected = expectedUsersData.user1;
 
   const response = await request.get(`users/${user1Expected.id}`, {
@@ -33,9 +27,7 @@ test('GET /users/{id} endpoint is accessible @smoke-users_id-get', async ({
   expect(response.status()).toBe(200);
 });
 
-test('POST /users endpoint is accessible @smoke-users-post', async ({
-  request,
-}) => {
+test('POST /users endpoint is accessible @smoke-users-post', async ({ request }) => {
   const newUserPayload = buildUserPayload();
 
   const response = await request.post('users', {
@@ -54,9 +46,7 @@ test('POST /users endpoint is accessible @smoke-users-post', async ({
   expect(response.status()).toBe(201);
 });
 
-test('PUT /users/{id} endpoint is accessible @smoke-users-put', async ({
-  request,
-}) => {
+test('PUT /users/{id} endpoint is accessible @smoke-users-put', async ({ request }) => {
   const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
 
   const updatedPayload = buildUserPayload();
@@ -77,10 +67,7 @@ test('PUT /users/{id} endpoint is accessible @smoke-users-put', async ({
   expect(response.status()).toBe(200);
 });
 
-test('HEAD /users endpoint is accessible @smoke-users-head', async ({
-  request,
-  authHeaders,
-}) => {
+test('HEAD /users endpoint is accessible @smoke-users-head', async ({ request, authHeaders }) => {
   const response = await request.head('users', {
     headers: authHeaders,
   });

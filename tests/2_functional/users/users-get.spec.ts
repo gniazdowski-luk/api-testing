@@ -212,10 +212,7 @@ test.describe('Sorting', () => {
     expect(firstnames).toEqual(sortedDesc);
   });
 
-  test('GET /users sorting by id ascending works @functional-users-get-sorting', async ({
-    request,
-    authHeaders,
-  }) => {
+  test('GET /users sorting by id ascending works @functional-users-get-sorting', async ({ request, authHeaders }) => {
     const response = await request.get('users?_sort=id&_order=asc', {
       headers: authHeaders,
     });
@@ -246,10 +243,7 @@ test.describe('Sorting', () => {
 });
 
 test.describe('Filtering', () => {
-  test('GET /users filtering by firstname works @functional-users-get-filtering', async ({
-    request,
-    authHeaders,
-  }) => {
+  test('GET /users filtering by firstname works @functional-users-get-filtering', async ({ request, authHeaders }) => {
     const data = filteringUsersData.singleFirstname;
     const response = await request.get(`users?firstname=${data.value}`, {
       headers: authHeaders,
@@ -330,10 +324,7 @@ test.describe('Filtering', () => {
 });
 
 test.describe('Search', () => {
-  test('GET /users full-text search works @functional-users-get-search', async ({
-    request,
-    authHeaders,
-  }) => {
+  test('GET /users full-text search works @functional-users-get-search', async ({ request, authHeaders }) => {
     const data = searchUsersData.matchingQuery;
     const response = await request.get(`users?q=${data.q}`, {
       headers: authHeaders,
@@ -346,10 +337,7 @@ test.describe('Search', () => {
     expect(userIds).toEqual(data.expectedIds);
   });
 
-  test('GET /users empty search returns all users @functional-users-get-search', async ({
-    request,
-    authHeaders,
-  }) => {
+  test('GET /users empty search returns all users @functional-users-get-search', async ({ request, authHeaders }) => {
     const [allUsersResponse, searchResponse] = await Promise.all([
       request.get('users', { headers: authHeaders }),
       request.get('users?q=', { headers: authHeaders }),
@@ -364,10 +352,7 @@ test.describe('Search', () => {
     expect(searchUsers).toHaveLength(allUsers.length);
   });
 
-  test('GET /users partial firstname matching works @functional-users-get-search', async ({
-    request,
-    authHeaders,
-  }) => {
+  test('GET /users partial firstname matching works @functional-users-get-search', async ({ request, authHeaders }) => {
     const pattern = searchUsersData.firstnameLikePattern;
 
     const [apiResponse, allUsers] = await Promise.all([
@@ -398,10 +383,7 @@ test.describe('Search', () => {
 });
 
 test.describe('Data', () => {
-  test('GET /users avatar paths are correct @functional-users-get-data', async ({
-    request,
-    authHeaders,
-  }) => {
+  test('GET /users avatar paths are correct @functional-users-get-data', async ({ request, authHeaders }) => {
     const response = await request.get('users', { headers: authHeaders });
     expect.soft(response.status()).toBe(200);
     const allUsers = await response.json();
@@ -501,10 +483,7 @@ test.describe('Negative', () => {
     expect(response.status()).toBe(404);
   });
 
-  test('GET /users zero limit returns not found @functional-users-get-negative', async ({
-    request,
-    authHeaders,
-  }) => {
+  test('GET /users zero limit returns not found @functional-users-get-negative', async ({ request, authHeaders }) => {
     const response = await request.get('users?_limit=0', {
       headers: authHeaders,
     });
@@ -592,10 +571,7 @@ test.describe('Negative', () => {
     expect(response.status()).toBe(404);
   });
 
-  test('GET /users filtering is case-sensitive @functional-users-get-negative', async ({
-    request,
-    authHeaders,
-  }) => {
+  test('GET /users filtering is case-sensitive @functional-users-get-negative', async ({ request, authHeaders }) => {
     const response = await request.get(`users?firstname=${filteringUsersData.caseSensitiveFirstname}`, {
       headers: authHeaders,
     });

@@ -1,9 +1,7 @@
 import { securityUsersData } from '@test-data/users/users.security.data';
 import { expect, test } from '@tests/fixtures';
 
-test('DELETE /users unauthenticated access returns error @security-users-delete-authorization', async ({
-  request,
-}) => {
+test('DELETE /users unauthenticated access returns error @security-users-delete-authorization', async ({ request }) => {
   const response = await request.delete('users');
   const errorResponse = await response.json();
 
@@ -11,9 +9,7 @@ test('DELETE /users unauthenticated access returns error @security-users-delete-
   expect(response.status()).toBe(401);
 });
 
-test('DELETE /users empty Bearer token returns error @security-users-delete-authorization', async ({
-  request,
-}) => {
+test('DELETE /users empty Bearer token returns error @security-users-delete-authorization', async ({ request }) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
   });
@@ -23,9 +19,7 @@ test('DELETE /users empty Bearer token returns error @security-users-delete-auth
   expect(response.status()).toBe(401);
 });
 
-test('DELETE /users invalid Bearer token returns error @security-users-delete-authorization', async ({
-  request,
-}) => {
+test('DELETE /users invalid Bearer token returns error @security-users-delete-authorization', async ({ request }) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
   });
@@ -35,9 +29,7 @@ test('DELETE /users invalid Bearer token returns error @security-users-delete-au
   expect(response.status()).toBe(401);
 });
 
-test('DELETE /users wrong Basic auth returns error @security-users-delete-authorization', async ({
-  request,
-}) => {
+test('DELETE /users wrong Basic auth returns error @security-users-delete-authorization', async ({ request }) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
   });
@@ -60,9 +52,7 @@ test('DELETE /users valid token without Cookie returns error @security-users-del
   expect(response.status()).toBe(401);
 });
 
-test('DELETE /users expired token returns error @security-users-delete-expired_token', async ({
-  request,
-}) => {
+test('DELETE /users expired token returns error @security-users-delete-expired_token', async ({ request }) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.expiredToken },
   });
