@@ -480,6 +480,36 @@ jobs:
           path: blob-report/
           retention-days: 1
 
+  pr-gate:
+    name: PR Gate
+    needs: [quality, smoke, contract, pr-functional, pr-security, pr-performance]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check all required jobs
+        run: |
+          results=(
+            "quality=${{ needs.quality.result }}"
+            "smoke=${{ needs.smoke.result }}"
+            "contract=${{ needs.contract.result }}"
+            "pr-functional=${{ needs.pr-functional.result }}"
+            "pr-security=${{ needs.pr-security.result }}"
+            "pr-performance=${{ needs.pr-performance.result }}"
+          )
+          failed=false
+          for entry in "${results[@]}"; do
+            job="${entry%%=*}"
+            result="${entry##*=}"
+            if [[ "$result" == "failure" || "$result" == "cancelled" ]]; then
+              echo "::error::Job '$job' did not pass (result: $result)"
+              failed=true
+            fi
+          done
+          if [[ "$failed" == "true" ]]; then
+            exit 1
+          fi
+          echo "All required jobs passed or were skipped."
+
   publish-report:
     name: Publish Report to GitHub Pages
     needs: [smoke, contract, functional, security, performance]

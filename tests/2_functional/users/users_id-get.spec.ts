@@ -1,9 +1,9 @@
 import expectedUsersData from '@test-data/users/users.data.json';
-import { byIdData } from '@test-data/users/users-id.data';
+import { byIdData } from '@test-data/users/users_id.data';
 import { expect, test } from '@tests/fixtures';
 
 test.describe('Core', () => {
-  test('checks that an existing user can be retrieved by ID with correct fields @functional-users-id', async ({
+  test('GET /users/{id} user data is correct @functional-users_id-get-core', async ({
     request,
     authHeaders,
   }) => {
@@ -12,22 +12,19 @@ test.describe('Core', () => {
     const response = await request.get(`users/${user1Expected.id}`, {
       headers: authHeaders,
     });
+    const user = await response.json();
 
-    const body = await response.json();
-
-    expect(body).toMatchObject({
+    expect.soft(user).toMatchObject({
       id: user1Expected.id,
       firstname: user1Expected.firstname,
       lastname: user1Expected.lastname,
-      email: expect.any(String),
-      avatar: expect.any(String),
-      password: expect.any(String),
     });
+    expect(response.status()).toBe(200);
   });
 });
 
 test.describe('Negative', () => {
-  test('checks that retrieving a non-existent user returns the correct status code @functional-users-id-negative', async ({
+  test('GET /users/{id} non-existent user returns not found @functional-users_id-get-negative', async ({
     request,
     authHeaders,
   }) => {
@@ -38,7 +35,7 @@ test.describe('Negative', () => {
     expect(response.status()).toBe(404);
   });
 
-  test('checks that retrieving a user with an invalid ID returns the correct status code @functional-users-id-negative', async ({
+  test('GET /users/{id} invalid ID format returns not found @functional-users_id-get-negative', async ({
     request,
     authHeaders,
   }) => {

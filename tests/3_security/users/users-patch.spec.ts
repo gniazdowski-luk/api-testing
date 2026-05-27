@@ -2,58 +2,58 @@ import { usersPayloadsData } from '@test-data/users/users.payloads.data';
 import { securityUsersData } from '@test-data/users/users.security.data';
 import { expect, test } from '@tests/fixtures';
 
-test('checks that missing authorization on PATCH /users returns the correct status code and error message @security-authorization-patch-users', async ({
+test('PATCH /users unauthenticated access returns error @security-users-patch-authorization', async ({
   request,
 }) => {
   const response = await request.patch('users', {
     data: usersPayloadsData.patch,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenNotProvided);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenNotProvided);
   expect(response.status()).toBe(401);
 });
 
-test('checks that an empty Bearer token on PATCH /users returns the correct status code and error message @security-authorization-patch-users', async ({
+test('PATCH /users empty Bearer token returns error @security-users-patch-authorization', async ({
   request,
 }) => {
   const response = await request.patch('users', {
     headers: { Authorization: securityUsersData.emptyBearerToken },
     data: usersPayloadsData.patch,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenNotProvided);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenNotProvided);
   expect(response.status()).toBe(401);
 });
 
-test('checks that an invalid Bearer token on PATCH /users returns the correct status code and error message @security-authorization-patch-users', async ({
+test('PATCH /users invalid Bearer token returns error @security-users-patch-authorization', async ({
   request,
 }) => {
   const response = await request.patch('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },
     data: usersPayloadsData.patch,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenNotProvided);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenNotProvided);
   expect(response.status()).toBe(401);
 });
 
-test('checks that wrong Basic auth on PATCH /users returns the correct status code and error message @security-authorization-patch-users', async ({
+test('PATCH /users wrong Basic auth returns error @security-users-patch-authorization', async ({
   request,
 }) => {
   const response = await request.patch('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
     data: usersPayloadsData.patch,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenNotProvided);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenNotProvided);
   expect(response.status()).toBe(401);
 });
 
-test('checks that a valid token without Cookie on PATCH /users returns the correct status code and error message @security-authorization-patch-users', async ({
+test('PATCH /users valid token without Cookie returns error @security-users-patch-authorization', async ({
   request,
   accessToken,
 }) => {
@@ -61,8 +61,8 @@ test('checks that a valid token without Cookie on PATCH /users returns the corre
     headers: { Authorization: `Bearer ${accessToken}` },
     data: usersPayloadsData.patch,
   });
-  const body = await response.json();
+  const errorResponse = await response.json();
 
-  expect.soft(body.error.message).toBe(securityUsersData.accessTokenInvalid);
+  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenInvalid);
   expect(response.status()).toBe(401);
 });

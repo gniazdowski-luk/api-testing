@@ -15,15 +15,15 @@ function assertMaskedFields(
   const user1 = users.find((u) => u.id === expectedUsersData.user1.id);
   const user2 = users.find((u) => u.id === expectedUsersData.user2.id);
 
-  expect.soft(response.status()).toBe(200);
-  expect([
+  expect.soft([
     { email: user1!.email, lastname: user1!.lastname, password: user1!.password },
     { email: user2!.email, lastname: user2!.lastname, password: user2!.password },
   ]).toEqual([maskedUser, maskedUser]);
+  expect(response.status()).toBe(200);
 }
 
 test.describe('Authorization', () => {
-  test('checks that unauthenticated access returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  test('GET /users unauthenticated access returns masked sensitive fields @security-users-get-authorization', async ({
     request,
   }) => {
     const response = await request.get('users');
@@ -32,7 +32,7 @@ test.describe('Authorization', () => {
     assertMaskedFields(users, response);
   });
 
-  test('checks that an empty Bearer token returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  test('GET /users empty Bearer token returns masked sensitive fields @security-users-get-authorization', async ({
     request,
   }) => {
     const response = await request.get('users', {
@@ -43,7 +43,7 @@ test.describe('Authorization', () => {
     assertMaskedFields(users, response);
   });
 
-  test('checks that an invalid Bearer token returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  test('GET /users invalid Bearer token returns masked sensitive fields @security-users-get-authorization', async ({
     request,
   }) => {
     const response = await request.get('users', {
@@ -54,7 +54,7 @@ test.describe('Authorization', () => {
     assertMaskedFields(users, response);
   });
 
-  test('checks that wrong Basic auth returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  test('GET /users wrong Basic auth returns masked sensitive fields @security-users-get-authorization', async ({
     request,
   }) => {
     const response = await request.get('users', {
@@ -65,7 +65,7 @@ test.describe('Authorization', () => {
     assertMaskedFields(users, response);
   });
 
-  test('checks that a valid token without Cookie returns the correct status code with masked sensitive fields @security-authorization-get-users', async ({
+  test('GET /users valid token without Cookie returns masked sensitive fields @security-users-get-authorization', async ({
     request,
     accessToken,
   }) => {
@@ -78,19 +78,21 @@ test.describe('Authorization', () => {
   });
 });
 
-test.describe('CORS', () => {
-  test('checks that the response includes the Access-Control-Allow-Origin header @security-cors-get-users', async ({
+test.describe('CORS Headers', () => {
+  test('GET /users access control allow origin header is included @security-users-get-cors', async ({
     request,
     baseURL,
   }) => {
+    const origin = new URL(baseURL!).origin;
     const response = await request.get('users', {
-      headers: { Origin: new URL(baseURL!).origin },
+      headers: { Origin: origin },
     });
 
-    expect(response.headers()['access-control-allow-origin']).toBeTruthy();
+    expect.soft(response.headers()['access-control-allow-origin']).toBe(origin);
+    expect(response.status()).toBe(200);
   });
 
-  test('checks that an OPTIONS preflight request returns the correct CORS headers @security-cors-get-users', async ({
+  test('OPTIONS /users preflight request returns CORS headers @security-users-get-cors', async ({
     request,
     baseURL,
   }) => {
@@ -104,30 +106,34 @@ test.describe('CORS', () => {
     });
 
     expect.soft(response.headers()['access-control-allow-methods']).toBeTruthy();
-    expect(response.headers()['access-control-allow-headers']).toBeTruthy();
+    expect.soft(response.headers()['access-control-allow-headers']).toBeTruthy();
+    expect(response.status()).toBe(204);
   });
 });
 
-test.describe('Security Headers', () => {
-  test('checks that the response includes the X-Content-Type-Options header @security-headers-users', async ({
+test.describe('Security Response Headers', () => {
+  test('GET /users response includes X-Content-Type-Options header @security-users-get-headers', async ({
     request,
   }) => {
     const response = await request.get('users');
 
-    expect(response.headers()['x-content-type-options']).toBe('nosniff');
+    expect.soft(response.headers()['x-content-type-options']).toBe('nosniff');
+    expect(response.status()).toBe(200);
   });
 
-  test('checks that the response includes the X-Frame-Options header @security-headers-users', async ({ request }) => {
+  test('GET /users response includes X-Frame-Options header @security-users-get-headers', async ({ request }) => {
     const response = await request.get('users');
 
-    expect(['DENY', 'SAMEORIGIN']).toContain(response.headers()['x-frame-options']);
+    expect.soft(response.headers()['x-frame-options']).toBe('SAMEORIGIN');
+    expect(response.status()).toBe(200);
   });
 
-  test('checks that the response includes a Content-Security-Policy header @security-headers-users', async ({
+  test('GET /users response includes Content-Security-Policy header @security-users-get-headers', async ({
     request,
   }) => {
     const response = await request.get('users');
 
-    expect(response.headers()['content-security-policy']).toBeTruthy();
+    expect.soft(response.headers()['content-security-policy']).toBeTruthy();
+    expect(response.status()).toBe(200);
   });
 });

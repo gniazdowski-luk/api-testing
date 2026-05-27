@@ -1,6 +1,6 @@
 import { expect, test } from '@tests/fixtures';
 
-test('checks that sending an unsupported HTTP method returns the correct status code @security-methods-users', async ({
+test('TRACE /users unsupported method returns error @security-users-trace-methods', async ({
   request,
 }) => {
   const response = await request.fetch('users', { method: 'TRACE' });

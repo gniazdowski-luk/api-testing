@@ -1,97 +1,126 @@
-# Security Requirements
+# Security Requirements - Users
 
-## Users
+## GET /users
 
-### GET /users
+### GET /users - Authorization
 
-@security-authorization-get-users - Security tests for GET /users authorization:
-- [x] `checks that unauthenticated access returns the correct status code with masked sensitive fields` - GET /users without Authorization header returns 200 with masked email, lastname, and password.
-- [x] `checks that an empty Bearer token returns the correct status code with masked sensitive fields` - GET /users with empty Bearer token returns 200 with masked fields.
-- [x] `checks that an invalid Bearer token returns the correct status code with masked sensitive fields` - GET /users with wrong Bearer token returns 200 with masked fields.
-- [x] `checks that wrong Basic auth returns the correct status code with masked sensitive fields` - GET /users with wrong Basic auth returns 200 with masked fields.
-- [x] `checks that a valid token without Cookie returns the correct status code with masked sensitive fields` - GET /users with valid Bearer token but without Cookie returns 200 with masked fields.
-
-### PUT /users
-
-@security-authorization-put-users - Security tests for PUT /users authorization:
-- [x] `checks that missing authorization on PUT /users returns the correct status code and error message` - PUT /users without Authorization header returns 401 with "Access token not provided!".
-- [x] `checks that an empty Bearer token on PUT /users returns the correct status code and error message` - PUT /users with empty Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that an invalid Bearer token on PUT /users returns the correct status code and error message` - PUT /users with wrong Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that wrong Basic auth on PUT /users returns the correct status code and error message` - PUT /users with wrong Basic auth returns 401 with "Access token not provided!".
-- [x] `checks that a valid token without Cookie on PUT /users returns the correct status code and error message` - PUT /users with valid Bearer token but without Cookie returns 401 with "Access token for given user is invalid!".
-
-### PATCH /users
-
-@security-authorization-patch-users - Security tests for PATCH /users authorization:
-- [x] `checks that missing authorization on PATCH /users returns the correct status code and error message` - PATCH /users without Authorization header returns 401 with "Access token not provided!".
-- [x] `checks that an empty Bearer token on PATCH /users returns the correct status code and error message` - PATCH /users with empty Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that an invalid Bearer token on PATCH /users returns the correct status code and error message` - PATCH /users with wrong Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that wrong Basic auth on PATCH /users returns the correct status code and error message` - PATCH /users with wrong Basic auth returns 401 with "Access token not provided!".
-- [x] `checks that a valid token without Cookie on PATCH /users returns the correct status code and error message` - PATCH /users with valid Bearer token but without Cookie returns 401 with "Access token for given user is invalid!".
-
-### DELETE /users
-
-@security-authorization-delete-users - Security tests for DELETE /users authorization:
-- [x] `checks that missing authorization on DELETE /users returns the correct status code and error message` - DELETE /users without Authorization header returns 401 with "Access token not provided!".
-- [x] `checks that an empty Bearer token on DELETE /users returns the correct status code and error message` - DELETE /users with empty Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that an invalid Bearer token on DELETE /users returns the correct status code and error message` - DELETE /users with wrong Bearer token returns 401 with "Access token not provided!".
-- [x] `checks that wrong Basic auth on DELETE /users returns the correct status code and error message` - DELETE /users with wrong Basic auth returns 401 with "Access token not provided!".
-- [x] `checks that a valid token without Cookie on DELETE /users returns the correct status code and error message` - DELETE /users with valid Bearer token but without Cookie returns 401 with "Access token for given user is invalid!".
+@security-users-get-authorization - Security tests for GET /users authorization:
+- `GET /users unauthenticated access returns masked sensitive fields` - GET /users without Authorization header returns status code 200 with masked email, lastname, and password.
+- `GET /users empty Bearer token returns masked sensitive fields` - GET /users with empty Bearer token returns status code 200 with masked fields.
+- `GET /users invalid Bearer token returns masked sensitive fields` - GET /users with wrong Bearer token returns status code 200 with masked fields.
+- `GET /users wrong Basic auth returns masked sensitive fields` - GET /users with wrong Basic auth returns status code 200 with masked fields.
+- `GET /users valid token without Cookie returns masked sensitive fields` - GET /users with valid Bearer token but without Cookie returns status code 200 with masked fields.
 
 ### GET /users - CORS Headers
 
-@security-cors-get-users - Security tests verifying CORS response headers are present on the /users endpoint:
-- [x] `checks that the response includes the Access-Control-Allow-Origin header` - GET /users with an Origin header set to the base URL origin returns an Access-Control-Allow-Origin response header matching that origin.
-- [x] `checks that an OPTIONS preflight request returns the correct CORS headers` - OPTIONS /users with Origin, Access-Control-Request-Method, and Access-Control-Request-Headers returns Access-Control-Allow-Methods and Access-Control-Allow-Headers in the response (browser preflight scenario from PDF CORS section).
-
-### POST /users - CORS Headers
-
-@security-cors-post-users - Security tests verifying CORS response headers are present on the POST /users endpoint:
-- [x] `checks that a POST request includes the Access-Control-Allow-Origin header` - POST /users with an Origin header set to the base URL origin returns an Access-Control-Allow-Origin response header matching that origin.
-- [x] `checks that an OPTIONS preflight request for POST includes the correct CORS headers` - OPTIONS /users with Origin, Access-Control-Request-Method: POST, and Access-Control-Request-Headers: Content-Type returns Access-Control-Allow-Methods (including POST) and Access-Control-Allow-Headers (including Content-Type) in the response.
-
-### /users - Disallowed HTTP Methods
-
-@security-methods-users - Security tests verifying that HTTP methods not supported at the /users endpoint are rejected by the server:
-- [x] `checks that sending an unsupported HTTP method returns the correct status code` - sending TRACE to /users (unauthenticated) returns 401; TRACE is not in the server's list of CORS-allowed methods (GET, HEAD, PUT, PATCH, POST, DELETE) and the auth middleware rejects it before route handling.
+@security-users-get-cors - Security tests verifying CORS response headers are present on the /users endpoint:
+- `GET /users access control allow origin header is included` - GET /users with an Origin header returns status code 200 and Access-Control-Allow-Origin header matching the request origin.
+- `OPTIONS /users preflight request returns CORS headers` - OPTIONS /users with Origin and preflight headers returns status code 204 and includes Access-Control-Allow-Methods and Access-Control-Allow-Headers.
 
 ### GET /users - Security Response Headers
 
-@security-headers-users - Security tests verifying that the /users endpoint returns expected security-related HTTP response headers:
-- [x] `checks that the response includes the X-Content-Type-Options header` - GET /users response includes X-Content-Type-Options: nosniff.
-- [x] `checks that the response includes the X-Frame-Options header` - GET /users response includes X-Frame-Options header (DENY or SAMEORIGIN).
-- [x] `checks that the response includes a Content-Security-Policy header` - GET /users response includes a Content-Security-Policy header.
+@security-users-get-headers - Security tests verifying that the /users endpoint returns expected security-related HTTP response headers:
+- `GET /users response includes X-Content-Type-Options header` - GET /users response includes X-Content-Type-Options: nosniff and status code 200.
+- `GET /users response includes X-Frame-Options header` - GET /users response includes X-Frame-Options: SAMEORIGIN and status code 200.
+- `GET /users response includes Content-Security-Policy header` - GET /users response includes a Content-Security-Policy header and status code 200.
 
-### /users - Expired Token
-
-@security-expired-token-users - Security tests verifying that an expired or revoked token is rejected on protected endpoints:
-- [x] `checks that an expired token on PUT /users returns the correct status code and error message` - PUT /users with a token that has expired returns 401.
-- [x] `checks that an expired token on DELETE /users returns the correct status code and error message` - DELETE /users with a token that has expired returns 401.
+## GET /users/{id}
 
 ### GET /users/{id} - Authorization
 
-@security-authorization-get-users-id - Security tests for GET /users/{id} authorization:
-- [x] `checks that unauthenticated access to a single user returns the correct status code with masked sensitive fields` - GET /users/{id} without Authorization header returns 200 with masked email, lastname, and password.
-- [x] `checks that an empty Bearer token for a single-user request returns the correct status code with masked sensitive fields` - GET /users/{id} with empty Bearer token returns 200 with masked fields.
-- [x] `checks that an invalid Bearer token for a single-user request returns the correct status code with masked sensitive fields` - GET /users/{id} with wrong Bearer token returns 200 with masked fields.
-- [x] `checks that wrong Basic auth for a single-user request returns the correct status code with masked sensitive fields` - GET /users/{id} with wrong Basic auth returns 200 with masked fields.
-- [x] `checks that a valid token without Cookie for a single-user request returns the correct status code with masked sensitive fields` - GET /users/{id} with valid Bearer token but without Cookie returns 200 with masked fields.
+@security-users_id-get-authorization - Security tests for GET /users/{id} authorization:
+- `GET /users/{id} unauthenticated access returns masked sensitive fields` - GET /users/{id} without Authorization header returns status code 200 with masked email, lastname, and password.
+- `GET /users/{id} empty Bearer token returns masked sensitive fields` - GET /users/{id} with empty Bearer token returns status code 200 with masked fields.
+- `GET /users/{id} invalid Bearer token returns masked sensitive fields` - GET /users/{id} with wrong Bearer token returns status code 200 with masked fields.
+- `GET /users/{id} wrong Basic auth returns masked sensitive fields` - GET /users/{id} with wrong Basic auth returns status code 200 with masked fields.
+- `GET /users/{id} valid token without Cookie returns masked sensitive fields` - GET /users/{id} with valid Bearer token but without Cookie returns status code 200 with masked fields.
 
 ### GET /users/{id} - CORS Headers
 
-@security-cors-get-users-id - Security tests verifying CORS response headers are present on the /users/{id} endpoint:
-- [x] `checks that the single-user response includes the Access-Control-Allow-Origin header` - GET /users/{id} with an Origin header set to the base URL origin returns an Access-Control-Allow-Origin response header matching that origin.
-- [x] `checks that an OPTIONS preflight request for a single user returns the correct CORS headers` - OPTIONS /users/{id} with Origin, Access-Control-Request-Method, and Access-Control-Request-Headers returns Access-Control-Allow-Methods and Access-Control-Allow-Headers in the response.
+@security-users_id-get-cors - Security tests verifying CORS response headers are present on the /users/{id} endpoint:
+- `GET /users/{id} access control allow origin header is included` - GET /users/{id} with an Origin header returns status code 200 and Access-Control-Allow-Origin matching the request origin.
+- `OPTIONS /users/{id} preflight request returns CORS headers` - OPTIONS /users/{id} with Origin and preflight headers returns status code 204 and includes Access-Control-Allow-Methods and Access-Control-Allow-Headers.
 
 ### GET /users/{id} - Security Response Headers
 
-@security-headers-users-id - Security tests verifying that the /users/{id} endpoint returns expected security-related HTTP response headers:
-- [x] `checks that the single-user response includes the X-Content-Type-Options header` - GET /users/{id} response includes X-Content-Type-Options: nosniff.
-- [x] `checks that the single-user response includes the X-Frame-Options header` - GET /users/{id} response includes X-Frame-Options header (DENY or SAMEORIGIN).
-- [x] `checks that the single-user response includes a Content-Security-Policy header` - GET /users/{id} response includes a Content-Security-Policy header.
+@security-users_id-get-headers - Security tests verifying that the /users/{id} endpoint returns expected security-related HTTP response headers:
+- `GET /users/{id} response includes X-Content-Type-Options header` - GET /users/{id} response includes X-Content-Type-Options: nosniff and status code 200.
+- `GET /users/{id} response includes X-Frame-Options header` - GET /users/{id} response includes X-Frame-Options: SAMEORIGIN and status code 200.
+- `GET /users/{id} response includes Content-Security-Policy header` - GET /users/{id} response includes a Content-Security-Policy header and status code 200.
 
-### /users/{id} - Disallowed HTTP Methods
+## POST /users
 
-@security-methods-users-id - Security tests verifying that HTTP methods not supported at the /users/{id} endpoint are rejected by the server:
-- [x] `checks that sending POST to a single user returns the correct status code` - POST /users/{id} with a valid body and an existing ID returns 404, confirming the endpoint does not support POST.
-- [x] `checks that sending POST to a non-existing user returns the correct status code` - POST /users/{id} with a valid body and a non-existing ID (99999999) returns 404, confirming the route is absent regardless of whether the ID exists.
+### POST /users - CORS Headers
+
+@security-users-post-cors - Security tests verifying CORS response headers are present on the POST /users endpoint:
+- `POST /users access control allow origin header is included` - POST /users with an Origin header returns status code 201 and Access-Control-Allow-Origin header matching the request origin.
+- `OPTIONS /users preflight request for POST returns CORS headers` - OPTIONS /users with Origin and preflight headers for POST returns status code 204 and includes Access-Control-Allow-Methods (including POST) and Access-Control-Allow-Headers.
+
+## POST /users/{id}
+
+### POST /users/{id} - Disallowed HTTP Methods
+
+@security-users_id-post-methods - Security tests verifying that HTTP methods not supported at the /users/{id} endpoint are rejected by the server:
+- `POST /users/{id} unsupported method returns not found` - POST /users/{id} with a valid body and an existing ID returns status code 404.
+- `POST /users/{id} unsupported method for non-existent user returns not found` - POST /users/{id} with a valid body and a non-existing ID returns status code 404.
+
+## PUT /users
+
+### PUT /users - Authorization
+
+@security-users-put-authorization - Security tests for PUT /users authorization:
+- `PUT /users unauthenticated access returns error` - PUT /users without Authorization header returns status code 401 with "Access token not provided!".
+- `PUT /users empty Bearer token returns error` - PUT /users with empty Bearer token returns status code 401 with "Access token not provided!".
+- `PUT /users invalid Bearer token returns error` - PUT /users with wrong Bearer token returns status code 401 with "Access token not provided!".
+- `PUT /users wrong Basic auth returns error` - PUT /users with wrong Basic auth returns status code 401 with "Access token not provided!".
+- `PUT /users valid token without Cookie returns error` - PUT /users with valid Bearer token but without Cookie returns status code 401 with "Access token for given user is invalid!".
+
+### PUT /users - Expired Token
+
+@security-users-put-expired_token - Security tests verifying that an expired token is rejected on protected endpoints:
+- `PUT /users expired token returns error` - PUT /users with a token that has expired returns status code 401.
+
+## PUT /users/{id
+
+### PUT /users/{id} - Authorization
+
+@security-users_id-put-authorization - Security tests for PUT /users/{id} authorization:
+- `PUT /users/{id} unauthenticated access returns error` - PUT /users/{id} without Authorization header returns status code 401 with "Access token not provided!".
+- `PUT /users/{id} empty Bearer token returns error` - PUT /users/{id} with empty Bearer token returns status code 401 with "Access token not provided!".
+- `PUT /users/{id} invalid Bearer token returns error` - PUT /users/{id} with wrong Bearer token returns status code 401 with "Access token not provided!".
+- `PUT /users/{id} wrong Basic auth returns error` - PUT /users/{id} with wrong Basic auth returns status code 401 with "Access token not provided!".
+- `PUT /users/{id} valid token without Cookie returns error` - PUT /users/{id} with valid Bearer token but without Cookie returns status code 401 with "Access token for given user is invalid!".
+
+## PATCH /users
+
+### PATCH /users - Authorization
+
+@security-users-patch-authorization - Security tests for PATCH /users authorization:
+- `PATCH /users unauthenticated access returns error` - PATCH /users without Authorization header returns status code 401 with "Access token not provided!".
+- `PATCH /users empty Bearer token returns error` - PATCH /users with empty Bearer token returns status code 401 with "Access token not provided!".
+- `PATCH /users invalid Bearer token returns error` - PATCH /users with wrong Bearer token returns status code 401 with "Access token not provided!".
+- `PATCH /users wrong Basic auth returns error` - PATCH /users with wrong Basic auth returns status code 401 with "Access token not provided!".
+- `PATCH /users valid token without Cookie returns error` - PATCH /users with valid Bearer token but without Cookie returns status code 401 with "Access token for given user is invalid!".
+
+## DELETE /users
+
+### DELETE /users - Authorization
+
+@security-users-delete-authorization - Security tests for DELETE /users authorization:
+- `DELETE /users unauthenticated access returns error` - DELETE /users without Authorization header returns status code 401 with "Access token not provided!".
+- `DELETE /users empty Bearer token returns error` - DELETE /users with empty Bearer token returns status code 401 with "Access token not provided!".
+- `DELETE /users invalid Bearer token returns error` - DELETE /users with wrong Bearer token returns status code 401 with "Access token not provided!".
+- `DELETE /users wrong Basic auth returns error` - DELETE /users with wrong Basic auth returns status code 401 with "Access token not provided!".
+- `DELETE /users valid token without Cookie returns error` - DELETE /users with valid Bearer token but without Cookie returns status code 401 with "Access token for given user is invalid!".
+
+### DELETE /users - Expired Token
+
+@security-users-delete-expired_token - Security tests verifying that an expired token is rejected on protected endpoints:
+- `DELETE /users expired token returns error` - DELETE /users with a token that has expired returns status code 401.
+
+## TRACE /users
+
+### TRACE /users - Disallowed HTTP Methods
+
+@security-users-trace-methods - Security tests verifying that HTTP methods not supported at the /users endpoint are rejected by the server:
+- `TRACE /users unsupported method returns error` - sending TRACE to /users (unauthenticated) returns status code 401.

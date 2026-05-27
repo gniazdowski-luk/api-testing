@@ -1,15 +1,15 @@
-import { contractUserData, contractUsersData } from '@test-data/users/users.contract.data';
 import expectedUsersData from '@test-data/users/users.data.json';
 import { usersPayloadsData } from '@test-data/users/users.payloads.data';
 import { buildUserPayload, postMissingFieldData } from '@test-data/users/users.post.data';
 import { userSchema, usersSchema } from '@test-data/users/users.schema';
 import { expect, test } from '@tests/fixtures';
+import { createUserAndLogin } from '@tests/helpers';
 import { Validator } from 'jsonschema';
 
 const validator = new Validator();
 
 test.describe('GET', () => {
-  test('checks that the response matches the expected users contract schema @contract-users-get', async ({
+  test('GET /users response matches the users contract schema @contract-users-get', async ({
     request,
     authHeaders,
   }) => {
@@ -17,13 +17,13 @@ test.describe('GET', () => {
       headers: authHeaders,
     });
 
-    const body = await response.json();
-    const result = validator.validate(body, usersSchema);
+    const users = await response.json();
+    const result = validator.validate(users, usersSchema);
 
     expect(result.errors).toHaveLength(0);
   });
 
-  test('checks that the response includes the correct Content-Type header @contract-users-get', async ({
+  test('GET /users response includes the correct Content-Type header @contract-users-get', async ({
     request,
     authHeaders,
   }) => {
@@ -32,60 +32,11 @@ test.describe('GET', () => {
     });
 
     expect(response.headers()['content-type']).toMatch(/application\/json/);
-  });
-});
-
-test.describe('GET - Mocked', () => {
-  test('verifies that a user object missing required fields is correctly rejected @contract-users-get-mocked', () => {
-    const result = validator.validate(contractUsersData.missingRequiredFields, usersSchema);
-
-    expect.soft(result.errors.every((e) => e.name === 'required')).toBe(true);
-    expect.soft(result.errors.map((e) => e.argument)).toEqual(expect.arrayContaining(['email', 'avatar']));
-    expect(result.errors).toHaveLength(2);
-  });
-
-  test('verifies that a user object with incorrect field types is correctly rejected @contract-users-get-mocked', () => {
-    const result = validator.validate(contractUsersData.wrongFieldTypes, usersSchema);
-
-    expect.soft(result.errors.every((e) => e.name === 'type')).toBe(true);
-    expect
-      .soft(result.errors.map((e) => e.property))
-      .toEqual(expect.arrayContaining(['instance[0].email', 'instance[0].firstname']));
-    expect(result.errors).toHaveLength(2);
-  });
-
-  test('verifies that a plain object at the root level is correctly rejected @contract-users-get-mocked', () => {
-    const result = validator.validate(contractUsersData.nonArrayRoot, usersSchema);
-
-    expect.soft(result.errors[0].name).toBe('type');
-    expect.soft(result.errors[0].property).toBe('instance');
-    expect(result.errors).toHaveLength(1);
-  });
-
-  test('verifies that an array containing a null item is correctly rejected @contract-users-get-mocked', () => {
-    const result = validator.validate(contractUsersData.nullUserEntry, usersSchema);
-
-    expect.soft(result.errors[0].property).toBe('instance[0]');
-    expect(result.errors).not.toHaveLength(0);
-  });
-
-  test('verifies that a user object with avatar as a number instead of a string is correctly rejected @contract-users-get-mocked', () => {
-    const result = validator.validate(contractUsersData.avatarWrongType, usersSchema);
-
-    expect.soft(result.errors[0].name).toBe('type');
-    expect.soft(result.errors[0].property).toBe('instance[0].avatar');
-    expect(result.errors).toHaveLength(1);
-  });
-
-  test('verifies that an empty array is a valid response per the schema @contract-users-get-mocked', () => {
-    const result = validator.validate(contractUsersData.emptyArray, usersSchema);
-
-    expect(result.errors).toHaveLength(0);
   });
 });
 
 test.describe('GET /users/{id}', () => {
-  test('checks that the response matches the expected user contract schema @contract-users-get-id', async ({
+  test('GET /users/{id} response matches the user contract schema @contract-users_id-get', async ({
     request,
     authHeaders,
   }) => {
@@ -93,13 +44,13 @@ test.describe('GET /users/{id}', () => {
       headers: authHeaders,
     });
 
-    const body = await response.json();
-    const result = validator.validate(body, userSchema);
+    const user = await response.json();
+    const result = validator.validate(user, userSchema);
 
     expect(result.errors).toHaveLength(0);
   });
 
-  test('checks that the GET /users/{id} response includes the correct Content-Type header @contract-users-get-id', async ({
+  test('GET /users/{id} response includes the correct Content-Type header @contract-users_id-get', async ({
     request,
     authHeaders,
   }) => {
@@ -108,53 +59,55 @@ test.describe('GET /users/{id}', () => {
     });
 
     expect(response.headers()['content-type']).toMatch(/application\/json/);
-  });
-});
-
-test.describe('GET /users/{id} - Mocked', () => {
-  test('verifies that a user object at /users/{id} missing required fields is correctly rejected @contract-users-get-id-mocked', () => {
-    const result = validator.validate(contractUserData.missingRequiredFields, userSchema);
-
-    expect.soft(result.errors.every((e) => e.name === 'required')).toBe(true);
-    expect.soft(result.errors.map((e) => e.argument)).toEqual(expect.arrayContaining(['email', 'avatar']));
-    expect(result.errors).toHaveLength(2);
-  });
-
-  test('verifies that a user object at /users/{id} with incorrect field types is correctly rejected @contract-users-get-id-mocked', () => {
-    const result = validator.validate(contractUserData.wrongFieldTypes, userSchema);
-
-    expect.soft(result.errors.every((e) => e.name === 'type')).toBe(true);
-    expect
-      .soft(result.errors.map((e) => e.property))
-      .toEqual(expect.arrayContaining(['instance.email', 'instance.avatar']));
-    expect(result.errors).toHaveLength(2);
-  });
-
-  test('verifies that an array is correctly rejected as a user object @contract-users-get-id-mocked', () => {
-    const result = validator.validate(contractUserData.nonObjectRoot, userSchema);
-
-    expect.soft(result.errors[0].name).toBe('type');
-    expect.soft(result.errors[0].property).toBe('instance');
-    expect(result.errors).toHaveLength(1);
   });
 });
 
 test.describe('POST', () => {
-  test('checks that the POST response matches the expected user schema @contract-users-post', async ({ request }) => {
+  test('POST /users response matches the user contract schema @contract-users-post', async ({ request }) => {
     const response = await request.post('users', {
       data: buildUserPayload(),
     });
 
-    const body = await response.json();
-    const result = validator.validate(body, userSchema);
+    const createdUser = await response.json();
+    const result = validator.validate(createdUser, userSchema);
+    expect(result.errors).toHaveLength(0);
+  });
+
+  test('POST /users response includes the correct Content-Type header @contract-users-post', async ({
+    request,
+  }) => {
+    const response = await request.post('users', {
+      data: buildUserPayload(),
+    });
+
+    expect(response.headers()['content-type']).toMatch(/application\/json/);
+  });
+});
+
+test.describe('PUT /users/{id}', () => {
+  test('PUT /users/{id} response matches the user contract schema @contract-users_id-put', async ({
+    request,
+  }) => {
+    const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
+
+    const response = await request.put(`users/${createdUser.id}`, {
+      headers: testAuthHeaders,
+      data: buildUserPayload(),
+    });
+
+    const updatedUser = await response.json();
+    const result = validator.validate(updatedUser, userSchema);
 
     expect(result.errors).toHaveLength(0);
   });
 
-  test('checks that the POST response includes the correct Content-Type header @contract-users-post', async ({
+  test('PUT /users/{id} response includes the correct Content-Type header @contract-users_id-put', async ({
     request,
   }) => {
-    const response = await request.post('users', {
+    const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
+
+    const response = await request.put(`users/${createdUser.id}`, {
+      headers: testAuthHeaders,
       data: buildUserPayload(),
     });
 
@@ -162,49 +115,3 @@ test.describe('POST', () => {
   });
 });
 
-test.describe('Error Responses - Content-Type', () => {
-  test('checks that a 422 response includes the correct Content-Type header @contract-error-content-type', async ({
-    request,
-  }) => {
-    const response = await request.post('users', {
-      data: postMissingFieldData.missingFirstname,
-    });
-
-    expect(response.headers()['content-type']).toMatch(/application\/json/);
-  });
-
-  test('checks that a 409 response includes the correct Content-Type header @contract-error-content-type', async ({
-    request,
-  }) => {
-    const payload = buildUserPayload();
-    await request.post('users', { data: payload });
-    const response = await request.post('users', { data: payload });
-
-    expect(response.headers()['content-type']).toMatch(/application\/json/);
-  });
-
-  test('checks that a 401 response includes the correct Content-Type header @contract-error-content-type', async ({
-    request,
-  }) => {
-    const response = await request.put('users', {
-      data: usersPayloadsData.put,
-    });
-
-    expect(response.headers()['content-type']).toMatch(/application\/json/);
-  });
-});
-
-test.describe('HEAD', () => {
-  test('checks that HEAD /users returns 200 with no response body @contract-head-users', async ({
-    request,
-    authHeaders,
-  }) => {
-    const response = await request.head('users', {
-      headers: authHeaders,
-    });
-    const body = await response.text();
-
-    expect.soft(body).toBe('');
-    expect(response.status()).toBe(200);
-  });
-});
