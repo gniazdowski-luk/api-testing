@@ -27,7 +27,7 @@ test('GET /users paginated request responds within SLA @performance-users-get-sl
   expect(elapsed).toBeLessThan(performanceData.slaMs.getPaginated);
 });
 
-test('GET /users full-text search request responds within SLA @performance-users-get-sla', async ({
+test('GET /users response includes X-Content-Type-Options header @performance-users-get-sla', async ({
   request,
   authHeaders,
 }) => {

@@ -24,4 +24,3 @@
 
 @contract-users_id-put - Contract tests to verify that the PUT /users/{id} endpoint adheres to the defined contract:
 - `PUT /users/{id} response matches the user contract schema` - PUT /users/{id} response matches user contract schema.
-- `PUT /users/{id} response includes the correct Content-Type header` - PUT /users/{id} response includes Content-Type header.

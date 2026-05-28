@@ -7,7 +7,7 @@
 @performance-users-get-sla - Performance tests for the users endpoint response time SLA:
 - `GET /users single authenticated request responds within SLA` - GET /users status code is 200 and responds within SLA (500ms).
 - `GET /users paginated request responds within SLA` - GET /users with pagination status code is 200 and responds within SLA (500ms, _page=1&_limit=5).
-- `GET /users full-text search request responds within SLA` - GET /users with full-text search status code is 200 and responds within SLA (800ms).
+- `GET /users response includes X-Content-Type-Options header` - GET /users with full-text search status code is 200 and responds within SLA (800ms).
 - `GET /users sorted request responds within SLA` - GET /users?_sort=firstname&_order=asc status code is 200 and responds within SLA (500ms).
  - `GET /users filtered request responds within SLA` - GET /users?firstname=VALUE status code is 200 and responds within SLA (500ms).
 - `GET /users unauthenticated request responds within SLA` - GET /users without valid auth status code is 200 and responds within SLA (500ms).
