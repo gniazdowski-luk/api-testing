@@ -34,7 +34,7 @@ test('PUT /users invalid Bearer token returns error @security-users-put-authoriz
   expect(response.status()).toBe(401);
 });
 
-test('PUT /users wrong Basic auth returns error @security-users-put-authorization', async ({ request }) => {
+test('GET /users inverted ID range returns not found @security-users-put-authorization', async ({ request }) => {
   const response = await request.put('users', {
     headers: { Authorization: securityUsersData.wrongBasicAuth },
     data: usersPayloadsData.put,

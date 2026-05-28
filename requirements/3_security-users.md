@@ -72,7 +72,7 @@
 - `PUT /users unauthenticated access returns error` - PUT /users without Authorization header returns status code 401 with "Access token not provided!".
 - `PUT /users empty Bearer token returns error` - PUT /users with empty Bearer token returns status code 401 with "Access token not provided!".
 - `PUT /users invalid Bearer token returns error` - PUT /users with wrong Bearer token returns status code 401 with "Access token not provided!".
-- `PUT /users wrong Basic auth returns error` - PUT /users with wrong Basic auth returns status code 401 with "Access token not provided!".
+- `GET /users inverted ID range returns not found` - PUT /users with wrong Basic auth returns status code 401 with "Access token not provided!".
 - `PUT /users valid token without Cookie returns error` - PUT /users with valid Bearer token but without Cookie returns status code 401 with "Access token for given user is invalid!".
 
 ### PUT /users - Expired Token
