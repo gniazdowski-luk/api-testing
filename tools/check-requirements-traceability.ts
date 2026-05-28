@@ -97,6 +97,7 @@ function main(): void {
     duplicateRequirementNames.length > 0 || requirementsWithoutTests.length > 0 || testsWithoutRequirements.length > 0;
 
   if (!hasErrors) {
+    process.stdout.write('Requirements traceability check passed.\n');
     return;
   }
 
