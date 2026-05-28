@@ -102,15 +102,15 @@ function main(): void {
   }
 
   if (duplicateRequirementNames.length > 0) {
-    process.stderr.write(`${formatList('Duplicate requirement names found:', duplicateRequirementNames)}\n`);
+    process.stderr.write(`${_formatList('Duplicate requirement names found:', duplicateRequirementNames)}\n`);
   }
 
   if (requirementsWithoutTests.length > 0) {
-    process.stderr.write(`${formatList('Requirements without matching tests:', requirementsWithoutTests)}\n`);
+    process.stderr.write(`${_formatList('Requirements without matching tests:', requirementsWithoutTests)}\n`);
   }
 
   if (testsWithoutRequirements.length > 0) {
-    process.stderr.write(`${formatList('Tests without matching requirements:', testsWithoutRequirements)}\n`);
+    process.stderr.write(`${_formatList('Tests without matching requirements:', testsWithoutRequirements)}\n`);
   }
 
   process.exit(1);
