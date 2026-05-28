@@ -139,8 +139,8 @@
 ### PUT /users/{id} - Negative
 
 @functional-users_id-put-negative - Functional tests for negative and edge-case scenarios for PUT /users/{id}:
-- `PUT /users/{id} invalid ID format returns not found` - PUT /users/{id} with a non-numeric string ID responds with status code 404.
-- `PUT /users/{id} non-existent user returns not found` - PUT /users/{id} with a non-existent numeric user ID responds with status code 404.
+- `PUT /users/{id} invalid ID format returns unauthorized` - PUT /users/{id} with a non-numeric string ID responds with status code 401.
+- `PUT /users/{id} non-existent user returns unauthorized` - PUT /users/{id} with a non-existent numeric user ID responds with status code 401.
 - `PUT /users/{id} missing firstname returns validation error` - PUT /users/{id} with firstname omitted responds with status code 422.
 - `PUT /users/{id} missing lastname returns validation error` - PUT /users/{id} with lastname omitted responds with status code 422.
 - `PUT /users/{id} missing email returns validation error` - PUT /users/{id} with email omitted responds with status code 422.

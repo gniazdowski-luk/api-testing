@@ -33,8 +33,29 @@ env:
   TEST_ENV: ${{ inputs.environment || 'qa' }}
 
 jobs:
+  requirements-traceability:
+    name: Requirements Traceability Check
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate requirements and tests coverage
+        run: npm run check:requirements-traceability
+
   detect-changes:
     name: Detect changed tests
+    needs: [requirements-traceability]
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     outputs:
@@ -95,6 +116,7 @@ jobs:
 
   quality:
     name: Quality Check
+    needs: [requirements-traceability]
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
@@ -242,8 +264,8 @@ jobs:
 
   smoke:
     name: Smoke Tests
-    needs: quality
-    if: always() && (needs.quality.result == 'success' || needs.quality.result == 'skipped')
+    needs: [requirements-traceability, quality]
+    if: always() && (needs.requirements-traceability.result == 'success' || needs.requirements-traceability.result == 'skipped') && (needs.quality.result == 'success' || needs.quality.result == 'skipped')
     runs-on: ubuntu-latest
 
     services:
@@ -482,13 +504,14 @@ jobs:
 
   pr-gate:
     name: PR Gate
-    needs: [quality, smoke, contract, pr-functional, pr-security, pr-performance]
+    needs: [requirements-traceability, quality, smoke, contract, pr-functional, pr-security, pr-performance]
     if: always() && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Check all required jobs
         run: |
           results=(
+            "requirements-traceability=${{ needs.requirements-traceability.result }}"
             "quality=${{ needs.quality.result }}"
             "smoke=${{ needs.smoke.result }}"
             "contract=${{ needs.contract.result }}"
