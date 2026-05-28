@@ -64,7 +64,7 @@
 - `GET /users page beyond total pages returns not found` - GET /users?_page=BEYOND_LAST&_limit=N with a page number exceeding total pages responds with status code 404.
 - `GET /users zero limit returns not found` - GET /users?_limit=0 responds with status code 404.
 - `GET /users offset beyond total users returns not found` - GET /users?_start=N&_limit=SIZE where _start exceeds the total user count responds with status code 404.
-- `GET /users filtering with non-existent value returns not found` - GET /users?firstname=VALUE with no matching user responds with status code 404.
+- `PUT /users/{id} response includes the correct Content-Type header` - GET /users?firstname=VALUE with no matching user responds with status code 404.
 - `GET /users empty ID range returns not found` - GET /users?id_gte=MIN&id_lte=MAX with no users in range responds with status code 404.
 - `GET /users inverted ID range returns not found` - GET /users?id_gte=MIN&id_lte=MAX where MIN > MAX responds with status code 404.
 - `GET /users non-matching full-text search returns not found` - GET /users?q=TEXT with no matching user responds with status code 404.

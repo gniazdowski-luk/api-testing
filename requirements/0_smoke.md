@@ -21,8 +21,3 @@
 
 @smoke-users-put - Smoke tests to verify PUT /users/{id}:
 - `PUT /users/{id} endpoint is accessible` - PUT /users/{id} response body contains the updated user object and status code is 200.
-
-### HEAD /users
-
-@smoke-users-head - Smoke tests to verify HEAD /users:
-- `HEAD /users endpoint is accessible` - HEAD /users response body is empty and status code is 200.

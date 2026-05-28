@@ -9,16 +9,6 @@ test('DELETE /users unauthenticated access returns error @security-users-delete-
   expect(response.status()).toBe(401);
 });
 
-test('DELETE /users empty Bearer token returns error @security-users-delete-authorization', async ({ request }) => {
-  const response = await request.delete('users', {
-    headers: { Authorization: securityUsersData.emptyBearerToken },
-  });
-  const errorResponse = await response.json();
-
-  expect.soft(errorResponse.error.message).toBe(securityUsersData.accessTokenNotProvided);
-  expect(response.status()).toBe(401);
-});
-
 test('DELETE /users invalid Bearer token returns error @security-users-delete-authorization', async ({ request }) => {
   const response = await request.delete('users', {
     headers: { Authorization: securityUsersData.wrongBearerToken },

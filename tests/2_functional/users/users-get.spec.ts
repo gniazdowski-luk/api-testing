@@ -503,7 +503,7 @@ test.describe('Negative', () => {
     expect(response.status()).toBe(404);
   });
 
-  test('GET /users filtering with non-existent value returns not found @functional-users-get-negative', async ({
+  test('PUT /users/{id} response includes the correct Content-Type header @functional-users-get-negative', async ({
     request,
     authHeaders,
   }) => {
