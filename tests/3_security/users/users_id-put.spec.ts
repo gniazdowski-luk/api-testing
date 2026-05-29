@@ -8,7 +8,6 @@ test.describe('Authorization', () => {
     request,
   }) => {
     const { createdUser } = await createUserAndLogin(request);
-
     const response = await request.put(`users/${createdUser.id}`, {
       data: buildUserPayload(),
     });
@@ -20,7 +19,6 @@ test.describe('Authorization', () => {
 
   test('PUT /users/{id} empty Bearer token returns error @security-users_id-put-authorization', async ({ request }) => {
     const { createdUser } = await createUserAndLogin(request);
-
     const response = await request.put(`users/${createdUser.id}`, {
       headers: { Authorization: securityUsersData.emptyBearerToken },
       data: buildUserPayload(),
@@ -35,7 +33,6 @@ test.describe('Authorization', () => {
     request,
   }) => {
     const { createdUser } = await createUserAndLogin(request);
-
     const response = await request.put(`users/${createdUser.id}`, {
       headers: { Authorization: securityUsersData.wrongBearerToken },
       data: buildUserPayload(),
@@ -48,7 +45,6 @@ test.describe('Authorization', () => {
 
   test('PUT /users/{id} wrong Basic auth returns error @security-users_id-put-authorization', async ({ request }) => {
     const { createdUser } = await createUserAndLogin(request);
-
     const response = await request.put(`users/${createdUser.id}`, {
       headers: { Authorization: securityUsersData.wrongBasicAuth },
       data: buildUserPayload(),
@@ -64,7 +60,6 @@ test.describe('Authorization', () => {
     accessToken,
   }) => {
     const { createdUser } = await createUserAndLogin(request);
-
     const response = await request.put(`users/${createdUser.id}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
       data: buildUserPayload(),

@@ -9,7 +9,6 @@ test.describe('Core', () => {
   }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
     const updatedPayload = buildUserPayload();
-
     const putResponse = await request.put(`users/${createdUser.id}`, {
       headers: testAuthHeaders,
       data: updatedPayload,
@@ -36,7 +35,6 @@ test.describe('Core', () => {
   }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
     const updatedPayload = buildUserPayload();
-
     const putResponse = await request.put(`users/${createdUser.id}`, {
       headers: testAuthHeaders,
       data: updatedPayload,
@@ -52,6 +50,7 @@ test.describe('Core', () => {
     });
 
     expect.soft(loginResponse.status()).toBe(200);
+
     const loginBody = await loginResponse.json();
 
     expect.soft(loginBody).toMatchObject({ access_token: expect.any(String) });

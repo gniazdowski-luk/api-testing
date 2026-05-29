@@ -15,7 +15,6 @@ test.describe('GET', () => {
     const response = await request.get('users', {
       headers: authHeaders,
     });
-
     const users = await response.json();
     const result = validator.validate(users, usersSchema);
 
@@ -42,7 +41,6 @@ test.describe('GET /users/{id}', () => {
     const response = await request.get(`users/${expectedUsersData.user1.id}`, {
       headers: authHeaders,
     });
-
     const user = await response.json();
     const result = validator.validate(user, userSchema);
 
@@ -66,9 +64,9 @@ test.describe('POST', () => {
     const response = await request.post('users', {
       data: buildUserPayload(),
     });
-
     const createdUser = await response.json();
     const result = validator.validate(createdUser, userSchema);
+
     expect(result.errors).toHaveLength(0);
   });
 
@@ -84,12 +82,10 @@ test.describe('POST', () => {
 test.describe('PUT /users/{id}', () => {
   test('PUT /users/{id} response matches the user contract schema @contract-users_id-put', async ({ request }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
-
     const response = await request.put(`users/${createdUser.id}`, {
       headers: testAuthHeaders,
       data: buildUserPayload(),
     });
-
     const updatedUser = await response.json();
     const result = validator.validate(updatedUser, userSchema);
 
@@ -100,7 +96,6 @@ test.describe('PUT /users/{id}', () => {
     request,
   }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
-
     const response = await request.put(`users/${createdUser.id}`, {
       headers: testAuthHeaders,
       data: buildUserPayload(),

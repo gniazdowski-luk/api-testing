@@ -13,7 +13,6 @@ test('POST /users creating a new user responds within SLA @performance-users-pos
 test('POST /users duplicate email rejection responds within SLA @performance-users-post-sla', async ({ request }) => {
   const payload = buildUserPayload();
   await request.post('users', { data: payload });
-
   const { response, elapsed } = await measureRequest(() => request.post('users', { data: payload }));
 
   expect.soft(response.status()).toBe(409);

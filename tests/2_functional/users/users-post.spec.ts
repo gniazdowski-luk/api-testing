@@ -17,21 +17,20 @@ test.describe('Core', () => {
     authHeaders,
   }) => {
     const newUserPayload = buildUserPayload();
-
     const createResponse = await request.post('users', {
       data: newUserPayload,
     });
 
     expect.soft(createResponse.status()).toBe(201);
-    const createdUser = await createResponse.json();
 
+    const createdUser = await createResponse.json();
     const getResponse = await request.get('users', {
       headers: authHeaders,
     });
 
     expect.soft(getResponse.status()).toBe(200);
-    const users = await getResponse.json();
 
+    const users = await getResponse.json();
     const foundUser = users.find((u: { id: number }) => u.id === createdUser.id);
 
     expect.soft(foundUser).toMatchObject({
@@ -47,14 +46,13 @@ test.describe('Core', () => {
     request,
   }) => {
     const newUserPayload = buildUserPayload();
-
     const createResponse = await request.post('users', {
       data: newUserPayload,
     });
 
     expect.soft(createResponse.status()).toBe(201);
-    await createResponse.json();
 
+    await createResponse.json();
     const loginResponse = await request.post('login', {
       data: {
         email: newUserPayload.email,
@@ -63,6 +61,7 @@ test.describe('Core', () => {
     });
 
     expect.soft(loginResponse.status()).toBe(200);
+
     const loginBody = await loginResponse.json();
 
     expect.soft(loginBody).toMatchObject({ access_token: expect.any(String) });
@@ -73,12 +72,12 @@ test.describe('Core', () => {
     request,
   }) => {
     const newUserPayload = buildUserPayloadWithBirthDate();
-
     const response = await request.post('users', {
       data: newUserPayload,
     });
 
     expect.soft(response.status()).toBe(201);
+
     const createdUser = await response.json();
 
     expect.soft(createdUser).toMatchObject({
@@ -97,21 +96,20 @@ test.describe('Core', () => {
     authHeaders,
   }) => {
     const newUserPayload = buildUserPayloadWithBirthDate();
-
     const createResponse = await request.post('users', {
       data: newUserPayload,
     });
 
     expect.soft(createResponse.status()).toBe(201);
-    const createdUser = await createResponse.json();
 
+    const createdUser = await createResponse.json();
     const getResponse = await request.get('users', {
       headers: authHeaders,
     });
 
     expect.soft(getResponse.status()).toBe(200);
-    const users = await getResponse.json();
 
+    const users = await getResponse.json();
     const foundUser = users.find((u: { id: number }) => u.id === createdUser.id);
 
     expect.soft(foundUser).toMatchObject({
@@ -127,14 +125,13 @@ test.describe('Core', () => {
     request,
   }) => {
     const newUserPayload = buildUserPayloadWithBirthDate();
-
     const createResponse = await request.post('users', {
       data: newUserPayload,
     });
 
     expect.soft(createResponse.status()).toBe(201);
-    await createResponse.json();
 
+    await createResponse.json();
     const loginResponse = await request.post('login', {
       data: {
         email: newUserPayload.email,
@@ -143,6 +140,7 @@ test.describe('Core', () => {
     });
 
     expect.soft(loginResponse.status()).toBe(200);
+
     const loginBody = await loginResponse.json();
 
     expect.soft(loginBody).toMatchObject({ access_token: expect.any(String) });

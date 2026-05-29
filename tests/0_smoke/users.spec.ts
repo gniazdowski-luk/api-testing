@@ -15,7 +15,6 @@ test('GET /users endpoint is accessible @smoke-users-get', async ({ request, aut
 
 test('GET /users/{id} endpoint is accessible @smoke-users_id-get', async ({ request, authHeaders }) => {
   const user1Expected = expectedUsersData.user1;
-
   const response = await request.get(`users/${user1Expected.id}`, {
     headers: authHeaders,
   });
@@ -29,7 +28,6 @@ test('GET /users/{id} endpoint is accessible @smoke-users_id-get', async ({ requ
 
 test('POST /users endpoint is accessible @smoke-users-post', async ({ request }) => {
   const newUserPayload = buildUserPayload();
-
   const response = await request.post('users', {
     data: newUserPayload,
   });
@@ -48,7 +46,6 @@ test('POST /users endpoint is accessible @smoke-users-post', async ({ request })
 
 test('PUT /users/{id} endpoint is accessible @smoke-users-put', async ({ request }) => {
   const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
-
   const updatedPayload = buildUserPayload();
   const response = await request.put(`users/${createdUser.id}`, {
     headers: testAuthHeaders,

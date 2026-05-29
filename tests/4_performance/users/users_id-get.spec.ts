@@ -36,7 +36,6 @@ test.describe('Concurrent', () => {
     authHeaders,
   }) => {
     const { concurrentRequests } = performanceData;
-
     const results = await Promise.all(
       Array.from({ length: concurrentRequests }, async () => {
         const { response, elapsed } = await measureRequest(() =>
@@ -45,7 +44,6 @@ test.describe('Concurrent', () => {
         return { response, elapsed };
       })
     );
-
     const statuses = results.map(({ response }) => response.status());
     const maxElapsed = Math.max(...results.map(({ elapsed }) => elapsed));
 
