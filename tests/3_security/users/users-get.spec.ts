@@ -1,4 +1,3 @@
-
 import { securityUsersData } from '@test-data/users/users.security.data';
 import { expect, test } from '@tests/fixtures';
 import { assertMaskedFieldsForUsers } from '@tests/helpers';

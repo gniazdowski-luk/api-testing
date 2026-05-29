@@ -1,6 +1,6 @@
-import { expect, test } from '@tests/fixtures';
 import expectedUsersData from '@test-data/users/users.data.json';
 import { securityUsersData } from '@test-data/users/users.security.data';
+import { expect, test } from '@tests/fixtures';
 import { assertMaskedFieldsForUser } from '@tests/helpers';
 
 test.describe('Authorization', () => {

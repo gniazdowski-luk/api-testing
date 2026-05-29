@@ -1,8 +1,9 @@
+import type { APIRequestContext, APIResponse } from '@playwright/test';
+
 import expectedUsersData from '@test-data/users/users.data.json';
+import { buildUserPayload } from '@test-data/users/users.post.data';
 import { securityUsersData } from '@test-data/users/users.security.data';
 import { expect } from '@tests/fixtures';
-import type { APIRequestContext, APIResponse } from '@playwright/test';
-import { buildUserPayload } from '@test-data/users/users.post.data';
 
 export async function measureRequest(fn: () => Promise<APIResponse>) {
   const start = Date.now();

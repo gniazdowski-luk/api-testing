@@ -140,7 +140,7 @@ test.describe('Core', () => {
     });
 
     expect.soft(loginResponse.status()).toBe(200);
-    
+
     const loginBody = await loginResponse.json();
 
     expect.soft(loginBody).toMatchObject({ access_token: expect.any(String) });

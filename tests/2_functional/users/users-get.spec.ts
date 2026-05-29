@@ -302,7 +302,7 @@ test.describe('Filtering', () => {
     });
 
     expect.soft(response.status()).toBe(200);
-    
+
     const users = await response.json();
     const userIds = users.map((u: { id: number }) => u.id);
 
@@ -412,9 +412,9 @@ test.describe('Search', () => {
 test.describe('Data', () => {
   test('GET /users avatar paths are correct @functional-users-get-data', async ({ request, authHeaders }) => {
     const response = await request.get('users', { headers: authHeaders });
-    
+
     expect.soft(response.status()).toBe(200);
-    
+
     const allUsers = await response.json();
     const usersWithAvatar = (allUsers as { avatar: string }[]).filter((u) => u.avatar !== '');
     const usersWithCorrectPath = usersWithAvatar.filter((u) => u.avatar.startsWith(avatarData.correctAvatarPath));
@@ -480,7 +480,7 @@ test.describe('Edge cases', () => {
     });
 
     expect.soft(response.status()).toBe(200);
-    
+
     const users = await response.json();
     const firstnames = users.map((u: { firstname: string }) => u.firstname);
     const sortedAsc = [...firstnames].sort();
