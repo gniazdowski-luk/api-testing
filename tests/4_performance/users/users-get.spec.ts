@@ -18,7 +18,6 @@ test('GET /users paginated request responds within SLA @performance-users-get-sl
   authHeaders,
 }) => {
   const { page, limit } = performanceData.pagination;
-
   const { response, elapsed } = await measureRequest(() =>
     request.get(`users?_page=${page}&_limit=${limit}`, { headers: authHeaders })
   );
@@ -72,14 +71,12 @@ test.describe('Concurrent', () => {
     authHeaders,
   }) => {
     const { concurrentRequests } = performanceData;
-
     const results = await Promise.all(
       Array.from({ length: concurrentRequests }, async () => {
         const { response, elapsed } = await measureRequest(() => request.get('users', { headers: authHeaders }));
         return { response, elapsed };
       })
     );
-
     const statuses = results.map(({ response }) => response.status());
     const maxElapsed = Math.max(...results.map(({ elapsed }) => elapsed));
 

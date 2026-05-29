@@ -24,15 +24,14 @@ test.describe('Core', () => {
     });
 
     expect.soft(response.status()).toBe(200);
-    const users = await response.json();
 
+    const users = await response.json();
     const user1Expected = expectedUsersData.user1;
     const user2Expected = expectedUsersData.user2;
-
     const user1 = users.find((u: { id: number }) => u.id === user1Expected.id);
     const user2 = users.find((u: { id: number }) => u.id === user2Expected.id);
 
-    expect([user1, user2]).toMatchObject([
+    expect.soft([user1, user2]).toMatchObject([
       {
         id: user1Expected.id,
         firstname: user1Expected.firstname,
@@ -50,6 +49,7 @@ test.describe('Core', () => {
         password: expect.any(String),
       },
     ]);
+    expect(response.status()).toBe(200);
   });
 });
 
@@ -63,9 +63,11 @@ test.describe('Pagination', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
 
-    expect(users).toHaveLength(PAGE_LIMIT);
+    expect.soft(users).toHaveLength(PAGE_LIMIT);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users pagination total count header is included in the response @functional-users-get-pagination', async ({
@@ -82,11 +84,11 @@ test.describe('Pagination', () => {
 
     const allUsers = await allUsersResponse.json();
     const realCount = allUsers.length;
-
     const totalCount = Number(response.headers()['x-total-count']);
 
     expect.soft(response.headers()['x-total-count']).toBeTruthy();
-    expect(totalCount).toBe(realCount);
+    expect.soft(totalCount).toBe(realCount);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users pagination page 2 does not overlap with page 1 @functional-users-get-pagination', async ({
@@ -103,7 +105,9 @@ test.describe('Pagination', () => {
     const page2Ids = (await page2Response.json()).map((u: { id: number }) => u.id);
     const hasOverlap = page1Ids.some((id: number) => page2Ids.includes(id));
 
-    expect(hasOverlap).toBe(false);
+    expect.soft(hasOverlap).toBe(false);
+    expect(page1Response.status()).toBe(200);
+    expect(page2Response.status()).toBe(200);
   });
 
   test('GET /users offset pagination returns correct number of users @functional-users-get-pagination', async ({
@@ -116,9 +120,11 @@ test.describe('Pagination', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
 
-    expect(users).toHaveLength(limit);
+    expect.soft(users).toHaveLength(limit);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users offset n does not overlap with offset 0 @functional-users-get-pagination', async ({
@@ -126,7 +132,6 @@ test.describe('Pagination', () => {
     authHeaders,
   }) => {
     const { start, limit } = paginationOffsetData.offsetLimit;
-
     const page0Response = await request.get(`users?_start=0&_limit=${limit}`, { headers: authHeaders });
     const pageNResponse = await request.get(`users?_start=${start}&_limit=${limit}`, { headers: authHeaders });
 
@@ -137,7 +142,9 @@ test.describe('Pagination', () => {
     const pageNIds = (await pageNResponse.json()).map((u: { id: number }) => u.id);
     const hasOverlap = page0Ids.some((id: number) => pageNIds.includes(id));
 
-    expect(hasOverlap).toBe(false);
+    expect.soft(hasOverlap).toBe(false);
+    expect(page0Response.status()).toBe(200);
+    expect(pageNResponse.status()).toBe(200);
   });
 
   test('GET /users total count header reflects all users @functional-users-get-pagination', async ({
@@ -145,7 +152,6 @@ test.describe('Pagination', () => {
     authHeaders,
   }) => {
     const { start, limit } = paginationOffsetData.offsetLimit;
-
     const [allUsersResponse, response] = await Promise.all([
       request.get('users', { headers: authHeaders }),
       request.get(`users?_start=${start}&_limit=${limit}`, { headers: authHeaders }),
@@ -156,11 +162,11 @@ test.describe('Pagination', () => {
 
     const allUsers = await allUsersResponse.json();
     const realCount = allUsers.length;
-
     const totalCount = Number(response.headers()['x-total-count']);
 
     expect.soft(response.headers()['x-total-count']).toBeTruthy();
-    expect(totalCount).toBe(realCount);
+    expect.soft(totalCount).toBe(realCount);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users range pagination returns correct number of users @functional-users-get-pagination', async ({
@@ -173,9 +179,11 @@ test.describe('Pagination', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
 
-    expect(users).toHaveLength(end - start);
+    expect.soft(users).toHaveLength(end - start);
+    expect(response.status()).toBe(200);
   });
 });
 
@@ -189,11 +197,13 @@ test.describe('Sorting', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
     const firstnames = users.map((u: { firstname: string }) => u.firstname);
     const sortedAsc = [...firstnames].sort();
 
-    expect(firstnames).toEqual(sortedAsc);
+    expect.soft(firstnames).toEqual(sortedAsc);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users sorting by firstname descending works @functional-users-get-sorting', async ({
@@ -205,11 +215,13 @@ test.describe('Sorting', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
     const firstnames = users.map((u: { firstname: string }) => u.firstname);
     const sortedDesc = [...firstnames].sort().reverse();
 
-    expect(firstnames).toEqual(sortedDesc);
+    expect.soft(firstnames).toEqual(sortedDesc);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users sorting by id ascending works @functional-users-get-sorting', async ({ request, authHeaders }) => {
@@ -218,11 +230,13 @@ test.describe('Sorting', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
     const ids = users.map((u: { id: number }) => u.id);
     const sortedAsc = [...ids].sort((a, b) => a - b);
 
-    expect(ids).toEqual(sortedAsc);
+    expect.soft(ids).toEqual(sortedAsc);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users sorting by lastname ascending works @functional-users-get-sorting', async ({
@@ -234,11 +248,13 @@ test.describe('Sorting', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
     const lastnames = users.map((u: { lastname: string }) => u.lastname);
     const sortedAsc = [...lastnames].sort();
 
-    expect(lastnames).toEqual(sortedAsc);
+    expect.soft(lastnames).toEqual(sortedAsc);
+    expect(response.status()).toBe(200);
   });
 });
 
@@ -250,10 +266,12 @@ test.describe('Filtering', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
     const userIds = users.map((u: { id: number }) => u.id);
 
-    expect(userIds).toEqual([data.expectedId]);
+    expect.soft(userIds).toEqual([data.expectedId]);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users combined filters applies AND logic @functional-users-get-filtering', async ({
@@ -266,10 +284,12 @@ test.describe('Filtering', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
     const userIds = users.map((u: { id: number }) => u.id);
 
-    expect(userIds).toEqual([data.expectedId]);
+    expect.soft(userIds).toEqual([data.expectedId]);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users repeating the same parameter applies OR logic @functional-users-get-filtering', async ({
@@ -282,10 +302,12 @@ test.describe('Filtering', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+    
     const users = await response.json();
     const userIds = users.map((u: { id: number }) => u.id);
 
-    expect(userIds).toEqual(data.ids);
+    expect.soft(userIds).toEqual(data.ids);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users filtering by inclusive ID range works @functional-users-get-filtering', async ({
@@ -298,10 +320,12 @@ test.describe('Filtering', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
     const userIds = users.map((u: { id: number }) => u.id);
 
-    expect(userIds).toEqual(data.expectedIds);
+    expect.soft(userIds).toEqual(data.expectedIds);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users unrecognized query parameters are ignored @functional-users-get-filtering', async ({
@@ -319,7 +343,8 @@ test.describe('Filtering', () => {
     const allUsers = await allUsersResponse.json();
     const filteredUsers = await filteredResponse.json();
 
-    expect(filteredUsers).toHaveLength(allUsers.length);
+    expect.soft(filteredUsers).toHaveLength(allUsers.length);
+    expect(filteredResponse.status()).toBe(200);
   });
 });
 
@@ -331,10 +356,12 @@ test.describe('Search', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+
     const users = await response.json();
     const userIds = users.map((u: { id: number }) => u.id);
 
-    expect(userIds).toEqual(data.expectedIds);
+    expect.soft(userIds).toEqual(data.expectedIds);
+    expect(response.status()).toBe(200);
   });
 
   test('GET /users empty search returns all users @functional-users-get-search', async ({ request, authHeaders }) => {
@@ -349,12 +376,12 @@ test.describe('Search', () => {
     const allUsers = await allUsersResponse.json();
     const searchUsers = await searchResponse.json();
 
-    expect(searchUsers).toHaveLength(allUsers.length);
+    expect.soft(searchUsers).toHaveLength(allUsers.length);
+    expect(searchResponse.status()).toBe(200);
   });
 
   test('GET /users partial firstname matching works @functional-users-get-search', async ({ request, authHeaders }) => {
     const pattern = searchUsersData.firstnameLikePattern;
-
     const [apiResponse, allUsers] = await Promise.all([
       request.get(`users?firstname_like=${pattern}`, { headers: authHeaders }),
       fetchAllUsers(request, authHeaders),
@@ -364,12 +391,12 @@ test.describe('Search', () => {
 
     const apiUsers = await apiResponse.json();
     const apiIds = apiUsers.map((u: { id: number }) => u.id);
-
     const localIds = (allUsers as { id: number; firstname: string }[])
       .filter((u) => new RegExp(pattern, 'i').test(u.firstname))
       .map((u) => u.id);
 
-    expect(apiIds).toEqual(localIds);
+    expect.soft(apiIds).toEqual(localIds);
+    expect(apiResponse.status()).toBe(200);
   });
 
   test('GET /users URL-encoded special characters are handled @functional-users-get-search', async ({
@@ -385,13 +412,15 @@ test.describe('Search', () => {
 test.describe('Data', () => {
   test('GET /users avatar paths are correct @functional-users-get-data', async ({ request, authHeaders }) => {
     const response = await request.get('users', { headers: authHeaders });
+    
     expect.soft(response.status()).toBe(200);
+    
     const allUsers = await response.json();
-
     const usersWithAvatar = (allUsers as { avatar: string }[]).filter((u) => u.avatar !== '');
     const usersWithCorrectPath = usersWithAvatar.filter((u) => u.avatar.startsWith(avatarData.correctAvatarPath));
 
-    expect(usersWithCorrectPath.length).toBe(usersWithAvatar.length);
+    expect.soft(usersWithCorrectPath.length).toBe(usersWithAvatar.length);
+    expect(response.status()).toBe(200);
   });
 });
 
@@ -436,7 +465,6 @@ test.describe('Edge cases', () => {
     const response = await request.get(`users?_limit=${paginationPageData.largeLimit}`, {
       headers: authHeaders,
     });
-
     const users = await response.json();
 
     expect.soft(Array.isArray(users)).toBe(true);
@@ -452,6 +480,7 @@ test.describe('Edge cases', () => {
     });
 
     expect.soft(response.status()).toBe(200);
+    
     const users = await response.json();
     const firstnames = users.map((u: { firstname: string }) => u.firstname);
     const sortedAsc = [...firstnames].sort();

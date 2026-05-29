@@ -1,26 +1,7 @@
+import { expect, test } from '@tests/fixtures';
 import expectedUsersData from '@test-data/users/users.data.json';
 import { securityUsersData } from '@test-data/users/users.security.data';
-import { expect, test } from '@tests/fixtures';
-
-const maskedUser = {
-  email: securityUsersData.maskedEmail,
-  lastname: securityUsersData.maskedLastname,
-  password: securityUsersData.maskedPassword,
-};
-
-function assertMaskedFields(
-  user: { id: number; email: string; lastname: string; password: string },
-  response: { status: () => number }
-) {
-  expect
-    .soft({
-      email: user.email,
-      lastname: user.lastname,
-      password: user.password,
-    })
-    .toEqual(maskedUser);
-  expect(response.status()).toBe(200);
-}
+import { assertMaskedFieldsForUser } from '@tests/helpers';
 
 test.describe('Authorization', () => {
   test('GET /users/{id} unauthenticated access returns masked sensitive fields @security-users_id-get-authorization', async ({
@@ -29,7 +10,7 @@ test.describe('Authorization', () => {
     const response = await request.get(`users/${expectedUsersData.user1.id}`);
     const user = await response.json();
 
-    assertMaskedFields(user, response);
+    assertMaskedFieldsForUser(user, response);
   });
 
   test('GET /users/{id} empty Bearer token returns masked sensitive fields @security-users_id-get-authorization', async ({
@@ -40,7 +21,7 @@ test.describe('Authorization', () => {
     });
     const user = await response.json();
 
-    assertMaskedFields(user, response);
+    assertMaskedFieldsForUser(user, response);
   });
 
   test('GET /users/{id} invalid Bearer token returns masked sensitive fields @security-users_id-get-authorization', async ({
@@ -51,7 +32,7 @@ test.describe('Authorization', () => {
     });
     const user = await response.json();
 
-    assertMaskedFields(user, response);
+    assertMaskedFieldsForUser(user, response);
   });
 
   test('GET /users/{id} wrong Basic auth returns masked sensitive fields @security-users_id-get-authorization', async ({
@@ -62,7 +43,7 @@ test.describe('Authorization', () => {
     });
     const user = await response.json();
 
-    assertMaskedFields(user, response);
+    assertMaskedFieldsForUser(user, response);
   });
 
   test('GET /users/{id} valid token without Cookie returns masked sensitive fields @security-users_id-get-authorization', async ({
@@ -74,7 +55,7 @@ test.describe('Authorization', () => {
     });
     const user = await response.json();
 
-    assertMaskedFields(user, response);
+    assertMaskedFieldsForUser(user, response);
   });
 });
 
