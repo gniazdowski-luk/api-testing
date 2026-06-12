@@ -60,12 +60,46 @@ This project uses [Biome](https://biomejs.dev/) for code formatting and linting.
 
 ## Continuous Integration (CI)
 
-This project uses a CI pipeline to ensure code quality and reliability. The pipeline automatically runs (on QA environment)the following checks on every pull request:
+This project uses a CI pipeline to ensure code quality and reliability. The pipeline is triggered on every pull request targeting `main`, and can also be triggered manually.
 
-- Code formatting and linting using Biome.
-- Smoke and Contract tests.
+### Pull Request pipeline
+
+The following jobs run automatically on every pull request:
+
+1. **Requirements Traceability Check** — validates that all requirements are covered by tests using `npm run check:requirements-traceability`.
+2. **Detect Changed Tests** — identifies which spec files were modified in the PR (functional / security / performance) so only relevant tests are run.
+3. **Quality Check** — runs Biome formatting and linting (`npm run biome:check`). Requires the traceability check to pass first.
+4. **Smoke Tests** — runs the full smoke suite after quality and traceability checks pass.
+5. **Contract Tests** — runs the full contract suite after smoke tests pass.
+6. **PR Functional Tests** — runs only the changed functional spec files (skipped if no functional files changed). Requires contract tests to pass.
+7. **PR Security Tests** — runs only the changed security spec files (skipped if no security files changed). Runs after PR functional tests.
+8. **PR Performance Tests** — runs only the changed performance spec files (skipped if no performance files changed). Runs after PR security tests.
+9. **PR Gate** — final blocking check that fails the PR if any of the above jobs failed or were cancelled.
+
+Playwright HTML reports for each test job are uploaded as artifacts (retained for 7 days).
 
 ### Manual Trigger
 
-Functional, Security and Performance tests are not run automatically on pull requests. These tests can be triggered manually for specific branches and environments by enabling the respective options in the CI pipeline.
+The pipeline can also be triggered manually (`workflow_dispatch`) with the following options:
 
+| Input | Description | Default |
+|---|---|---|
+| `environment` | Target environment (`qa` \| `staging`) | `qa` |
+| `run_functional` | Run full functional test suite | `false` |
+| `run_security` | Run full security test suite | `false` |
+| `run_performance` | Run full performance test suite | `false` |
+
+On a manual run, smoke and contract tests always execute. Functional, security, and performance suites run only when their respective options are enabled, and each suite depends on the previous one passing. After all test jobs complete, the merged HTML report is published to **GitHub Pages**.
+
+## Application coverage
+
+The tests in this project cover the following API endpoints of the GAD application:
+- /users
+- /users/{id}
+
+### Backlog
+
+The following are not covered by tests yet and are planned for future implementation:
+- other endpoints (e.g. /articles, /comments, /authentication)
+- JWT token detailed scenarios
+- E2E tests covering more complex scenarios and interactions between multiple endpoints
