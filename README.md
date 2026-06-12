@@ -69,3 +69,15 @@ This project uses a CI pipeline to ensure code quality and reliability. The pipe
 
 Functional, Security and Performance tests are not run automatically on pull requests. These tests can be triggered manually for specific branches and environments by enabling the respective options in the CI pipeline.
 
+## Application coverage
+
+The tests in this project cover the following API endpoints of the GAD application:
+- /users
+- /users/{id}
+
+### Backlog
+
+The following are not covered by tests yet and are planned for future implementation:
+- other endpoints (e.g. /articles, /comments, /authentication)
+- JWT token detailed scenarios
+- E2E tests covering more complex scenarios and interactions between multiple endpoints
