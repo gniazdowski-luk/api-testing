@@ -25,3 +25,21 @@
 @contract-users_id-put - Contract tests to verify that the PUT /users/{id} endpoint adheres to the defined contract:
 - `PUT /users/{id} response matches the user contract schema` - PUT /users/{id} response matches user contract schema.
 - `PUT /users/{id} response includes the correct Content-Type header` - PUT /users/{id} response includes Content-Type header.
+
+### PATCH /users/{id}
+
+@contract-users_id-patch - Contract tests to verify that the PATCH /users/{id} endpoint adheres to the defined contract:
+- `PATCH /users/{id} response matches the user contract schema` - PATCH /users/{id} response matches user contract schema.
+- `PATCH /users/{id} response includes the correct Content-Type header` - PATCH /users/{id} response includes Content-Type header.
+
+### DELETE /users/{id}
+
+@contract-users_id-delete - Contract tests to verify that the DELETE /users/{id} endpoint adheres to the defined contract:
+- `DELETE /users/{id} response matches the user contract schema` - DELETE /users/{id} response body is an empty object.
+- `DELETE /users/{id} response includes the correct Content-Type header` - DELETE /users/{id} response includes Content-Type header.
+
+### HEAD /users
+
+@contract-users-head - Contract tests to verify that the HEAD /users endpoint adheres to the defined contract:
+- `HEAD /users response includes the correct Content-Type header` - HEAD /users response includes the same Content-Type header as GET /users.
+- `HEAD /users response includes X-Total-Count header` - HEAD /users?_page=1&_limit=N response includes X-Total-Count header matching the total user count.

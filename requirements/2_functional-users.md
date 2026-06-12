@@ -133,7 +133,7 @@
 ### PUT /users/{id} - Core
 
 @functional-users_id-put-core - Functional tests for updating a user by ID via PUT:
-- `PUT /users/{id} updated user data is included in the response` - PUT /users/{id} status code is 200 and response body contains fields matching the updated payload.
+- `PUT /users/{id} updated user data is included in the response` - PUT /users/{id} status code is 200, response body contains fields matching the updated payload, and a follow-up GET /users/{id} returns the persisted updated data.
 - `PUT /users/{id} updated user can log in with new credentials` - PUT /users/{id} status code is 200 and the updated password allows successful login via POST /login.
 
 ### PUT /users/{id} - Negative
@@ -146,3 +146,80 @@
 - `PUT /users/{id} missing email returns validation error` - PUT /users/{id} with email omitted responds with status code 422.
 - `PUT /users/{id} missing password returns validation error` - PUT /users/{id} with password omitted responds with status code 422.
 - `PUT /users/{id} missing avatar returns validation error` - PUT /users/{id} with avatar omitted responds with status code 422.
+- `PUT /users/{id} invalid firstname type returns validation error` - PUT /users/{id} with firstname as a number responds with status code 422.
+- `PUT /users/{id} invalid lastname type returns validation error` - PUT /users/{id} with lastname as a number responds with status code 422.
+- `PUT /users/{id} invalid email type returns validation error` - PUT /users/{id} with email as a number responds with status code 422.
+- `PUT /users/{id} invalid password type returns validation error` - PUT /users/{id} with password as a number responds with status code 422.
+- `PUT /users/{id} invalid avatar type returns validation error` - PUT /users/{id} with avatar as a number responds with status code 422.
+- `PUT /users/{id} email missing at symbol returns validation error` - PUT /users/{id} with email missing @ responds with status code 422.
+- `PUT /users/{id} email missing domain returns validation error` - PUT /users/{id} with email missing domain responds with status code 422.
+- `PUT /users/{id} email missing local part returns validation error` - PUT /users/{id} with email missing local part responds with status code 422.
+- `PUT /users/{id} empty body returns validation error` - PUT /users/{id} with an empty body responds with status code 422.
+- `PUT /users/{id} unrecognized extra fields returns validation error` - PUT /users/{id} with additional unknown fields responds with status code 422.
+- `PUT /users/{id} empty firstname string returns validation error` - PUT /users/{id} with firstname as an empty string responds with status code 422.
+- `PUT /users/{id} empty lastname string returns validation error` - PUT /users/{id} with lastname as an empty string responds with status code 422.
+- `PUT /users/{id} empty email string returns validation error` - PUT /users/{id} with email as an empty string responds with status code 422.
+- `PUT /users/{id} empty password string returns validation error` - PUT /users/{id} with password as an empty string responds with status code 422.
+- `PUT /users/{id} empty avatar string returns validation error` - PUT /users/{id} with avatar as an empty string responds with status code 422.
+- `PUT /users/{id} null firstname returns validation error` - PUT /users/{id} with firstname explicitly set to null responds with status code 422.
+- `PUT /users/{id} null email returns validation error` - PUT /users/{id} with email explicitly set to null responds with status code 422.
+
+## PATCH /users/{id}
+
+### PATCH /users/{id} - Core
+
+@functional-users_id-patch-core - Functional tests for partially updating a user by ID via PATCH:
+- `PATCH /users/{id} updated field is included in the response` - PATCH /users/{id} with a single field in the payload status code is 200, response body contains the updated field value, and a follow-up GET /users/{id} returns the persisted change.
+- `PATCH /users/{id} unmodified fields retain their values` - PATCH /users/{id} with a subset of fields status code is 200 and fields not included in the payload are unchanged in the follow-up GET /users/{id} response.
+
+### PATCH /users/{id} - Edge cases
+
+@functional-users_id-patch-edge - Functional tests for PATCH edge-case scenarios:
+- `PATCH /users/{id} updating with the same values is accepted` - PATCH /users/{id} with all current field values repeated in the payload responds with status code 200.
+- `PATCH /users/{id} updating birthDate field is accepted` - PATCH /users/{id} with only birthDate in the payload responds with status code 200.
+
+### PATCH /users/{id} - Negative
+
+@functional-users_id-patch-negative - Functional tests for negative and edge-case scenarios for PATCH /users/{id}:
+- `PATCH /users/{id} invalid ID format returns unauthorized` - PATCH /users/{id} with a non-numeric string ID responds with status code 401.
+- `PATCH /users/{id} non-existent user returns unauthorized` - PATCH /users/{id} with a non-existent numeric user ID responds with status code 401.
+- `PATCH /users/{id} empty firstname string returns validation error` - PATCH /users/{id} with firstname as an empty string responds with status code 422.
+- `PATCH /users/{id} empty lastname string returns validation error` - PATCH /users/{id} with lastname as an empty string responds with status code 422.
+- `PATCH /users/{id} empty email string returns validation error` - PATCH /users/{id} with email as an empty string responds with status code 422.
+- `PATCH /users/{id} empty password string returns validation error` - PATCH /users/{id} with password as an empty string responds with status code 422.
+- `PATCH /users/{id} empty avatar string returns validation error` - PATCH /users/{id} with avatar as an empty string responds with status code 422.
+
+## DELETE /users/{id}
+
+### DELETE /users/{id} - Core
+
+@functional-users_id-delete-core - Functional tests for deleting a user by ID via DELETE:
+- `DELETE /users/{id} deleted user is no longer accessible` - DELETE /users/{id} status code is 200 and a follow-up GET /users/{id} returns status code 404.
+- `DELETE /users/{id} deleted user is no longer present in the users list` - DELETE /users/{id} status code is 200 and the deleted user is absent from the list returned by GET /users.
+
+### DELETE /users/{id} - Negative
+
+@functional-users_id-delete-negative - Functional tests for negative and edge-case scenarios for DELETE /users/{id}:
+- `DELETE /users/{id} invalid ID format returns not found` - DELETE /users/{id} with a non-numeric string ID responds with status code 404.
+- `DELETE /users/{id} non-existent user returns not found` - DELETE /users/{id} with a non-existent numeric user ID responds with status code 404.
+
+## HEAD /users
+
+### HEAD /users - Core
+
+@functional-users-head-core - Functional tests for core HEAD /users behaviour:
+- `HEAD /users response body is empty` - HEAD /users status code is 200 and response body is empty.
+- `HEAD /users response headers match GET /users response headers` - HEAD /users status code is 200 and Content-Type header matches the one returned by GET /users.
+- `HEAD /users X-Total-Count header reflects total user count` - HEAD /users?_page=1&_limit=N status code is 200 and X-Total-Count header value equals the total number of users in the database.
+
+### HEAD /users - Pagination
+
+@functional-users-head-pagination - Functional tests for HEAD /users with pagination parameters:
+- `HEAD /users pagination X-Total-Count reflects total count with page limit` - HEAD /users?_page=1&_limit=N status code is 200 and X-Total-Count header matches the total count returned by GET /users?_page=1&_limit=N.
+- `HEAD /users offset pagination X-Total-Count reflects total user count` - HEAD /users?_start=N&_limit=SIZE status code is 200 and X-Total-Count header equals the total number of users.
+
+### HEAD /users - Filtering
+
+@functional-users-head-filtering - Functional tests for HEAD /users with filter parameters:
+- `HEAD /users filtering X-Total-Count reflects filtered count` - HEAD /users?firstname=VALUE status code is 200 and X-Total-Count header matches the count returned by GET /users?firstname=VALUE.
+

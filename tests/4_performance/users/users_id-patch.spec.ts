@@ -1,57 +1,56 @@
 import { performanceData } from '@test-data/users/users.performance.data';
-import { buildUserPayload, postMissingFieldData } from '@test-data/users/users.post.data';
+import { buildUserPayload, postEmptyFieldData } from '@test-data/users/users.post.data';
 import { byIdData } from '@test-data/users/users_id.data';
 import { expect, test } from '@tests/fixtures';
 import { createUserAndLogin, measureRequest } from '@tests/helpers';
 
 test.describe('SLA', () => {
-  test('PUT /users/{id} updating a user responds within SLA @performance-users_id-put-sla', async ({ request }) => {
+  test('PATCH /users/{id} partial update responds within SLA @performance-users_id-patch-sla', async ({ request }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
     const { response, elapsed } = await measureRequest(() =>
-      request.put(`users/${createdUser.id}`, {
+      request.patch(`users/${createdUser.id}`, {
         headers: testAuthHeaders,
-        data: buildUserPayload(),
+        data: { firstname: buildUserPayload().firstname },
       })
     );
 
     expect.soft(response.status()).toBe(200);
-    expect(elapsed).toBeLessThan(performanceData.slaMs.putById);
+    expect(elapsed).toBeLessThan(performanceData.slaMs.patchById);
   });
 
-  test('PUT /users/{id} updating a non-existent user responds within SLA @performance-users_id-put-sla', async ({
+  test('PATCH /users/{id} updating a non-existent user responds within SLA @performance-users_id-patch-sla', async ({
     request,
     authHeaders,
   }) => {
     const { response, elapsed } = await measureRequest(() =>
-      request.put(`users/${byIdData.nonExistentId}`, {
+      request.patch(`users/${byIdData.nonExistentId}`, {
         headers: authHeaders,
-        data: buildUserPayload(),
+        data: { firstname: buildUserPayload().firstname },
       })
     );
 
     expect.soft(response.status()).toBe(401);
-    expect(elapsed).toBeLessThan(performanceData.slaMs.putByIdNotFound);
+    expect(elapsed).toBeLessThan(performanceData.slaMs.patchByIdNotFound);
   });
 
-  test('PUT /users/{id} invalid payload rejection responds within SLA @performance-users_id-put-sla', async ({
+  test('PATCH /users/{id} invalid payload rejection responds within SLA @performance-users_id-patch-sla', async ({
     request,
-    authHeaders,
-    userId,
   }) => {
+    const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
     const { response, elapsed } = await measureRequest(() =>
-      request.put(`users/${userId}`, {
-        headers: authHeaders,
-        data: postMissingFieldData.missingFirstname,
+      request.patch(`users/${createdUser.id}`, {
+        headers: testAuthHeaders,
+        data: postEmptyFieldData.emptyFirstname,
       })
     );
 
     expect.soft(response.status()).toBe(422);
-    expect(elapsed).toBeLessThan(performanceData.slaMs.putByIdInvalidPayload);
+    expect(elapsed).toBeLessThan(performanceData.slaMs.patchByIdInvalidPayload);
   });
 });
 
 test.describe('Concurrent', () => {
-  test('PUT /users/{id} concurrent requests respond within SLA @performance-users_id-put-concurrent', async ({
+  test('PATCH /users/{id} concurrent requests respond within SLA @performance-users_id-patch-concurrent', async ({
     request,
   }) => {
     const { concurrentRequests } = performanceData;
@@ -59,9 +58,9 @@ test.describe('Concurrent', () => {
     const results = await Promise.all(
       users.map(async ({ createdUser, testAuthHeaders }) => {
         const { response, elapsed } = await measureRequest(() =>
-          request.put(`users/${createdUser.id}`, {
+          request.patch(`users/${createdUser.id}`, {
             headers: testAuthHeaders,
-            data: buildUserPayload(),
+            data: { firstname: buildUserPayload().firstname },
           })
         );
         return { response, elapsed };
@@ -71,6 +70,6 @@ test.describe('Concurrent', () => {
     const maxElapsed = Math.max(...results.map(({ elapsed }) => elapsed));
 
     expect.soft(statuses).toEqual(Array(concurrentRequests).fill(200));
-    expect(maxElapsed).toBeLessThan(performanceData.slaMs.putByIdConcurrent);
+    expect(maxElapsed).toBeLessThan(performanceData.slaMs.patchByIdConcurrent);
   });
 });

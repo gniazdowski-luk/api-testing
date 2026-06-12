@@ -4,12 +4,12 @@ import { expect, test } from '@tests/fixtures';
 import { createUserAndLogin } from '@tests/helpers';
 
 test.describe('Authorization', () => {
-  test('PUT /users/{id} unauthenticated access returns error @security-users_id-put-authorization', async ({
+  test('PATCH /users/{id} unauthenticated access returns error @security-users_id-patch-authorization', async ({
     request,
   }) => {
     const { createdUser } = await createUserAndLogin(request);
-    const response = await request.put(`users/${createdUser.id}`, {
-      data: buildUserPayload(),
+    const response = await request.patch(`users/${createdUser.id}`, {
+      data: { firstname: buildUserPayload().firstname },
     });
     const errorResponse = await response.json();
 
@@ -17,11 +17,13 @@ test.describe('Authorization', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('PUT /users/{id} empty Bearer token returns error @security-users_id-put-authorization', async ({ request }) => {
+  test('PATCH /users/{id} empty Bearer token returns error @security-users_id-patch-authorization', async ({
+    request,
+  }) => {
     const { createdUser } = await createUserAndLogin(request);
-    const response = await request.put(`users/${createdUser.id}`, {
+    const response = await request.patch(`users/${createdUser.id}`, {
       headers: { Authorization: securityUsersData.emptyBearerToken },
-      data: buildUserPayload(),
+      data: { firstname: buildUserPayload().firstname },
     });
     const errorResponse = await response.json();
 
@@ -29,13 +31,13 @@ test.describe('Authorization', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('PUT /users/{id} invalid Bearer token returns error @security-users_id-put-authorization', async ({
+  test('PATCH /users/{id} invalid Bearer token returns error @security-users_id-patch-authorization', async ({
     request,
   }) => {
     const { createdUser } = await createUserAndLogin(request);
-    const response = await request.put(`users/${createdUser.id}`, {
+    const response = await request.patch(`users/${createdUser.id}`, {
       headers: { Authorization: securityUsersData.wrongBearerToken },
-      data: buildUserPayload(),
+      data: { firstname: buildUserPayload().firstname },
     });
     const errorResponse = await response.json();
 
@@ -43,11 +45,13 @@ test.describe('Authorization', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('PUT /users/{id} wrong Basic auth returns error @security-users_id-put-authorization', async ({ request }) => {
+  test('PATCH /users/{id} wrong Basic auth returns error @security-users_id-patch-authorization', async ({
+    request,
+  }) => {
     const { createdUser } = await createUserAndLogin(request);
-    const response = await request.put(`users/${createdUser.id}`, {
+    const response = await request.patch(`users/${createdUser.id}`, {
       headers: { Authorization: securityUsersData.wrongBasicAuth },
-      data: buildUserPayload(),
+      data: { firstname: buildUserPayload().firstname },
     });
     const errorResponse = await response.json();
 
@@ -55,14 +59,14 @@ test.describe('Authorization', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('PUT /users/{id} valid token without Cookie returns error @security-users_id-put-authorization', async ({
+  test('PATCH /users/{id} valid token without Cookie returns error @security-users_id-patch-authorization', async ({
     request,
     accessToken,
   }) => {
     const { createdUser } = await createUserAndLogin(request);
-    const response = await request.put(`users/${createdUser.id}`, {
+    const response = await request.patch(`users/${createdUser.id}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
-      data: buildUserPayload(),
+      data: { firstname: buildUserPayload().firstname },
     });
     const errorResponse = await response.json();
 
@@ -72,11 +76,11 @@ test.describe('Authorization', () => {
 });
 
 test.describe('Expired Token', () => {
-  test('PUT /users/{id} expired token returns error @security-users_id-put-expired_token', async ({ request }) => {
+  test('PATCH /users/{id} expired token returns error @security-users_id-patch-expired_token', async ({ request }) => {
     const { createdUser } = await createUserAndLogin(request);
-    const response = await request.put(`users/${createdUser.id}`, {
+    const response = await request.patch(`users/${createdUser.id}`, {
       headers: { Authorization: securityUsersData.expiredToken },
-      data: buildUserPayload(),
+      data: { firstname: buildUserPayload().firstname },
     });
 
     expect(response.status()).toBe(401);
@@ -84,22 +88,22 @@ test.describe('Expired Token', () => {
 });
 
 test.describe('CORS Headers', () => {
-  test('PUT /users/{id} access control allow origin header is included @security-users_id-put-cors', async ({
+  test('PATCH /users/{id} access control allow origin header is included @security-users_id-patch-cors', async ({
     request,
     baseURL,
   }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
     const origin = new URL(baseURL!).origin;
-    const response = await request.put(`users/${createdUser.id}`, {
+    const response = await request.patch(`users/${createdUser.id}`, {
       headers: { ...testAuthHeaders, Origin: origin },
-      data: buildUserPayload(),
+      data: { firstname: buildUserPayload().firstname },
     });
 
     expect.soft(response.headers()['access-control-allow-origin']).toBe(origin);
     expect(response.status()).toBe(200);
   });
 
-  test('OPTIONS /users/{id} preflight request for PUT returns CORS headers @security-users_id-put-cors', async ({
+  test('OPTIONS /users/{id} preflight request for PATCH returns CORS headers @security-users_id-patch-cors', async ({
     request,
     baseURL,
   }) => {
@@ -108,51 +112,51 @@ test.describe('CORS Headers', () => {
       method: 'OPTIONS',
       headers: {
         Origin: new URL(baseURL!).origin,
-        'Access-Control-Request-Method': 'PUT',
+        'Access-Control-Request-Method': 'PATCH',
         'Access-Control-Request-Headers': 'Authorization',
       },
     });
 
-    expect.soft(response.headers()['access-control-allow-methods']).toContain('PUT');
+    expect.soft(response.headers()['access-control-allow-methods']).toContain('PATCH');
     expect.soft(response.headers()['access-control-allow-headers']).toBeTruthy();
     expect(response.status()).toBe(204);
   });
 });
 
 test.describe('Security Response Headers', () => {
-  test('PUT /users/{id} response includes X-Content-Type-Options header @security-users_id-put-headers', async ({
+  test('PATCH /users/{id} response includes X-Content-Type-Options header @security-users_id-patch-headers', async ({
     request,
   }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
-    const response = await request.put(`users/${createdUser.id}`, {
+    const response = await request.patch(`users/${createdUser.id}`, {
       headers: testAuthHeaders,
-      data: buildUserPayload(),
+      data: { firstname: buildUserPayload().firstname },
     });
 
     expect.soft(response.headers()['x-content-type-options']).toBe('nosniff');
     expect(response.status()).toBe(200);
   });
 
-  test('PUT /users/{id} response includes X-Frame-Options header @security-users_id-put-headers', async ({
+  test('PATCH /users/{id} response includes X-Frame-Options header @security-users_id-patch-headers', async ({
     request,
   }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
-    const response = await request.put(`users/${createdUser.id}`, {
+    const response = await request.patch(`users/${createdUser.id}`, {
       headers: testAuthHeaders,
-      data: buildUserPayload(),
+      data: { firstname: buildUserPayload().firstname },
     });
 
     expect.soft(response.headers()['x-frame-options']).toBe('SAMEORIGIN');
     expect(response.status()).toBe(200);
   });
 
-  test('PUT /users/{id} response includes Content-Security-Policy header @security-users_id-put-headers', async ({
+  test('PATCH /users/{id} response includes Content-Security-Policy header @security-users_id-patch-headers', async ({
     request,
   }) => {
     const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
-    const response = await request.put(`users/${createdUser.id}`, {
+    const response = await request.patch(`users/${createdUser.id}`, {
       headers: testAuthHeaders,
-      data: buildUserPayload(),
+      data: { firstname: buildUserPayload().firstname },
     });
 
     expect.soft(response.headers()['content-security-policy']).toBeTruthy();
