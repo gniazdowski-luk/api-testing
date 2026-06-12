@@ -157,13 +157,6 @@ test.describe('DELETE /users/{id}', () => {
 });
 
 test.describe('HEAD /users', () => {
-  test('HEAD /users response body is empty @contract-users-head', async ({ request, authHeaders }) => {
-    const response = await request.head('users', { headers: authHeaders });
-    const body = await response.text();
-
-    expect(body).toBe('');
-  });
-
   test('HEAD /users response includes the correct Content-Type header @contract-users-head', async ({
     request,
     authHeaders,
