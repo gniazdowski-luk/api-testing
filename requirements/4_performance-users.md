@@ -44,3 +44,46 @@
 
 @performance-users_id-put-sla - Performance tests for the PUT /users/{id} endpoint response time SLA:
 - `PUT /users/{id} updating a user responds within SLA` - PUT /users/{id} with a valid payload and valid auth status code is 200 and responds within SLA (1000ms).
+- `PUT /users/{id} updating a non-existent user responds within SLA` - PUT /users/{id} with a non-existent numeric ID returns status code 401 and responds within SLA (500ms).
+- `PUT /users/{id} invalid payload rejection responds within SLA` - PUT /users/{id} with a missing required field returns status code 422 and responds within SLA (500ms).
+
+### PUT /users/{id} - Concurrent Requests
+
+@performance-users_id-put-concurrent - Performance tests verifying the PUT /users/{id} endpoint remains within SLA under concurrent load:
+- `PUT /users/{id} concurrent requests respond within SLA` - N simultaneous PUT /users/{id} requests (e.g. 10) all respond with status code 200 within SLA (1000ms each).
+
+## PATCH /users/{id}
+
+### PATCH /users/{id} - Response Time SLA
+
+@performance-users_id-patch-sla - Performance tests for the PATCH /users/{id} endpoint response time SLA:
+- `PATCH /users/{id} partial update responds within SLA` - PATCH /users/{id} with a valid partial payload and valid auth status code is 200 and responds within SLA (1000ms).
+- `PATCH /users/{id} updating a non-existent user responds within SLA` - PATCH /users/{id} with a non-existent numeric ID returns status code 401 and responds within SLA (500ms).
+- `PATCH /users/{id} invalid payload rejection responds within SLA` - PATCH /users/{id} with an empty required field returns status code 422 and responds within SLA (500ms).
+
+### PATCH /users/{id} - Concurrent Requests
+
+@performance-users_id-patch-concurrent - Performance tests verifying the PATCH /users/{id} endpoint remains within SLA under concurrent load:
+- `PATCH /users/{id} concurrent requests respond within SLA` - N simultaneous PATCH /users/{id} requests (e.g. 10) all respond with status code 200 within SLA (1000ms each).
+
+## DELETE /users/{id}
+
+### DELETE /users/{id} - Response Time SLA
+
+@performance-users_id-delete-sla - Performance tests for the DELETE /users/{id} endpoint response time SLA:
+- `DELETE /users/{id} deleting a user responds within SLA` - DELETE /users/{id} with valid auth and an existing user ID status code is 200 and responds within SLA (1000ms).
+- `DELETE /users/{id} deleting a non-existent user responds within SLA` - DELETE /users/{id} with a non-existent numeric ID returns status code 404 and responds within SLA (500ms).
+
+## HEAD /users
+
+### HEAD /users - Response Time SLA
+
+@performance-users-head-sla - Performance tests for the HEAD /users endpoint response time SLA:
+- [x] `HEAD /users single request responds within SLA` - HEAD /users status code is 200 and responds within SLA (500ms).
+- [x] `HEAD /users with pagination params responds within SLA` - HEAD /users?_page=1&_limit=5 status code is 200 and responds within SLA (500ms).
+- [x] `HEAD /users with filter params responds within SLA` - HEAD /users?firstname=VALUE status code is 200 and responds within SLA (500ms).
+
+### HEAD /users - Concurrent Requests
+
+@performance-users-head-concurrent - Performance tests verifying the HEAD /users endpoint remains within SLA under concurrent load:
+- [x] `HEAD /users concurrent requests respond within SLA` - N simultaneous HEAD /users requests (e.g. 10) all respond with status code 200 within SLA (1000ms each).

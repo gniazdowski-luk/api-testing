@@ -22,6 +22,16 @@
 @smoke-users-put - Smoke tests to verify PUT /users/{id}:
 - `PUT /users/{id} endpoint is accessible` - PUT /users/{id} response body contains the updated user object and status code is 200.
 
+### PATCH /users/{id}
+
+@smoke-users_id-patch - Smoke tests to verify PATCH /users/{id}:
+- `PATCH /users/{id} endpoint is accessible` - PATCH /users/{id} response body contains the partially updated user object and status code is 200.
+
+### DELETE /users/{id}
+
+@smoke-users_id-delete - Smoke tests to verify DELETE /users/{id}:
+- `DELETE /users/{id} endpoint is accessible` - DELETE /users/{id} response body is empty and status code is 200.
+
 ### HEAD /users
 
 @smoke-users-head - Smoke tests to verify HEAD /users:

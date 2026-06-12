@@ -1,4 +1,12 @@
-import { buildUserPayload, postMissingFieldData } from '@test-data/users/users.post.data';
+import {
+  buildUserPayload,
+  postEmptyFieldData,
+  postInvalidEmailFormatData,
+  postInvalidTypeData,
+  postMissingFieldData,
+  postNegativeData,
+  postNullFieldData,
+} from '@test-data/users/users.post.data';
 import { byIdData } from '@test-data/users/users_id.data';
 import { expect, test } from '@tests/fixtures';
 import { createUserAndLogin } from '@tests/helpers';
@@ -143,6 +151,227 @@ test.describe('Negative', () => {
     const response = await request.put(`users/${userId}`, {
       headers: authHeaders,
       data: postMissingFieldData.missingAvatar,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} invalid firstname type returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postInvalidTypeData.invalidFirstname,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} invalid lastname type returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postInvalidTypeData.invalidLastname,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} invalid email type returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postInvalidTypeData.invalidEmail,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} invalid password type returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postInvalidTypeData.invalidPassword,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} invalid avatar type returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postInvalidTypeData.invalidAvatar,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} email missing at symbol returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postInvalidEmailFormatData.missingAt,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} email missing domain returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postInvalidEmailFormatData.missingDomain,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} email missing local part returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postInvalidEmailFormatData.missingLocalPart,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} empty body returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postNegativeData.emptyBody,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} unrecognized extra fields returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postNegativeData.extraFields,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} empty firstname string returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postEmptyFieldData.emptyFirstname,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} empty lastname string returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postEmptyFieldData.emptyLastname,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} empty email string returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postEmptyFieldData.emptyEmail,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} empty password string returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postEmptyFieldData.emptyPassword,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} empty avatar string returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postEmptyFieldData.emptyAvatar,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} null firstname returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postNullFieldData.nullFirstname,
+    });
+
+    expect(response.status()).toBe(422);
+  });
+
+  test('PUT /users/{id} null email returns validation error @functional-users_id-put-negative', async ({
+    request,
+    authHeaders,
+    userId,
+  }) => {
+    const response = await request.put(`users/${userId}`, {
+      headers: authHeaders,
+      data: postNullFieldData.nullEmail,
     });
 
     expect(response.status()).toBe(422);

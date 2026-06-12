@@ -64,6 +64,31 @@ test('PUT /users/{id} endpoint is accessible @smoke-users-put', async ({ request
   expect(response.status()).toBe(200);
 });
 
+test('PATCH /users/{id} endpoint is accessible @smoke-users_id-patch', async ({ request }) => {
+  const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
+  const patchPayload = { firstname: buildUserPayload().firstname };
+  const response = await request.patch(`users/${createdUser.id}`, {
+    headers: testAuthHeaders,
+    data: patchPayload,
+  });
+  const patchedUser = await response.json();
+
+  expect.soft(patchedUser).toMatchObject({
+    id: createdUser.id,
+    firstname: patchPayload.firstname,
+  });
+  expect(response.status()).toBe(200);
+});
+
+test('DELETE /users/{id} endpoint is accessible @smoke-users_id-delete', async ({ request }) => {
+  const { createdUser, testAuthHeaders } = await createUserAndLogin(request);
+  const response = await request.delete(`users/${createdUser.id}`, {
+    headers: testAuthHeaders,
+  });
+
+  expect(response.status()).toBe(200);
+});
+
 test('HEAD /users endpoint is accessible @smoke-users-head', async ({ request, authHeaders }) => {
   const response = await request.head('users', {
     headers: authHeaders,

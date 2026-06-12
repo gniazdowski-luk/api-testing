@@ -59,3 +59,36 @@ test('DELETE /users expired token returns error @security-users-delete-expired_t
 
   expect(response.status()).toBe(401);
 });
+
+test.describe('CORS Headers', () => {
+  test('DELETE /users access control allow origin header is included @security-users-delete-cors', async ({
+    request,
+    baseURL,
+  }) => {
+    const origin = new URL(baseURL!).origin;
+    const response = await request.delete('users', {
+      headers: { Origin: origin },
+    });
+
+    expect.soft(response.headers()['access-control-allow-origin']).toBe(origin);
+    expect(response.status()).toBe(401);
+  });
+
+  test('OPTIONS /users preflight request for DELETE returns CORS headers @security-users-delete-cors', async ({
+    request,
+    baseURL,
+  }) => {
+    const response = await request.fetch('users', {
+      method: 'OPTIONS',
+      headers: {
+        Origin: new URL(baseURL!).origin,
+        'Access-Control-Request-Method': 'DELETE',
+        'Access-Control-Request-Headers': 'Authorization',
+      },
+    });
+
+    expect.soft(response.headers()['access-control-allow-methods']).toContain('DELETE');
+    expect.soft(response.headers()['access-control-allow-headers']).toBeTruthy();
+    expect(response.status()).toBe(204);
+  });
+});
