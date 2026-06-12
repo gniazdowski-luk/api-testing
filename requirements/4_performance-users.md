@@ -79,11 +79,11 @@
 ### HEAD /users - Response Time SLA
 
 @performance-users-head-sla - Performance tests for the HEAD /users endpoint response time SLA:
-- [x] `HEAD /users single request responds within SLA` - HEAD /users status code is 200 and responds within SLA (500ms).
-- [x] `HEAD /users with pagination params responds within SLA` - HEAD /users?_page=1&_limit=5 status code is 200 and responds within SLA (500ms).
-- [x] `HEAD /users with filter params responds within SLA` - HEAD /users?firstname=VALUE status code is 200 and responds within SLA (500ms).
+- `HEAD /users single request responds within SLA` - HEAD /users status code is 200 and responds within SLA (500ms).
+- `HEAD /users with pagination params responds within SLA` - HEAD /users?_page=1&_limit=5 status code is 200 and responds within SLA (500ms).
+- `HEAD /users with filter params responds within SLA` - HEAD /users?firstname=VALUE status code is 200 and responds within SLA (500ms).
 
 ### HEAD /users - Concurrent Requests
 
 @performance-users-head-concurrent - Performance tests verifying the HEAD /users endpoint remains within SLA under concurrent load:
-- [x] `HEAD /users concurrent requests respond within SLA` - N simultaneous HEAD /users requests (e.g. 10) all respond with status code 200 within SLA (1000ms each).
+- `HEAD /users concurrent requests respond within SLA` - N simultaneous HEAD /users requests (e.g. 10) all respond with status code 200 within SLA (1000ms each).

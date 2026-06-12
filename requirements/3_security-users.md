@@ -223,21 +223,21 @@
 ### HEAD /users - Authorization
 
 @security-users-head-authorization - Security tests for HEAD /users authorization:
-- [x] `HEAD /users unauthenticated access returns ok` - HEAD /users without Authorization header returns status code 200.
-- [x] `HEAD /users empty Bearer token returns ok` - HEAD /users with empty Bearer token returns status code 200.
-- [x] `HEAD /users invalid Bearer token returns ok` - HEAD /users with wrong Bearer token returns status code 200.
-- [x] `HEAD /users wrong Basic auth returns ok` - HEAD /users with wrong Basic auth returns status code 200.
-- [x] `HEAD /users valid token without Cookie returns ok` - HEAD /users with valid Bearer token but without Cookie returns status code 200.
+- `HEAD /users unauthenticated access returns ok` - HEAD /users without Authorization header returns status code 200.
+- `HEAD /users empty Bearer token returns ok` - HEAD /users with empty Bearer token returns status code 200.
+- `HEAD /users invalid Bearer token returns ok` - HEAD /users with wrong Bearer token returns status code 200.
+- `HEAD /users wrong Basic auth returns ok` - HEAD /users with wrong Basic auth returns status code 200.
+- `HEAD /users valid token without Cookie returns ok` - HEAD /users with valid Bearer token but without Cookie returns status code 200.
 
 ### HEAD /users - CORS Headers
 
 @security-users-head-cors - Security tests verifying CORS response headers are present on the HEAD /users endpoint:
-- [x] `HEAD /users access control allow origin header is included` - HEAD /users with an Origin header returns status code 200 and Access-Control-Allow-Origin header matching the request origin.
-- [x] `OPTIONS /users preflight request for HEAD returns CORS headers` - OPTIONS /users with Origin and preflight headers for HEAD returns status code 204 and includes Access-Control-Allow-Methods (including HEAD) and Access-Control-Allow-Headers.
+- `HEAD /users access control allow origin header is included` - HEAD /users with an Origin header returns status code 200 and Access-Control-Allow-Origin header matching the request origin.
+- `OPTIONS /users preflight request for HEAD returns CORS headers` - OPTIONS /users with Origin and preflight headers for HEAD returns status code 204 and includes Access-Control-Allow-Methods (including HEAD) and Access-Control-Allow-Headers.
 
 ### HEAD /users - Security Response Headers
 
 @security-users-head-headers - Security tests verifying that the HEAD /users endpoint returns expected security-related HTTP response headers:
-- [x] `HEAD /users response includes X-Content-Type-Options header` - HEAD /users response includes X-Content-Type-Options: nosniff and status code 200.
-- [x] `HEAD /users response includes X-Frame-Options header` - HEAD /users response includes X-Frame-Options: SAMEORIGIN and status code 200.
-- [x] `HEAD /users response includes Content-Security-Policy header` - HEAD /users response includes a Content-Security-Policy header and status code 200.
+- `HEAD /users response includes X-Content-Type-Options header` - HEAD /users response includes X-Content-Type-Options: nosniff and status code 200.
+- `HEAD /users response includes X-Frame-Options header` - HEAD /users response includes X-Frame-Options: SAMEORIGIN and status code 200.
+- `HEAD /users response includes Content-Security-Policy header` - HEAD /users response includes a Content-Security-Policy header and status code 200.

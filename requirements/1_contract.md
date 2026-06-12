@@ -41,6 +41,6 @@
 ### HEAD /users
 
 @contract-users-head - Contract tests to verify that the HEAD /users endpoint adheres to the defined contract:
-- [x] `HEAD /users response body is empty` - HEAD /users response has no body and status code is 200.
-- [x] `HEAD /users response includes the correct Content-Type header` - HEAD /users response includes the same Content-Type header as GET /users.
-- [x] `HEAD /users response includes X-Total-Count header` - HEAD /users?_page=1&_limit=N response includes X-Total-Count header matching the total user count.
+- `HEAD /users response body is empty` - HEAD /users response has no body and status code is 200.
+- `HEAD /users response includes the correct Content-Type header` - HEAD /users response includes the same Content-Type header as GET /users.
+- `HEAD /users response includes X-Total-Count header` - HEAD /users?_page=1&_limit=N response includes X-Total-Count header matching the total user count.

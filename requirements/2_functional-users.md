@@ -208,18 +208,18 @@
 ### HEAD /users - Core
 
 @functional-users-head-core - Functional tests for core HEAD /users behaviour:
-- [x] `HEAD /users response body is empty` - HEAD /users status code is 200 and response body is empty.
-- [x] `HEAD /users response headers match GET /users response headers` - HEAD /users status code is 200 and Content-Type header matches the one returned by GET /users.
-- [x] `HEAD /users X-Total-Count header reflects total user count` - HEAD /users?_page=1&_limit=N status code is 200 and X-Total-Count header value equals the total number of users in the database.
+- `HEAD /users response body is empty` - HEAD /users status code is 200 and response body is empty.
+- `HEAD /users response headers match GET /users response headers` - HEAD /users status code is 200 and Content-Type header matches the one returned by GET /users.
+- `HEAD /users X-Total-Count header reflects total user count` - HEAD /users?_page=1&_limit=N status code is 200 and X-Total-Count header value equals the total number of users in the database.
 
 ### HEAD /users - Pagination
 
 @functional-users-head-pagination - Functional tests for HEAD /users with pagination parameters:
-- [x] `HEAD /users pagination X-Total-Count reflects total count with page limit` - HEAD /users?_page=1&_limit=N status code is 200 and X-Total-Count header matches the total count returned by GET /users?_page=1&_limit=N.
-- [x] `HEAD /users offset pagination X-Total-Count reflects total user count` - HEAD /users?_start=N&_limit=SIZE status code is 200 and X-Total-Count header equals the total number of users.
+- `HEAD /users pagination X-Total-Count reflects total count with page limit` - HEAD /users?_page=1&_limit=N status code is 200 and X-Total-Count header matches the total count returned by GET /users?_page=1&_limit=N.
+- `HEAD /users offset pagination X-Total-Count reflects total user count` - HEAD /users?_start=N&_limit=SIZE status code is 200 and X-Total-Count header equals the total number of users.
 
 ### HEAD /users - Filtering
 
 @functional-users-head-filtering - Functional tests for HEAD /users with filter parameters:
-- [x] `HEAD /users filtering X-Total-Count reflects filtered count` - HEAD /users?firstname=VALUE status code is 200 and X-Total-Count header matches the count returned by GET /users?firstname=VALUE.
+- `HEAD /users filtering X-Total-Count reflects filtered count` - HEAD /users?firstname=VALUE status code is 200 and X-Total-Count header matches the count returned by GET /users?firstname=VALUE.
 
