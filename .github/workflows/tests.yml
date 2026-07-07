@@ -566,10 +566,7 @@ jobs:
 
       - name: Generate report ID
         id: report-id
-        run: |
-          REPORT_ID=$(date -u +%Y%m%d-%H%M%S | tr '0-9' 'a-j')
-          echo "value=${REPORT_ID}" >> "$GITHUB_OUTPUT"
-          echo "REPORT_ID=${REPORT_ID}" >> "$GITHUB_ENV"
+        run: echo "value=$(date -u +%Y%m%d-%H%M%S | tr '0-9' 'a-j')" >> "$GITHUB_OUTPUT"
 
       - name: Deploy report history to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -584,7 +581,7 @@ jobs:
       - name: Log unique report URL
         run: |
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          REPORT_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/reports/${REPORT_ID}/"
+          REPORT_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/reports/${{ steps['report-id'].outputs.value }}/"
           echo "Playwright report URL: ${REPORT_URL}"
           {
             echo "### Playwright report URL"
