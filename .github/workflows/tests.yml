@@ -539,7 +539,11 @@ jobs:
     if: always() && github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -564,24 +568,14 @@ jobs:
       - name: Merge reports
         run: npx playwright merge-reports --reporter html ./all-blobs
 
-      - name: Deploy report history to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: playwright-report
-          destination_dir: reports/run-${{ github.run_number }}-${{ github.run_attempt }}
-          keep_files: true
-          force_orphan: false
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - name: Print unique report URL
-        run: |
-          REPORT_PATH="reports/run-${{ github.run_number }}-${{ github.run_attempt }}/"
-          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${REPORT_PATH}"
-          echo "Report URL: $REPORT_URL"
-          echo "::notice title=Playwright Report URL::$REPORT_URL"
-          {
-            echo "### Playwright report"
-            echo
-            echo "$REPORT_URL"
-          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: playwright-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
