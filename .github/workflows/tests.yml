@@ -570,14 +570,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: playwright-report
-          destination_dir: reports/run-${{ github.run_id }}-${{ github.run_attempt }}
+          destination_dir: reports/run-${{ github.run_id }}
           keep_files: true
           force_orphan: false
 
       - name: Log unique report URL
         run: |
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          REPORT_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/reports/run-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/"
+          REPORT_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/reports/run-${GITHUB_RUN_ID}/"
           echo "Playwright report URL: ${REPORT_URL}"
           {
             echo "### Playwright report URL"
