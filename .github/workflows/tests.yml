@@ -565,7 +565,11 @@ jobs:
         run: npx playwright merge-reports --reporter html ./all-blobs
 
       - name: Generate report ID
-        run: echo "REPORT_ID=$(date -u +%Y%m%d-%H%M%S | tr '0-9' 'a-j')" >> "$GITHUB_ENV"
+        id: report-id
+        run: |
+          REPORT_ID=$(date -u +%Y%m%d-%H%M%S | tr '0-9' 'a-j')
+          echo "value=${REPORT_ID}" >> "$GITHUB_OUTPUT"
+          echo "REPORT_ID=${REPORT_ID}" >> "$GITHUB_ENV"
 
       - name: Deploy report history to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -573,7 +577,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: playwright-report
-          destination_dir: reports/${{ env.REPORT_ID }}
+          destination_dir: reports/${{ steps['report-id'].outputs.value }}
           keep_files: true
           force_orphan: false
 
