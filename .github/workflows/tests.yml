@@ -576,10 +576,11 @@ jobs:
 
       - name: Log unique report URL
         run: |
-          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/reports/run-${{ github.run_id }}-${{ github.run_attempt }}/"
-          echo "Playwright report URL: $REPORT_URL"
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          REPORT_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/reports/run-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/"
+          echo "Playwright report URL: ${REPORT_URL}"
           {
             echo "### Playwright report URL"
             echo
-            echo "$REPORT_URL"
+            echo "${REPORT_URL}"
           } >> "$GITHUB_STEP_SUMMARY"
